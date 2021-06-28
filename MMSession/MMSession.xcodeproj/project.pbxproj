@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1203870E2688C67D00D9EDCA /* CameraSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 1203870D2688C67D00D9EDCA /* CameraSession.m */; };
+		120387122688C77300D9EDCA /* CameraSessionConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 120387112688C77300D9EDCA /* CameraSessionConfig.m */; };
 		1248443B268711C2003C27DF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 12484439268711C2003C27DF /* Main.storyboard */; };
 		1248443D268711C2003C27DF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1248443C268711C2003C27DF /* Assets.xcassets */; };
 		12484440268711C2003C27DF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1248443E268711C2003C27DF /* LaunchScreen.storyboard */; };
@@ -17,6 +19,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1203870C2688C67D00D9EDCA /* CameraSession.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CameraSession.h; sourceTree = "<group>"; };
+		1203870D2688C67D00D9EDCA /* CameraSession.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CameraSession.m; sourceTree = "<group>"; };
+		120387102688C77300D9EDCA /* CameraSessionConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CameraSessionConfig.h; sourceTree = "<group>"; };
+		120387112688C77300D9EDCA /* CameraSessionConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CameraSessionConfig.m; sourceTree = "<group>"; };
 		1248442D268711C1003C27DF /* MMSession.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MMSession.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1248443A268711C2003C27DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		1248443C268711C2003C27DF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -42,6 +48,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1203870B2688C65C00D9EDCA /* CameraSession */ = {
+			isa = PBXGroup;
+			children = (
+				1203870C2688C67D00D9EDCA /* CameraSession.h */,
+				1203870D2688C67D00D9EDCA /* CameraSession.m */,
+				120387102688C77300D9EDCA /* CameraSessionConfig.h */,
+				120387112688C77300D9EDCA /* CameraSessionConfig.m */,
+			);
+			path = CameraSession;
+			sourceTree = "<group>";
+		};
 		12484424268711C1003C27DF = {
 			isa = PBXGroup;
 			children = (
@@ -61,6 +78,7 @@
 		1248442F268711C1003C27DF /* MMSession */ = {
 			isa = PBXGroup;
 			children = (
+				1203870B2688C65C00D9EDCA /* CameraSession */,
 				1248444B2687121A003C27DF /* Other */,
 				12484439268711C2003C27DF /* Main.storyboard */,
 				1248443C268711C2003C27DF /* Assets.xcassets */,
@@ -156,7 +174,9 @@
 				124844552687121A003C27DF /* SceneDelegate.m in Sources */,
 				124844572687121A003C27DF /* AppDelegate.m in Sources */,
 				124844562687121A003C27DF /* main.m in Sources */,
+				1203870E2688C67D00D9EDCA /* CameraSession.m in Sources */,
 				124844542687121A003C27DF /* ViewController.m in Sources */,
+				120387122688C77300D9EDCA /* CameraSessionConfig.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

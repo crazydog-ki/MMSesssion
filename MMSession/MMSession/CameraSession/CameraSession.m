@@ -3,7 +3,6 @@
 // Github : https://github.com/crazydog-ki
 
 #import "CameraSession.h"
-#import <AVFoundation/AVFoundation.h>
 
 @interface CameraSession ()<AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate>
 @property (nonatomic, strong) dispatch_queue_t cameraQueue;
@@ -90,10 +89,11 @@
 #pragma mark - AVCaptureVideoDataOutputSampleBufferDelegate
 
 - (void)captureOutput:(AVCaptureOutput *)output didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection {
-    
-    CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
-    if (output == _videoOutput) {
+    if (output == _videoOutput && self.videoOutputCallback) {
         NSLog(@"youjianxia capture video");
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            self.videoOutputCallback(sampleBuffer);
+        });
     } else if (output == _audioOutput) {
         NSLog(@"youjianxia capture audio");
     }

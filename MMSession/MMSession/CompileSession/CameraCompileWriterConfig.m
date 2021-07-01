@@ -2,10 +2,8 @@
 // Email  : jxyou.ki@gmail.com
 // Github : https://github.com/crazydog-ki
 
-#import <UIKit/UIKit.h>
+#import "CameraCompileWriterConfig.h"
 
-@interface ViewController : UIViewController
-
+@implementation CameraCompileWriterConfig
 
 @end
-

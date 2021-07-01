@@ -34,7 +34,21 @@
 }
 
 - (void)startCapture {
-    [_captureSession startRunning];
+    dispatch_sync(_cameraQueue, ^{
+        [_captureSession startRunning];
+    });
+}
+
+- (void)stopCapture {
+    dispatch_sync(_cameraQueue, ^{
+        [_captureSession stopRunning];
+    });
+}
+
+- (void)setVideoPreviewLayerForSession:(AVCaptureVideoPreviewLayer *)previewLayer {
+    dispatch_sync(_cameraQueue, ^{
+        [previewLayer setSession:_captureSession];
+    });
 }
 
 #pragma mark - Private
@@ -90,17 +104,14 @@
 
 - (void)captureOutput:(AVCaptureOutput *)output didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection {
     if (output == _videoOutput && self.videoOutputCallback) {
-        NSLog(@"youjianxia capture video");
-        dispatch_sync(dispatch_get_main_queue(), ^{
-            self.videoOutputCallback(sampleBuffer);
-        });
-    } else if (output == _audioOutput) {
-        NSLog(@"youjianxia capture audio");
+        self.videoOutputCallback(sampleBuffer);
+    } else if (output == _audioOutput && self.audioOutputCallback) {
+        self.audioOutputCallback(sampleBuffer);
     }
 }
 
 - (void)captureOutput:(AVCaptureOutput *)output didDropSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection {
-    
+    NSLog(@"[yjx] camera drop sampleBuffer");
 }
 
 @end

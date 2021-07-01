@@ -12,11 +12,13 @@
 		1248443B268711C2003C27DF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 12484439268711C2003C27DF /* Main.storyboard */; };
 		1248443D268711C2003C27DF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1248443C268711C2003C27DF /* Assets.xcassets */; };
 		12484440268711C2003C27DF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1248443E268711C2003C27DF /* LaunchScreen.storyboard */; };
-		124844542687121A003C27DF /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1248444D2687121A003C27DF /* ViewController.m */; };
+		124844542687121A003C27DF /* CameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1248444D2687121A003C27DF /* CameraViewController.m */; };
 		124844552687121A003C27DF /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1248444E2687121A003C27DF /* SceneDelegate.m */; };
 		124844562687121A003C27DF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1248444F2687121A003C27DF /* main.m */; };
 		124844572687121A003C27DF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 124844502687121A003C27DF /* AppDelegate.m */; };
-		1284DB56268B7EB1008692B8 /* VideoPreview.m in Sources */ = {isa = PBXBuildFile; fileRef = 1284DB55268B7EB1008692B8 /* VideoPreview.m */; };
+		1284DB56268B7EB1008692B8 /* VideoLayerPreview.m in Sources */ = {isa = PBXBuildFile; fileRef = 1284DB55268B7EB1008692B8 /* VideoLayerPreview.m */; };
+		2B5072D0268C6D0C00444623 /* CameraCompileWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B5072CF268C6D0C00444623 /* CameraCompileWriter.m */; };
+		2B50795D268C732200444623 /* CameraCompileWriterConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B50795C268C732200444623 /* CameraCompileWriterConfig.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,15 +31,19 @@
 		1248443C268711C2003C27DF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1248443F268711C2003C27DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1248444C2687121A003C27DF /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		1248444D2687121A003C27DF /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		1248444D2687121A003C27DF /* CameraViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraViewController.m; sourceTree = "<group>"; };
 		1248444E2687121A003C27DF /* SceneDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
 		1248444F2687121A003C27DF /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		124844502687121A003C27DF /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		124844512687121A003C27DF /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		124844522687121A003C27DF /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		124844522687121A003C27DF /* CameraViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraViewController.h; sourceTree = "<group>"; };
 		124844532687121A003C27DF /* SceneDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
-		1284DB54268B7EB1008692B8 /* VideoPreview.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoPreview.h; sourceTree = "<group>"; };
-		1284DB55268B7EB1008692B8 /* VideoPreview.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoPreview.m; sourceTree = "<group>"; };
+		1284DB54268B7EB1008692B8 /* VideoLayerPreview.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoLayerPreview.h; sourceTree = "<group>"; };
+		1284DB55268B7EB1008692B8 /* VideoLayerPreview.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoLayerPreview.m; sourceTree = "<group>"; };
+		2B5072CE268C6D0C00444623 /* CameraCompileWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CameraCompileWriter.h; sourceTree = "<group>"; };
+		2B5072CF268C6D0C00444623 /* CameraCompileWriter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CameraCompileWriter.m; sourceTree = "<group>"; };
+		2B50795B268C732200444623 /* CameraCompileWriterConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CameraCompileWriterConfig.h; sourceTree = "<group>"; };
+		2B50795C268C732200444623 /* CameraCompileWriterConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CameraCompileWriterConfig.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,8 +64,8 @@
 				1203870D2688C67D00D9EDCA /* CameraSession.m */,
 				120387102688C77300D9EDCA /* CameraSessionConfig.h */,
 				120387112688C77300D9EDCA /* CameraSessionConfig.m */,
-				1284DB54268B7EB1008692B8 /* VideoPreview.h */,
-				1284DB55268B7EB1008692B8 /* VideoPreview.m */,
+				1284DB54268B7EB1008692B8 /* VideoLayerPreview.h */,
+				1284DB55268B7EB1008692B8 /* VideoLayerPreview.m */,
 			);
 			path = CameraSession;
 			sourceTree = "<group>";
@@ -83,6 +89,8 @@
 		1248442F268711C1003C27DF /* MMSession */ = {
 			isa = PBXGroup;
 			children = (
+				2B508D01268DBE2F00444623 /* ViewControllers */,
+				2B5072CD268C6C9500444623 /* CompileSession */,
 				1203870B2688C65C00D9EDCA /* CameraSession */,
 				1248444B2687121A003C27DF /* Other */,
 				12484439268711C2003C27DF /* Main.storyboard */,
@@ -99,12 +107,30 @@
 				124844502687121A003C27DF /* AppDelegate.m */,
 				124844532687121A003C27DF /* SceneDelegate.h */,
 				1248444E2687121A003C27DF /* SceneDelegate.m */,
-				124844522687121A003C27DF /* ViewController.h */,
-				1248444D2687121A003C27DF /* ViewController.m */,
 				1248444F2687121A003C27DF /* main.m */,
 				124844512687121A003C27DF /* Info.plist */,
 			);
 			path = Other;
+			sourceTree = "<group>";
+		};
+		2B5072CD268C6C9500444623 /* CompileSession */ = {
+			isa = PBXGroup;
+			children = (
+				2B5072CE268C6D0C00444623 /* CameraCompileWriter.h */,
+				2B5072CF268C6D0C00444623 /* CameraCompileWriter.m */,
+				2B50795B268C732200444623 /* CameraCompileWriterConfig.h */,
+				2B50795C268C732200444623 /* CameraCompileWriterConfig.m */,
+			);
+			path = CompileSession;
+			sourceTree = "<group>";
+		};
+		2B508D01268DBE2F00444623 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				124844522687121A003C27DF /* CameraViewController.h */,
+				1248444D2687121A003C27DF /* CameraViewController.m */,
+			);
+			path = ViewControllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -180,9 +206,11 @@
 				124844572687121A003C27DF /* AppDelegate.m in Sources */,
 				124844562687121A003C27DF /* main.m in Sources */,
 				1203870E2688C67D00D9EDCA /* CameraSession.m in Sources */,
-				124844542687121A003C27DF /* ViewController.m in Sources */,
+				124844542687121A003C27DF /* CameraViewController.m in Sources */,
+				2B50795D268C732200444623 /* CameraCompileWriterConfig.m in Sources */,
 				120387122688C77300D9EDCA /* CameraSessionConfig.m in Sources */,
-				1284DB56268B7EB1008692B8 /* VideoPreview.m in Sources */,
+				1284DB56268B7EB1008692B8 /* VideoLayerPreview.m in Sources */,
+				2B5072D0268C6D0C00444623 /* CameraCompileWriter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

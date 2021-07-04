@@ -17,8 +17,12 @@
 		124844562687121A003C27DF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1248444F2687121A003C27DF /* main.m */; };
 		124844572687121A003C27DF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 124844502687121A003C27DF /* AppDelegate.m */; };
 		1284DB56268B7EB1008692B8 /* VideoLayerPreview.m in Sources */ = {isa = PBXBuildFile; fileRef = 1284DB55268B7EB1008692B8 /* VideoLayerPreview.m */; };
+		2B0073992691511A006510A6 /* Shader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 2B0073952691511A006510A6 /* Shader.fsh */; };
+		2B00739A2691511A006510A6 /* Shader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 2B0073972691511A006510A6 /* Shader.vsh */; };
+		2B00739D26915F01006510A6 /* VideoPreviewConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B00739C26915F01006510A6 /* VideoPreviewConfig.m */; };
 		2B5072D0268C6D0C00444623 /* CameraCompileWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B5072CF268C6D0C00444623 /* CameraCompileWriter.m */; };
 		2B50795D268C732200444623 /* CameraCompileWriterConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B50795C268C732200444623 /* CameraCompileWriterConfig.m */; };
+		2B508D04268EC21700444623 /* VideoGLPreview.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B508D03268EC21700444623 /* VideoGLPreview.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,10 +44,17 @@
 		124844532687121A003C27DF /* SceneDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
 		1284DB54268B7EB1008692B8 /* VideoLayerPreview.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoLayerPreview.h; sourceTree = "<group>"; };
 		1284DB55268B7EB1008692B8 /* VideoLayerPreview.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoLayerPreview.m; sourceTree = "<group>"; };
+		2B0073952691511A006510A6 /* Shader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Shader.fsh; sourceTree = "<group>"; };
+		2B0073972691511A006510A6 /* Shader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Shader.vsh; sourceTree = "<group>"; };
+		2B00739B26915F01006510A6 /* VideoPreviewConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoPreviewConfig.h; sourceTree = "<group>"; };
+		2B00739C26915F01006510A6 /* VideoPreviewConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoPreviewConfig.m; sourceTree = "<group>"; };
 		2B5072CE268C6D0C00444623 /* CameraCompileWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CameraCompileWriter.h; sourceTree = "<group>"; };
 		2B5072CF268C6D0C00444623 /* CameraCompileWriter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CameraCompileWriter.m; sourceTree = "<group>"; };
 		2B50795B268C732200444623 /* CameraCompileWriterConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CameraCompileWriterConfig.h; sourceTree = "<group>"; };
 		2B50795C268C732200444623 /* CameraCompileWriterConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CameraCompileWriterConfig.m; sourceTree = "<group>"; };
+		2B508D02268EC21700444623 /* VideoGLPreview.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoGLPreview.h; sourceTree = "<group>"; };
+		2B508D03268EC21700444623 /* VideoGLPreview.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoGLPreview.m; sourceTree = "<group>"; };
+		2B508D07268F056D00444623 /* MMSessionProcessProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMSessionProcessProtocol.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,8 +75,6 @@
 				1203870D2688C67D00D9EDCA /* CameraSession.m */,
 				120387102688C77300D9EDCA /* CameraSessionConfig.h */,
 				120387112688C77300D9EDCA /* CameraSessionConfig.m */,
-				1284DB54268B7EB1008692B8 /* VideoLayerPreview.h */,
-				1284DB55268B7EB1008692B8 /* VideoLayerPreview.m */,
 			);
 			path = CameraSession;
 			sourceTree = "<group>";
@@ -89,9 +98,11 @@
 		1248442F268711C1003C27DF /* MMSession */ = {
 			isa = PBXGroup;
 			children = (
+				2B508D06268F053200444623 /* Utils */,
 				2B508D01268DBE2F00444623 /* ViewControllers */,
-				2B5072CD268C6C9500444623 /* CompileSession */,
 				1203870B2688C65C00D9EDCA /* CameraSession */,
+				2B5072CD268C6C9500444623 /* CompileSession */,
+				2B508D05268EC7A600444623 /* PreviewSession */,
 				1248444B2687121A003C27DF /* Other */,
 				12484439268711C2003C27DF /* Main.storyboard */,
 				1248443C268711C2003C27DF /* Assets.xcassets */,
@@ -131,6 +142,29 @@
 				1248444D2687121A003C27DF /* CameraViewController.m */,
 			);
 			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		2B508D05268EC7A600444623 /* PreviewSession */ = {
+			isa = PBXGroup;
+			children = (
+				1284DB54268B7EB1008692B8 /* VideoLayerPreview.h */,
+				1284DB55268B7EB1008692B8 /* VideoLayerPreview.m */,
+				2B508D02268EC21700444623 /* VideoGLPreview.h */,
+				2B508D03268EC21700444623 /* VideoGLPreview.m */,
+				2B0073972691511A006510A6 /* Shader.vsh */,
+				2B0073952691511A006510A6 /* Shader.fsh */,
+				2B00739B26915F01006510A6 /* VideoPreviewConfig.h */,
+				2B00739C26915F01006510A6 /* VideoPreviewConfig.m */,
+			);
+			path = PreviewSession;
+			sourceTree = "<group>";
+		};
+		2B508D06268F053200444623 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				2B508D07268F056D00444623 /* MMSessionProcessProtocol.h */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -189,9 +223,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B0073992691511A006510A6 /* Shader.fsh in Resources */,
 				12484440268711C2003C27DF /* LaunchScreen.storyboard in Resources */,
 				1248443D268711C2003C27DF /* Assets.xcassets in Resources */,
 				1248443B268711C2003C27DF /* Main.storyboard in Resources */,
+				2B00739A2691511A006510A6 /* Shader.vsh in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -202,6 +238,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B00739D26915F01006510A6 /* VideoPreviewConfig.m in Sources */,
 				124844552687121A003C27DF /* SceneDelegate.m in Sources */,
 				124844572687121A003C27DF /* AppDelegate.m in Sources */,
 				124844562687121A003C27DF /* main.m in Sources */,
@@ -209,6 +246,7 @@
 				124844542687121A003C27DF /* CameraViewController.m in Sources */,
 				2B50795D268C732200444623 /* CameraCompileWriterConfig.m in Sources */,
 				120387122688C77300D9EDCA /* CameraSessionConfig.m in Sources */,
+				2B508D04268EC21700444623 /* VideoGLPreview.m in Sources */,
 				1284DB56268B7EB1008692B8 /* VideoLayerPreview.m in Sources */,
 				2B5072D0268C6D0C00444623 /* CameraCompileWriter.m in Sources */,
 			);
@@ -355,6 +393,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4G7XDBY9J6;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"GLES_SILENCE_DEPRECATION=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
 				INFOPLIST_FILE = MMSession/Other/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -374,6 +417,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4G7XDBY9J6;
+				GCC_PREPROCESSOR_DEFINITIONS = "GLES_SILENCE_DEPRECATION=1";
 				INFOPLIST_FILE = MMSession/Other/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (

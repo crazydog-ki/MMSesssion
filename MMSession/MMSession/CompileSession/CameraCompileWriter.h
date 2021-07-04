@@ -3,12 +3,12 @@
 // Github : https://github.com/crazydog-ki
 
 #import <Foundation/Foundation.h>
-#import <AVFoundation/AVFoundation.h>
+#import "MMSessionProcessProtocol.h"
 #import "CameraCompileWriterConfig.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CameraCompileWriter : NSObject
+@interface CameraCompileWriter : NSObject<MMSessionProcessProtocol>
 
 typedef void (^CompleteHandle)(NSURL *_Nullable fileUrl, NSError *_Nullable error);
 
@@ -17,10 +17,6 @@ typedef void (^CompleteHandle)(NSURL *_Nullable fileUrl, NSError *_Nullable erro
 - (void)startRecord;
 
 - (void)stopRecordWithCompleteHandle:(CompleteHandle)handler;
-
-- (void)processVideoBuffer:(CMSampleBufferRef)sampleBuffer;
-
-- (void)processAudioBuffer:(CMSampleBufferRef)sampleBuffer;
 
 @end
 

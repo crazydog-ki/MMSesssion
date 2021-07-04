@@ -5,6 +5,7 @@
 #import "CameraViewController.h"
 #import "CameraSession.h"
 #import "VideoLayerPreview.h"
+#import "VideoGLPreview.h"
 #import "CameraCompileWriter.h"
 
 #define weakify(var) __weak typeof(var) weak_##var = var;
@@ -18,7 +19,8 @@ _Pragma("clang diagnostic pop")
 @interface CameraViewController ()
 
 @property (nonatomic, strong) CameraSession *camera;
-@property (nonatomic, strong) VideoLayerPreview *preview;
+@property (nonatomic, strong) VideoLayerPreview *layerPreview;
+@property (nonatomic, strong) VideoGLPreview *glPreview;
 @property (nonatomic, strong) CameraCompileWriter *writer;
 
 @end
@@ -29,12 +31,18 @@ _Pragma("clang diagnostic pop")
     [super viewDidLoad];
     
     CGFloat w = self.view.bounds.size.width;
-    self.preview = [[VideoLayerPreview alloc] initWithFrame:CGRectMake(0, 0, w, w*16/9)];
-    [self.view addSubview:self.preview];
+    self.glPreview = [[VideoGLPreview alloc] initWithFrame:CGRectMake(0, 0, w, w*16/9)];
+    [self.view addSubview:self.glPreview];
+    VideoPreviewConfig *config = [[VideoPreviewConfig alloc] init];
+    config.renderYUV = YES;
+    // config.rotation = 180;
+    config.presentRect = CGRectMake(0, 0, w, w*16/9);
+    self.glPreview.config = config;
+    [self.glPreview setupGLEnv];
     
     CameraSessionConfig *cameraConfig = [[CameraSessionConfig alloc] init];
     self.camera = [[CameraSession alloc] initWithConfig:cameraConfig];
-    [self.camera setVideoPreviewLayerForSession:self.preview.videoPreviewLayer];
+    // [self.camera setVideoPreviewLayerForSession:self.layerPreview.videoPreviewLayer];
     
     CameraCompileWriterConfig *compileConfig = [[CameraCompileWriterConfig alloc] init];
     NSString *docPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
@@ -65,7 +73,10 @@ _Pragma("clang diagnostic pop")
     weakify(self);
     self.camera.videoOutputCallback = ^(CMSampleBufferRef  _Nonnull sampleBuffer) {
         strongify(self);
-        [self.writer processVideoBuffer:sampleBuffer];
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            [self.glPreview processVideoBuffer:sampleBuffer];
+        });
+        // [self.writer processVideoBuffer:sampleBuffer];
     };
     self.camera.audioOutputCallback = ^(CMSampleBufferRef  _Nonnull sampleBuffer) {
         strongify(self);

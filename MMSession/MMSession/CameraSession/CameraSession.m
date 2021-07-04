@@ -74,12 +74,20 @@
     if ([_captureSession canAddOutput:_videoOutput]) {
         [_captureSession addOutput:_videoOutput];
     }
+    _videoOutput.videoSettings = @{(NSString *)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)};
     
     [_videoOutput setSampleBufferDelegate:self queue:_videoQueue];
     
-    // 设置竖屏
+    // 竖屏
     AVCaptureConnection *videoConnection = [_videoOutput connectionWithMediaType:AVMediaTypeVideo];
-    [videoConnection setVideoOrientation:AVCaptureVideoOrientationPortrait];
+    if ([videoConnection isVideoOrientationSupported]) {
+        [videoConnection setVideoOrientation:AVCaptureVideoOrientationPortrait];
+    }
+    
+    // 镜像
+    if ([videoConnection isVideoMirroringSupported]) {
+        [videoConnection setVideoMirrored:YES];
+    }
 }
 
 - (void)_setupAudioStream {

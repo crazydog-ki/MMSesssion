@@ -21,8 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef void(^VideoOutputCallback)(CMSampleBufferRef sampleBuffer);
 typedef void(^AudioOutputCallback)(CMSampleBufferRef sampleBuffer);
-@property (nonatomic, strong) VideoOutputCallback videoOutputCallback;
-@property (nonatomic, strong) AudioOutputCallback audioOutputCallback;
+@property (nonatomic, strong) VideoOutputCallback _Nullable videoOutputCallback;
+@property (nonatomic, strong) AudioOutputCallback _Nullable audioOutputCallback;
 
 @end
 

@@ -3,6 +3,7 @@
 // Github : https://github.com/crazydog-ki
 
 #import "SceneDelegate.h"
+#import "MainViewController.h"
 
 @interface SceneDelegate ()
 
@@ -12,9 +13,11 @@
 
 
 - (void)scene:(UIScene *)scene willConnectToSession:(UISceneSession *)session options:(UISceneConnectionOptions *)connectionOptions {
-    // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-    // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-    // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
+    self.window = [[UIWindow alloc] initWithWindowScene:(UIWindowScene *)scene];
+    self.window.backgroundColor = UIColor.whiteColor;
+    UINavigationController *mainNavController = [[UINavigationController alloc] initWithRootViewController:[[MainViewController alloc] init]];
+    self.window.rootViewController = mainNavController;
+    [self.window makeKeyAndVisible];
 }
 
 

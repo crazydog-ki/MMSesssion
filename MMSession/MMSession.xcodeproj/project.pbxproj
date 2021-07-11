@@ -3,13 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		1203870E2688C67D00D9EDCA /* CameraSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 1203870D2688C67D00D9EDCA /* CameraSession.m */; };
 		120387122688C77300D9EDCA /* CameraSessionConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 120387112688C77300D9EDCA /* CameraSessionConfig.m */; };
-		1248443B268711C2003C27DF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 12484439268711C2003C27DF /* Main.storyboard */; };
 		1248443D268711C2003C27DF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1248443C268711C2003C27DF /* Assets.xcassets */; };
 		12484440268711C2003C27DF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1248443E268711C2003C27DF /* LaunchScreen.storyboard */; };
 		124844542687121A003C27DF /* CameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1248444D2687121A003C27DF /* CameraViewController.m */; };
@@ -23,6 +22,14 @@
 		2B5072D0268C6D0C00444623 /* CameraCompileWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B5072CF268C6D0C00444623 /* CameraCompileWriter.m */; };
 		2B50795D268C732200444623 /* CameraCompileWriterConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B50795C268C732200444623 /* CameraCompileWriterConfig.m */; };
 		2B508D04268EC21700444623 /* VideoGLPreview.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B508D03268EC21700444623 /* VideoGLPreview.m */; };
+		2B9AC2AD2696E60000DC842D /* AVMutableComposition+Concat.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B9AC2AC2696E60000DC842D /* AVMutableComposition+Concat.m */; };
+		2B9AC2B22696F3DF00DC842D /* test1.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 2B9AC2AF2696F3DE00DC842D /* test1.mp4 */; };
+		2B9AC2B42696F3DF00DC842D /* test2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 2B9AC2B12696F3DE00DC842D /* test2.mp4 */; };
+		2B9AC2B72697E19500DC842D /* EditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B9AC2B62697E19500DC842D /* EditViewController.m */; };
+		2B9AC2B92697E27400DC842D /* test3.MP4 in Resources */ = {isa = PBXBuildFile; fileRef = 2B9AC2B82697E27400DC842D /* test3.MP4 */; };
+		2B9AC2BC2697E36700DC842D /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B9AC2BB2697E36700DC842D /* MainViewController.m */; };
+		2B9AC2BE2697F41000DC842D /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 2B9AC2BD2697F41000DC842D /* Podfile */; };
+		4257EEE83CA9A998BAADECCD /* Pods_MMSession.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F065112A3C063051A029E7D1 /* Pods_MMSession.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,7 +38,6 @@
 		120387102688C77300D9EDCA /* CameraSessionConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CameraSessionConfig.h; sourceTree = "<group>"; };
 		120387112688C77300D9EDCA /* CameraSessionConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CameraSessionConfig.m; sourceTree = "<group>"; };
 		1248442D268711C1003C27DF /* MMSession.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MMSession.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		1248443A268711C2003C27DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		1248443C268711C2003C27DF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1248443F268711C2003C27DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1248444C2687121A003C27DF /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -55,6 +61,19 @@
 		2B508D02268EC21700444623 /* VideoGLPreview.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoGLPreview.h; sourceTree = "<group>"; };
 		2B508D03268EC21700444623 /* VideoGLPreview.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoGLPreview.m; sourceTree = "<group>"; };
 		2B508D07268F056D00444623 /* MMSessionProcessProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMSessionProcessProtocol.h; sourceTree = "<group>"; };
+		2B9AC2AB2696E60000DC842D /* AVMutableComposition+Concat.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AVMutableComposition+Concat.h"; sourceTree = "<group>"; };
+		2B9AC2AC2696E60000DC842D /* AVMutableComposition+Concat.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "AVMutableComposition+Concat.m"; sourceTree = "<group>"; };
+		2B9AC2AF2696F3DE00DC842D /* test1.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = test1.mp4; sourceTree = "<group>"; };
+		2B9AC2B12696F3DE00DC842D /* test2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = test2.mp4; sourceTree = "<group>"; };
+		2B9AC2B52697E19500DC842D /* EditViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EditViewController.h; sourceTree = "<group>"; };
+		2B9AC2B62697E19500DC842D /* EditViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EditViewController.m; sourceTree = "<group>"; };
+		2B9AC2B82697E27400DC842D /* test3.MP4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = test3.MP4; sourceTree = "<group>"; };
+		2B9AC2BA2697E36700DC842D /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
+		2B9AC2BB2697E36700DC842D /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
+		2B9AC2BD2697F41000DC842D /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = SOURCE_ROOT; };
+		50FCC0F64CCC23C2867F1373 /* Pods-MMSession.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MMSession.debug.xcconfig"; path = "Target Support Files/Pods-MMSession/Pods-MMSession.debug.xcconfig"; sourceTree = "<group>"; };
+		F065112A3C063051A029E7D1 /* Pods_MMSession.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MMSession.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FFC1797B66E16F453B9EFA8D /* Pods-MMSession.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MMSession.release.xcconfig"; path = "Target Support Files/Pods-MMSession/Pods-MMSession.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +81,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4257EEE83CA9A998BAADECCD /* Pods_MMSession.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,6 +104,8 @@
 			children = (
 				1248442F268711C1003C27DF /* MMSession */,
 				1248442E268711C1003C27DF /* Products */,
+				34D394AA114648695A754C7B /* Pods */,
+				B6567E6FFE91E358D1F50C04 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -98,15 +120,13 @@
 		1248442F268711C1003C27DF /* MMSession */ = {
 			isa = PBXGroup;
 			children = (
+				2B9AC2AE2696F2DE00DC842D /* Resource */,
 				2B508D06268F053200444623 /* Utils */,
 				2B508D01268DBE2F00444623 /* ViewControllers */,
 				1203870B2688C65C00D9EDCA /* CameraSession */,
 				2B5072CD268C6C9500444623 /* CompileSession */,
 				2B508D05268EC7A600444623 /* PreviewSession */,
 				1248444B2687121A003C27DF /* Other */,
-				12484439268711C2003C27DF /* Main.storyboard */,
-				1248443C268711C2003C27DF /* Assets.xcassets */,
-				1248443E268711C2003C27DF /* LaunchScreen.storyboard */,
 			);
 			path = MMSession;
 			sourceTree = "<group>";
@@ -114,10 +134,9 @@
 		1248444B2687121A003C27DF /* Other */ = {
 			isa = PBXGroup;
 			children = (
-				1248444C2687121A003C27DF /* AppDelegate.h */,
-				124844502687121A003C27DF /* AppDelegate.m */,
-				124844532687121A003C27DF /* SceneDelegate.h */,
-				1248444E2687121A003C27DF /* SceneDelegate.m */,
+				2B9AC2BD2697F41000DC842D /* Podfile */,
+				1248443C268711C2003C27DF /* Assets.xcassets */,
+				1248443E268711C2003C27DF /* LaunchScreen.storyboard */,
 				1248444F2687121A003C27DF /* main.m */,
 				124844512687121A003C27DF /* Info.plist */,
 			);
@@ -138,8 +157,16 @@
 		2B508D01268DBE2F00444623 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				1248444C2687121A003C27DF /* AppDelegate.h */,
+				124844502687121A003C27DF /* AppDelegate.m */,
+				124844532687121A003C27DF /* SceneDelegate.h */,
+				1248444E2687121A003C27DF /* SceneDelegate.m */,
+				2B9AC2BA2697E36700DC842D /* MainViewController.h */,
+				2B9AC2BB2697E36700DC842D /* MainViewController.m */,
 				124844522687121A003C27DF /* CameraViewController.h */,
 				1248444D2687121A003C27DF /* CameraViewController.m */,
+				2B9AC2B52697E19500DC842D /* EditViewController.h */,
+				2B9AC2B62697E19500DC842D /* EditViewController.m */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -163,8 +190,37 @@
 			isa = PBXGroup;
 			children = (
 				2B508D07268F056D00444623 /* MMSessionProcessProtocol.h */,
+				2B9AC2AB2696E60000DC842D /* AVMutableComposition+Concat.h */,
+				2B9AC2AC2696E60000DC842D /* AVMutableComposition+Concat.m */,
 			);
 			path = Utils;
+			sourceTree = "<group>";
+		};
+		2B9AC2AE2696F2DE00DC842D /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				2B9AC2AF2696F3DE00DC842D /* test1.mp4 */,
+				2B9AC2B12696F3DE00DC842D /* test2.mp4 */,
+				2B9AC2B82697E27400DC842D /* test3.MP4 */,
+			);
+			path = Resource;
+			sourceTree = "<group>";
+		};
+		34D394AA114648695A754C7B /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				50FCC0F64CCC23C2867F1373 /* Pods-MMSession.debug.xcconfig */,
+				FFC1797B66E16F453B9EFA8D /* Pods-MMSession.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		B6567E6FFE91E358D1F50C04 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F065112A3C063051A029E7D1 /* Pods_MMSession.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -174,9 +230,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 12484446268711C2003C27DF /* Build configuration list for PBXNativeTarget "MMSession" */;
 			buildPhases = (
+				7979DD173BEAD13350E69782 /* [CP] Check Pods Manifest.lock */,
 				12484429268711C1003C27DF /* Sources */,
 				1248442A268711C1003C27DF /* Frameworks */,
 				1248442B268711C1003C27DF /* Resources */,
+				7DEC498F51FF8A5C07FD8811 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -225,13 +283,58 @@
 			files = (
 				2B0073992691511A006510A6 /* Shader.fsh in Resources */,
 				12484440268711C2003C27DF /* LaunchScreen.storyboard in Resources */,
+				2B9AC2BE2697F41000DC842D /* Podfile in Resources */,
 				1248443D268711C2003C27DF /* Assets.xcassets in Resources */,
-				1248443B268711C2003C27DF /* Main.storyboard in Resources */,
+				2B9AC2B92697E27400DC842D /* test3.MP4 in Resources */,
+				2B9AC2B42696F3DF00DC842D /* test2.mp4 in Resources */,
 				2B00739A2691511A006510A6 /* Shader.vsh in Resources */,
+				2B9AC2B22696F3DF00DC842D /* test1.mp4 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		7979DD173BEAD13350E69782 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MMSession-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7DEC498F51FF8A5C07FD8811 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MMSession/Pods-MMSession-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MMSession/Pods-MMSession-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MMSession/Pods-MMSession-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		12484429268711C1003C27DF /* Sources */ = {
@@ -240,12 +343,15 @@
 			files = (
 				2B00739D26915F01006510A6 /* VideoPreviewConfig.m in Sources */,
 				124844552687121A003C27DF /* SceneDelegate.m in Sources */,
+				2B9AC2BC2697E36700DC842D /* MainViewController.m in Sources */,
 				124844572687121A003C27DF /* AppDelegate.m in Sources */,
 				124844562687121A003C27DF /* main.m in Sources */,
+				2B9AC2AD2696E60000DC842D /* AVMutableComposition+Concat.m in Sources */,
 				1203870E2688C67D00D9EDCA /* CameraSession.m in Sources */,
 				124844542687121A003C27DF /* CameraViewController.m in Sources */,
 				2B50795D268C732200444623 /* CameraCompileWriterConfig.m in Sources */,
 				120387122688C77300D9EDCA /* CameraSessionConfig.m in Sources */,
+				2B9AC2B72697E19500DC842D /* EditViewController.m in Sources */,
 				2B508D04268EC21700444623 /* VideoGLPreview.m in Sources */,
 				1284DB56268B7EB1008692B8 /* VideoLayerPreview.m in Sources */,
 				2B5072D0268C6D0C00444623 /* CameraCompileWriter.m in Sources */,
@@ -255,14 +361,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		12484439268711C2003C27DF /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1248443A268711C2003C27DF /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		1248443E268711C2003C27DF /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -388,9 +486,11 @@
 		};
 		12484447268711C2003C27DF /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 50FCC0F64CCC23C2867F1373 /* Pods-MMSession.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4G7XDBY9J6;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -406,15 +506,18 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.yjx.MMSession;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
 		12484448268711C2003C27DF /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FFC1797B66E16F453B9EFA8D /* Pods-MMSession.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4G7XDBY9J6;
 				GCC_PREPROCESSOR_DEFINITIONS = "GLES_SILENCE_DEPRECATION=1";
@@ -426,6 +529,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.yjx.MMSession;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

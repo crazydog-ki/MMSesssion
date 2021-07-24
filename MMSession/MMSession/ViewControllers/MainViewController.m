@@ -1,36 +1,27 @@
-//
-//  MainTableViewController.m
-//  MMSession
-//
-//  Created by youjianxia on 7/9/21.
-//
+// Created by crazydog-ki
+// Email  : jxyou.ki@gmail.com
+// Github : https://github.com/crazydog-ki
 
 #import "MainViewController.h"
 #import "CameraViewController.h"
 #import "EditViewController.h"
 
-#define kRandom(r, g, b, a) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:(a)/255.0]
-#define kRandomColor kRandom(arc4random_uniform(256), arc4random_uniform(256), arc4random_uniform(256), arc4random_uniform(256))
-
 @interface MainViewController () <UITableViewDataSource, UITableViewDelegate>
-
 @property (nonatomic, strong) NSArray<NSString *> *data;
 @property (nonatomic, weak) UITableView *tableView;
-
 @end
 
 @implementation MainViewController
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"Main";
-    self.navigationController.navigationBar.barTintColor = UIColor.purpleColor;
+    self.title = @"Main Project";
     self.data = @[@"视频采集", @"视频编辑"];
     
-    CGFloat w = self.view.bounds.size.width;
-    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 44, w, w*16/9)];
+    UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
+    tableView.backgroundColor = UIColor.blackColor;
     tableView.scrollEnabled = NO;
     tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    tableView.tableFooterView.backgroundColor = UIColor.blackColor;
     [self.view addSubview:tableView];
     tableView.dataSource = self;
     tableView.delegate = self;
@@ -56,7 +47,7 @@
     cell.textLabel.text = self.data[indexPath.row];
     cell.textLabel.textAlignment = NSTextAlignmentCenter;
     cell.textLabel.font = [UIFont boldSystemFontOfSize:16];
-    cell.backgroundColor = kRandomColor;
+    cell.backgroundColor = kStyleColor;
     return cell;
 }
 
@@ -79,5 +70,4 @@
     [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault]];
     [self.navigationController.view.layer addAnimation:animation forKey:nil];
 }
-
 @end

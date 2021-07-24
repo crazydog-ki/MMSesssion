@@ -7,5 +7,7 @@ target 'MMSession' do
 
   # Pods for MMSession
   pod 'Masonry'
-
+  pod 'TZImagePickerController'
+  pod "TTGTagCollectionView"
+  
 end

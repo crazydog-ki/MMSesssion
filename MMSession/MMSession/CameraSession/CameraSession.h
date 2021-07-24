@@ -4,7 +4,6 @@
 
 #import <Foundation/Foundation.h>
 #import "CameraSessionConfig.h"
-#import <AVFoundation/AVFoundation.h>
 #import "VideoLayerPreview.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -18,6 +17,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)stopCapture;
 
 - (void)setVideoPreviewLayerForSession:(AVCaptureVideoPreviewLayer *)previewLayer;
+
+- (CGSize)videoSize;
+
+typedef void (^FirstFrameCallback)(void);
+@property (nonatomic, strong) FirstFrameCallback firstFrameBlk;
 
 typedef void(^VideoOutputCallback)(CMSampleBufferRef sampleBuffer);
 typedef void(^AudioOutputCallback)(CMSampleBufferRef sampleBuffer);

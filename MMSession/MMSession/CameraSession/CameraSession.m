@@ -17,12 +17,17 @@
 @property (nonatomic, strong) AVCaptureDevice *audioDevice;
 @property (nonatomic, strong) AVCaptureDeviceInput *audioDeviceInput;
 @property (nonatomic, strong) AVCaptureAudioDataOutput *audioOutput;
+
+@property (nonatomic, assign) CGSize videoSize;
+@property (nonatomic, assign) BOOL isFirstFrame;
 @end
 
 @implementation CameraSession
 
 - (instancetype)initWithConfig:(CameraSessionConfig *)config {
     if (self = [super init]) {
+        _videoSize = CGSizeZero;
+        _isFirstFrame = YES;
         [self _setupCaptureSession];
 
         [_captureSession beginConfiguration];
@@ -49,6 +54,10 @@
     dispatch_sync(_cameraQueue, ^{
         [previewLayer setSession:_captureSession];
     });
+}
+
+- (CGSize)videoSize {
+    return _videoSize;
 }
 
 #pragma mark - Private
@@ -111,6 +120,21 @@
 #pragma mark - AVCaptureVideoDataOutputSampleBufferDelegate
 
 - (void)captureOutput:(AVCaptureOutput *)output didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection {
+    if (_isFirstFrame && _firstFrameBlk && output == _videoOutput) {
+        if (CGSizeEqualToSize(_videoSize, CGSizeZero)) {
+            CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+            CGFloat w = CVPixelBufferGetWidth(pixelBuffer);
+            CGFloat h = CVPixelBufferGetHeight(pixelBuffer);
+            _videoSize = CGSizeMake(w, h);
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.firstFrameBlk();
+        });
+        
+        _isFirstFrame = NO;
+    }
+    
     if (output == _videoOutput && self.videoOutputCallback) {
         self.videoOutputCallback(sampleBuffer);
     } else if (output == _audioOutput && self.audioOutputCallback) {

@@ -1,9 +1,6 @@
-//
-//  MainTableViewController.h
-//  MMSession
-//
-//  Created by youjianxia on 7/9/21.
-//
+// Created by crazydog-ki
+// Email  : jxyou.ki@gmail.com
+// Github : https://github.com/crazydog-ki
 
 #import <UIKit/UIKit.h>
 

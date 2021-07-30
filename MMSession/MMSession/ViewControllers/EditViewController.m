@@ -8,6 +8,8 @@
 #import "MMAudioQueuePlayer.h"
 #import "MMAssetReader.h"
 
+static const NSUInteger kMaxSamplesCount = 8192;
+
 @interface EditViewController () <TZImagePickerControllerDelegate, TTGTextTagCollectionViewDelegate>
 {
     AudioBufferList *_bufferList;
@@ -23,10 +25,12 @@
 @property (nonatomic, strong) CADisplayLink *displayLink;
 
 @property (nonatomic, strong) MMAssetReader *assetReader;
+@property (nonatomic, assign) BOOL alreadyDecode;
 @property (nonatomic, strong) MMAudioQueuePlayer *audioPlayer;
 @property (nonatomic, strong) VideoGLPreview *glPreview;
-@property (nonatomic, strong) AVPlayer *player;
-@property (nonatomic, strong) AVPlayerItem *playerItem;
+
+@property (nonatomic, assign) double audioPts;
+@property (nonatomic, assign) double videoPts;
 @end
 
 @implementation EditViewController
@@ -35,9 +39,9 @@
     self.view.backgroundColor = UIColor.blackColor;
     self.navigationItem.title = @"Edit Module";
     
-    self.displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(_playVideo)];
-    [self.displayLink setPaused:YES];
-    [self.displayLink addToRunLoop:NSRunLoop.mainRunLoop forMode:NSRunLoopCommonModes];
+    _alreadyDecode = NO;
+    _audioPts = 0.0f;
+    _videoPts = 0.0f;
     
     self.videoAssets = [NSMutableArray array];
     self.imageDatas = [NSMutableArray array];
@@ -45,16 +49,18 @@
     [self _setupCollectionView];
 }
 
-- (void)dealloc {
-    if (self.player) {
-        [self.player pause];
-        self.player = nil;
-    }
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
     
     if (self.audioPlayer) {
-        [self.audioPlayer pause];
         [self.audioPlayer stop];
         self.audioPlayer = nil;
+    }
+    
+    if (self.displayLink) {
+        [self.displayLink setPaused:YES];
+        [self.displayLink invalidate];
+        self.displayLink = nil;
     }
 }
 
@@ -100,15 +106,6 @@
     
     TTGTextTag *allPlayTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"视频播放"] style:style];
     [tagCollectionView addTag:allPlayTag];
-    
-    TTGTextTag *decodeTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"视频解码"] style:style];
-    [tagCollectionView addTag:decodeTag];
-    
-    TTGTextTag *audioPlayTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"仅音频播放"] style:style];
-    [tagCollectionView addTag:audioPlayTag];
-    
-    TTGTextTag *videoPlayTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"仅视频播放"] style:style];
-    [tagCollectionView addTag:videoPlayTag];
 }
 
 - (AudioBufferList *)_createAudioBufferList:(AudioStreamBasicDescription)audioFormat
@@ -163,45 +160,88 @@
     self.composition = composition;
 }
 
-- (void)_startDecode {
-    if (!_assetReader) {
-        MMAssetReaderConfig *readerConfig = [[MMAssetReaderConfig alloc] init];
-        readerConfig.videoAsset = self.composition;
-        _assetReader = [[MMAssetReader alloc] initWithConfig:readerConfig];
+- (void)_play {
+    // 音视频解码
+    [self _startDecode];
+    
+    // 视频驱动
+    if (!self.displayLink) {
+        self.displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(_playVideo)];
+        [self.displayLink addToRunLoop:NSRunLoop.mainRunLoop forMode:NSRunLoopCommonModes];
+        [self.displayLink setPaused:NO];
     }
     
-    [_assetReader startReading];
+    // 音频驱动
+    [self _playAudio];
 }
 
-- (void)_playAll {
-    [self _setupPreview];
-    if (!self.player) {
-        self.playerItem = [AVPlayerItem playerItemWithAsset:self.composition];
-        self.player = [AVPlayer playerWithPlayerItem:self.playerItem];
-        AVPlayerLayer *playLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
-        playLayer.frame = self.glPreview.bounds;
-        [self.glPreview.layer addSublayer:playLayer];
+- (void)_playVideo {
+    while (self.audioPts <= self.videoPts) {
+        sleep(0.0001);
+        if (!self.alreadyDecode) break;
     }
     
-    [self.player play];
+    if (self.assetReader) {
+        [self _setupPreview];
+        
+        MMSampleData *videoData = [self.assetReader pullSampleBuffer:MMSampleDataTypeVideo];
+        if (videoData.flag == MMSampleDataFlagEnd) {
+            [self.displayLink setPaused:YES];
+            NSLog(@"[yjx] pull video buffer end");
+            return;
+        }
+        CMSampleBufferRef videoBuffer = videoData.sampleBuffer;
+        self.videoPts = CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(videoBuffer));
+        NSLog(@"[yjx] pull video buffer, pts: %lf", self.videoPts);
+        
+        if (self.glPreview) {
+            [self.glPreview processVideoBuffer:videoBuffer];
+        }
+        if (videoBuffer) {
+            CFRelease(videoBuffer);
+            videoBuffer = nil;
+        }
+    }
 }
 
 - (void)_playAudio {
-    MMAudioQueuePlayerConfig *playerConfig = [[MMAudioQueuePlayerConfig alloc] init];
-    MMAudioQueuePlayer *audioPlayer = [[MMAudioQueuePlayer alloc] initWithConfig:playerConfig];
-    self.audioPlayer = audioPlayer;
+    if (!self.audioPlayer) {
+        MMAudioQueuePlayerConfig *playerConfig = [[MMAudioQueuePlayerConfig alloc] init];
+        MMAudioQueuePlayer *audioPlayer = [[MMAudioQueuePlayer alloc] initWithConfig:playerConfig];
+        self.audioPlayer = audioPlayer;
+    } else {
+        NSLog(@"[yjx] audio is playing now, can not interrupt");
+        return;
+    }
     
     weakify(self);
-    _bufferList = [self _createAudioBufferList:self.audioPlayer.asbd numberFrames:1024];
+    _bufferList = [self _createAudioBufferList:self.audioPlayer.asbd numberFrames:kMaxSamplesCount];
     self.audioPlayer.pullDataBlk = ^(AudioBufferBlock  _Nonnull block) {
         strongify(self);
-        CMSampleBufferRef sampleBuffer = [self.assetReader pullSampleBuffer:MMSampleDataTypeAudio].sampleBuffer;
-        if (!sampleBuffer) {
+        MMSampleData *sampleData = [self.assetReader pullSampleBuffer:MMSampleDataTypeAudio];
+        if (sampleData.flag == MMSampleDataFlagEnd) {
+            NSLog(@"[yjx] pull audio buffer end");
+            self.assetReader = nil;
+            
+            self.alreadyDecode = NO;
+            self.audioPts = 0.0f;
+            self.videoPts = 0.0f;
+            
+            [self.displayLink removeFromRunLoop:NSRunLoop.mainRunLoop forMode:NSRunLoopCommonModes];
+            [self.displayLink setPaused:YES];
+            [self.displayLink invalidate];
+            self.displayLink = nil;
+            
             [self.audioPlayer stop];
+            self.audioPlayer = nil;
             return;
         }
+        CMSampleBufferRef sampleBuffer = sampleData.sampleBuffer;
         
-        NSLog(@"[yjx] audio player pull data, pts: %lf", CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(sampleBuffer)));
+        NSUInteger samplesCount = (long)CMSampleBufferGetNumSamples(sampleBuffer);
+        self.audioPts = CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(sampleBuffer));
+    
+        NSLog(@"[yjx] pull audio buffer, samples: %ld, pts: %lf", samplesCount, self.audioPts);
         
         if (sampleBuffer) {
             UInt32 samples = (UInt32)CMSampleBufferGetNumSamples(sampleBuffer);
@@ -232,23 +272,18 @@
     [self.audioPlayer play];
 }
 
-- (void)_playVideo {
-    if (self.assetReader) {
-        [self _setupPreview];
-        
-        MMSampleData *videoData = [self.assetReader pullSampleBuffer:MMSampleDataTypeVideo];
-        if (videoData.flag == MMSampleDataFlagEnd) {
-            [self.displayLink setPaused:YES];
-            NSLog(@"[yjx] pull video buffer end");
-            return;
-        }
-        CMSampleBufferRef videoBuffer = videoData.sampleBuffer;
-        NSLog(@"[yjx] pull video buffer, pts: %lf", CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(videoBuffer)));
-        
-        if (self.glPreview) {
-            [self.glPreview processVideoBuffer:videoBuffer];
-        }
+- (void)_startDecode {
+    if (_alreadyDecode || _assetReader) {
+        NSLog(@"[yjx] reader is not available now");
+        return;
     }
+    
+    MMAssetReaderConfig *readerConfig = [[MMAssetReaderConfig alloc] init];
+    readerConfig.videoAsset = self.composition;
+    _assetReader = [[MMAssetReader alloc] initWithConfig:readerConfig];
+
+    [self.assetReader startReading];
+    _alreadyDecode = YES;
 }
 
 #pragma mark - TZImagePickerControllerDelegate
@@ -293,14 +328,7 @@
     } else if ([content.text isEqualToString:@"视频拼接"]) {
         [self _startConcat];
     } else if ([content.text isEqualToString:@"视频播放"]) {
-        [self _playAll];
-    } else if ([content.text isEqualToString:@"视频解码"]) {
-        [self _startDecode];
-    } else if ([content.text isEqualToString:@"仅音频播放"]) {
-        [self _playAudio];
-    } else if ([content.text isEqualToString:@"仅视频播放"]) {
-        [self.displayLink setPaused:NO];
-        // [self _playVideo];
+        [self _play];
     }
     return;
 }

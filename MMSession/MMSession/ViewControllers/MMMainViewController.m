@@ -15,12 +15,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"MMSession";
-    self.data = @[@"相机",
+    self.data = @[@"Camera",
                   @"AVFD",
                   @"AVTB",
                   @"FFmpeg",
-                  @"音视频多轨",
-                  @"音视频特效"];
+                  @"AV-Multi",
+                  @"AV-Filter"];
     
     UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
     tableView.backgroundColor = UIColor.blackColor;
@@ -59,7 +59,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [self _transAnimation];
     
-    if ([self.data[indexPath.row] isEqualToString:@"相机"]) {
+    if ([self.data[indexPath.row] isEqualToString:@"Camera"]) {
         [self.navigationController pushViewController:[[MMCameraViewController alloc] init] animated:NO];
     } else if ([self.data[indexPath.row] isEqualToString:@"AVFD"])  {
         [self.navigationController pushViewController:[[MMAVFDViewController alloc] init] animated:NO];

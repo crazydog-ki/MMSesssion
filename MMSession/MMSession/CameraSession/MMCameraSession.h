@@ -16,6 +16,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)stopCapture;
 
+- (void)switchPosition;
+- (void)switchPosition:(AVCaptureDevicePosition)position;
+
+- (void)tapFocusAtPoint:(CGPoint)point mode:(AVCaptureFocusMode)mode;
+- (void)exposureAtPoint:(CGPoint)point mode:(AVCaptureExposureMode)mode;
+
 - (void)setVideoPreviewLayerForSession:(AVCaptureVideoPreviewLayer *)previewLayer;
 
 - (CGSize)videoSize;

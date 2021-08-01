@@ -14,15 +14,13 @@
 @implementation MMMainViewController
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"Main Project";
-    self.data = @[@"Camera",
-                  @"AVFoundation",
-                  @"ToolBox",
+    self.title = @"MMSession";
+    self.data = @[@"相机",
+                  @"AVFD",
+                  @"AVTB",
                   @"FFmpeg",
-                  @"Multi-Video",
-                  @"Multi-Audio",
-                  @"Video Filter",
-                  @"Audio Filter"];
+                  @"音视频多轨",
+                  @"音视频特效"];
     
     UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
     tableView.backgroundColor = UIColor.blackColor;
@@ -61,9 +59,9 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [self _transAnimation];
     
-    if ([self.data[indexPath.row] isEqualToString:@"Camera"]) {
+    if ([self.data[indexPath.row] isEqualToString:@"相机"]) {
         [self.navigationController pushViewController:[[MMCameraViewController alloc] init] animated:NO];
-    } else if ([self.data[indexPath.row] isEqualToString:@"AVFoundation"])  {
+    } else if ([self.data[indexPath.row] isEqualToString:@"AVFD"])  {
         [self.navigationController pushViewController:[[MMAVFDViewController alloc] init] animated:NO];
     }
 }

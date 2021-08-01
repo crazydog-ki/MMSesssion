@@ -37,7 +37,7 @@ static const NSUInteger kMaxSamplesCount = 8192;
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = UIColor.blackColor;
-    self.navigationItem.title = @"Edit Module";
+    self.navigationItem.title = @"AVFD Module";
     
     _alreadyDecode = NO;
     _audioPts = 0.0f;

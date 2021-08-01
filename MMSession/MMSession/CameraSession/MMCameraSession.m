@@ -50,6 +50,75 @@
     });
 }
 
+- (void)switchPosition {
+    AVCaptureDevicePosition pos = self.videoDevice.position;
+    if (pos == AVCaptureDevicePositionFront) {
+        [self switchPosition:AVCaptureDevicePositionBack];
+    } else {
+        [self switchPosition:AVCaptureDevicePositionFront];
+    }
+}
+
+- (void)switchPosition:(AVCaptureDevicePosition)position {
+    dispatch_sync(_cameraQueue, ^{
+        [_captureSession beginConfiguration];
+        [_captureSession removeInput:_videoDeviceInput];
+        _videoDevice = [AVCaptureDevice defaultDeviceWithDeviceType:AVCaptureDeviceTypeBuiltInWideAngleCamera mediaType:AVMediaTypeVideo position:position];
+        NSError *error;
+        _videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:_videoDevice error:&error];
+        if ([_captureSession canAddInput:_videoDeviceInput]) {
+            [_captureSession addInput:_videoDeviceInput];
+        }
+        
+        // 竖屏
+        AVCaptureConnection *videoConnection = [_videoOutput connectionWithMediaType:AVMediaTypeVideo];
+        if ([videoConnection isVideoOrientationSupported]) {
+            [videoConnection setVideoOrientation:AVCaptureVideoOrientationPortrait];
+        }
+        
+        // 处理前置摄像头镜像
+        if (position == AVCaptureDevicePositionFront) {
+            if ([videoConnection isVideoMirroringSupported]) {
+                [videoConnection setVideoMirrored:YES];
+            }
+        }
+        [_captureSession commitConfiguration];
+    });
+}
+
+- (void)tapFocusAtPoint:(CGPoint)point mode:(AVCaptureFocusMode)mode {
+    dispatch_sync(_cameraQueue, ^{
+        if (![_videoDevice isFocusPointOfInterestSupported] ||
+            ![_videoDevice isFocusModeSupported:mode]) {
+            return;
+        }
+        
+        NSError *error;
+        [_videoDevice lockForConfiguration:&error];
+        [_videoDevice setFocusPointOfInterest:point];
+        [_videoDevice setFocusMode:mode];
+        [_videoDevice unlockForConfiguration];
+        NSLog(@"[yjx] set camera focus success, point: [%lf, %lf], mode: %ld", point.x, point.y, mode);
+    });
+}
+
+- (void)exposureAtPoint:(CGPoint)point mode:(AVCaptureExposureMode)mode {
+    dispatch_sync(_cameraQueue, ^{
+        if (![_videoDevice isExposurePointOfInterestSupported] ||
+            ![_videoDevice isExposureModeSupported:mode]) {
+            return;
+        }
+        
+        NSError *error;
+        [_videoDevice lockForConfiguration:&error];
+        [_videoDevice setExposurePointOfInterest:point];
+        [_videoDevice setExposureMode:mode];
+        [_videoDevice unlockForConfiguration];
+        NSLog(@"[yjx] set camera focus success, point: [%lf, %lf], mode: %ld", point.x, point.y, mode);
+        
+    });
+}
+
 - (void)setVideoPreviewLayerForSession:(AVCaptureVideoPreviewLayer *)previewLayer {
     dispatch_sync(_cameraQueue, ^{
         [previewLayer setSession:_captureSession];
@@ -126,6 +195,7 @@
             CGFloat w = CVPixelBufferGetWidth(pixelBuffer);
             CGFloat h = CVPixelBufferGetHeight(pixelBuffer);
             _videoSize = CGSizeMake(w, h);
+            NSLog(@"[yjx] camera capture video size: [%lf, %lf]", w, h);
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{

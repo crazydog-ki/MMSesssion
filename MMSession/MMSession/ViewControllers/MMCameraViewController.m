@@ -131,6 +131,15 @@
     
     TTGTextTag *playVideoTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"停止录制"] style:style];
     [tagCollectionView addTag:playVideoTag];
+    
+    TTGTextTag *switchPositionTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"切换摄像头"] style:style];
+    [tagCollectionView addTag:switchPositionTag];
+    
+    TTGTextTag *focusTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"中心点对焦"] style:style];
+    [tagCollectionView addTag:focusTag];
+    
+    TTGTextTag *exposureTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"中心点曝光"] style:style];
+    [tagCollectionView addTag:exposureTag];
 }
 
 - (void)_startPreview {
@@ -155,19 +164,38 @@
     }];
 }
 
+- (void)_switchCamera {
+    [self.camera switchPosition];
+}
+
+- (void)_focusAtCenter {
+    [self.camera tapFocusAtPoint:CGPointMake(0.5f, 0.5f) mode:AVCaptureFocusModeContinuousAutoFocus];
+}
+
+- (void)_exposeAtCenter {
+    [self.camera exposureAtPoint:CGPointMake(0.5f, 0.5f) mode:AVCaptureExposureModeContinuousAutoExposure];
+}
+
 #pragma mark - TTGTextTagCollectionViewDelegate
 - (void)textTagCollectionView:(TTGTextTagCollectionView *)textTagCollectionView
                     didTapTag:(TTGTextTag *)tag
                       atIndex:(NSUInteger)index {
     TTGTextTagStringContent *content = (TTGTextTagStringContent *)tag.content;
-    if ([content.text isEqualToString:@"开始预览"]) {
+    NSString *text = content.text;
+    if ([text isEqualToString:@"开始预览"]) {
         [self _startPreview];
-    } else if ([content.text isEqualToString:@"停止预览"]) {
+    } else if ([text isEqualToString:@"停止预览"]) {
         [self _stopPreview];
-    } else if ([content.text isEqualToString:@"开始录制"]) {
+    } else if ([text isEqualToString:@"开始录制"]) {
         [self _startRecord];
-    } else if ([content.text isEqualToString:@"停止录制"]) {
+    } else if ([text isEqualToString:@"停止录制"]) {
         [self _finishRecord];
+    } else if ([text isEqualToString:@"切换摄像头"]) {
+        [self _switchCamera];
+    } else if ([text isEqualToString:@"中心点对焦"]) {
+        [self _focusAtCenter];
+    } else if ([text isEqualToString:@"中心点曝光"]) {
+        [self _exposeAtCenter];
     }
     return;
 }

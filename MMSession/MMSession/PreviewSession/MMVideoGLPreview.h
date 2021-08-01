@@ -4,13 +4,13 @@
 
 #import <UIKit/UIKit.h>
 #import "MMSessionProcessProtocol.h"
-#import "VideoPreviewConfig.h"
+#import "MMVideoPreviewConfig.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface VideoGLPreview : UIView<MMSessionProcessProtocol>
+@interface MMVideoGLPreview : UIView<MMSessionProcessProtocol>
 
-@property (nonatomic, strong) VideoPreviewConfig *config;
+@property (nonatomic, strong) MMVideoPreviewConfig *config;
 
 - (void)setupGLEnv;
 

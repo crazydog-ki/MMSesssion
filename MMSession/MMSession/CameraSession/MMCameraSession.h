@@ -3,14 +3,14 @@
 // Github : https://github.com/crazydog-ki
 
 #import <Foundation/Foundation.h>
-#import "CameraSessionConfig.h"
-#import "VideoLayerPreview.h"
+#import "MMCameraSessionConfig.h"
+#import "MMVideoLayerPreview.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CameraSession : NSObject
+@interface MMCameraSession : NSObject
 
-- (instancetype)initWithConfig:(CameraSessionConfig *)config;
+- (instancetype)initWithConfig:(MMCameraSessionConfig *)config;
 
 - (void)startCapture;
 

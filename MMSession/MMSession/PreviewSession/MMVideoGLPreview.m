@@ -2,7 +2,7 @@
 // Email  : jxyou.ki@gmail.com
 // Github : https://github.com/crazydog-ki
 
-#import "VideoGLPreview.h"
+#import "MMVideoGLPreview.h"
 #import <OpenGLES/ES2/gl.h>
 #import <OpenGLES/ES2/glext.h>
 
@@ -34,7 +34,7 @@ static const GLfloat kColorConversion709[] = {
     1.793, -0.533, 0.0,
 };
 
-@interface VideoGLPreview () {
+@interface MMVideoGLPreview () {
     const GLfloat *_preferredConversion;
 }
 @property (nonatomic) CAEAGLLayer *rendLayer;
@@ -49,7 +49,7 @@ static const GLfloat kColorConversion709[] = {
 @property (nonatomic) CVOpenGLESTextureRef rgbaTexture;
 @end
 
-@implementation VideoGLPreview
+@implementation MMVideoGLPreview
 
 + (Class)layerClass {
     return [CAEAGLLayer class];

@@ -12,16 +12,13 @@
 
 static const CGFloat kNavBarHeight = 88.0f;
 
-#define kColor(r, g, b, a) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:(a)/255.0]
-#define kRandomColor kColor(arc4random_uniform(256), arc4random_uniform(256), arc4random_uniform(256), arc4random_uniform(256))
-#define kStyleColor kColor(255.0f, 215.0f, 0.0f, 255.0f)
+#define kColor(r, g, b, a) [UIColor colorWithRed:(r)/255.0f green:(g)/255.0f blue:(b)/255.0f alpha:(a)]
+#define kMMColor kColor(255.0f, 215.0f, 0.0f, 1.0f)
 
 #define weakify(var) __weak typeof(var) weak_##var = var;
-
 #define strongify(var) \
 _Pragma("clang diagnostic push") \
 _Pragma("clang diagnostic ignored \"-Wshadow\"") \
 __strong typeof(var) var = weak_##var; \
 _Pragma("clang diagnostic pop")
-
 #endif /* MMPrefixHeader_pch */

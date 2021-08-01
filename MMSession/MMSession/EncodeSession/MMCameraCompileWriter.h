@@ -4,15 +4,15 @@
 
 #import <Foundation/Foundation.h>
 #import "MMSessionProcessProtocol.h"
-#import "CameraCompileWriterConfig.h"
+#import "MMCameraCompileWriterConfig.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CameraCompileWriter : NSObject<MMSessionProcessProtocol>
+@interface MMCameraCompileWriter : NSObject<MMSessionProcessProtocol>
 
 typedef void (^CompleteHandle)(NSURL *_Nullable fileUrl, NSError *_Nullable error);
 
-- (instancetype)initWithConfig:(CameraCompileWriterConfig *)config;
+- (instancetype)initWithConfig:(MMCameraCompileWriterConfig *)config;
 
 - (void)startRecord;
 

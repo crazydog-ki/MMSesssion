@@ -2,11 +2,12 @@
 // Email  : jxyou.ki@gmail.com
 // Github : https://github.com/crazydog-ki
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface EditViewController : UIViewController
+@interface MMCameraSessionConfig : NSObject
+
 @end
 
 NS_ASSUME_NONNULL_END

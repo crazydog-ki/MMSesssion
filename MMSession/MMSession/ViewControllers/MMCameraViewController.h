@@ -2,8 +2,8 @@
 // Email  : jxyou.ki@gmail.com
 // Github : https://github.com/crazydog-ki
 
-#import "CameraSessionConfig.h"
+#import <UIKit/UIKit.h>
 
-@implementation CameraSessionConfig
-
+@interface MMCameraViewController : UIViewController
 @end
+

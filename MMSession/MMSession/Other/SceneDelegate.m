@@ -3,7 +3,7 @@
 // Github : https://github.com/crazydog-ki
 
 #import "SceneDelegate.h"
-#import "MainViewController.h"
+#import "MMMainViewController.h"
 
 @interface SceneDelegate ()
 @end
@@ -12,11 +12,11 @@
 - (void)scene:(UIScene *)scene willConnectToSession:(UISceneSession *)session options:(UISceneConnectionOptions *)connectionOptions {
     self.window = [[UIWindow alloc] initWithWindowScene:(UIWindowScene *)scene];
     self.window.backgroundColor = UIColor.whiteColor;
-    UINavigationController *mainNavController = [[UINavigationController alloc] initWithRootViewController:[[MainViewController alloc] init]];
+    UINavigationController *mainNavController = [[UINavigationController alloc] initWithRootViewController:[[MMMainViewController alloc] init]];
     mainNavController.navigationBar.opaque = YES;
-    mainNavController.navigationBar.tintColor = kStyleColor;
-    mainNavController.navigationBar.barTintColor = kStyleColor;
-    mainNavController.navigationBar.backgroundColor = kStyleColor;
+    mainNavController.navigationBar.tintColor = kMMColor;
+    mainNavController.navigationBar.barTintColor = kMMColor;
+    mainNavController.navigationBar.backgroundColor = kMMColor;
     mainNavController.navigationBar.alpha = 1.0f;
     self.window.rootViewController = mainNavController;
     [self.window makeKeyAndVisible];

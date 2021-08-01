@@ -2,11 +2,11 @@
 // Email  : jxyou.ki@gmail.com
 // Github : https://github.com/crazydog-ki
 
-#import "CameraCompileWriter.h"
+#import "MMCameraCompileWriter.h"
 
-@interface CameraCompileWriter ()
+@interface MMCameraCompileWriter ()
 
-@property (nonatomic, strong) CameraCompileWriterConfig *config;
+@property (nonatomic, strong) MMCameraCompileWriterConfig *config;
 @property (nonatomic, strong) dispatch_queue_t writerQueue;
 @property (nonatomic, strong) AVAssetWriter *assetWriter;
 
@@ -20,9 +20,9 @@
 
 @end
 
-@implementation CameraCompileWriter
+@implementation MMCameraCompileWriter
 
-- (instancetype)initWithConfig:(CameraCompileWriterConfig *)config {
+- (instancetype)initWithConfig:(MMCameraCompileWriterConfig *)config {
     if (self = [super init]) {
         _config = config;
         _writerQueue = dispatch_queue_create("mmsession_camera_compile_queue", DISPATCH_QUEUE_SERIAL);

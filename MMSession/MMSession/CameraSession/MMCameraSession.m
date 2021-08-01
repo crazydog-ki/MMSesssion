@@ -2,9 +2,9 @@
 // Email  : jxyou.ki@gmail.com
 // Github : https://github.com/crazydog-ki
 
-#import "CameraSession.h"
+#import "MMCameraSession.h"
 
-@interface CameraSession ()<AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate>
+@interface MMCameraSession ()<AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate>
 @property (nonatomic, strong) dispatch_queue_t cameraQueue;
 @property (nonatomic, strong) AVCaptureSession *captureSession;
 
@@ -22,9 +22,9 @@
 @property (nonatomic, assign) BOOL isFirstFrame;
 @end
 
-@implementation CameraSession
+@implementation MMCameraSession
 
-- (instancetype)initWithConfig:(CameraSessionConfig *)config {
+- (instancetype)initWithConfig:(MMCameraSessionConfig *)config {
     if (self = [super init]) {
         _videoSize = CGSizeZero;
         _isFirstFrame = YES;

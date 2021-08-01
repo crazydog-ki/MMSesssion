@@ -2,8 +2,8 @@
 // Email  : jxyou.ki@gmail.com
 // Github : https://github.com/crazydog-ki
 
-#import "VideoPreviewConfig.h"
+#import "MMCameraCompileWriterConfig.h"
 
-@implementation VideoPreviewConfig
+@implementation MMCameraCompileWriterConfig
 
 @end

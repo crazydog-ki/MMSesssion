@@ -2,16 +2,16 @@
 // Email  : jxyou.ki@gmail.com
 // Github : https://github.com/crazydog-ki
 
-#import "MainViewController.h"
-#import "CameraViewController.h"
-#import "EditViewController.h"
+#import "MMMainViewController.h"
+#import "MMCameraViewController.h"
+#import "MMAVFDViewController.h"
 
-@interface MainViewController () <UITableViewDataSource, UITableViewDelegate>
+@interface MMMainViewController () <UITableViewDataSource, UITableViewDelegate>
 @property (nonatomic, strong) NSArray<NSString *> *data;
 @property (nonatomic, weak) UITableView *tableView;
 @end
 
-@implementation MainViewController
+@implementation MMMainViewController
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"Main Project";
@@ -54,7 +54,7 @@
     cell.textLabel.text = self.data[indexPath.row];
     cell.textLabel.textAlignment = NSTextAlignmentCenter;
     cell.textLabel.font = [UIFont boldSystemFontOfSize:16];
-    cell.backgroundColor = kStyleColor;
+    cell.backgroundColor = kMMColor;
     return cell;
 }
 
@@ -62,9 +62,9 @@
     [self _transAnimation];
     
     if ([self.data[indexPath.row] isEqualToString:@"Camera"]) {
-        [self.navigationController pushViewController:[[CameraViewController alloc] init] animated:NO];
+        [self.navigationController pushViewController:[[MMCameraViewController alloc] init] animated:NO];
     } else if ([self.data[indexPath.row] isEqualToString:@"AVFoundation"])  {
-        [self.navigationController pushViewController:[[EditViewController alloc] init] animated:NO];
+        [self.navigationController pushViewController:[[MMAVFDViewController alloc] init] animated:NO];
     }
 }
 

@@ -2,15 +2,15 @@
 // Email  : jxyou.ki@gmail.com
 // Github : https://github.com/crazydog-ki
 
-#import "EditViewController.h"
+#import "MMAVFDViewController.h"
 #import "AVMutableComposition+Concat.h"
-#import "VideoGLPreview.h"
+#import "MMVideoGLPreview.h"
 #import "MMAudioQueuePlayer.h"
 #import "MMAssetReader.h"
 
 static const NSUInteger kMaxSamplesCount = 8192;
 
-@interface EditViewController () <TZImagePickerControllerDelegate, TTGTextTagCollectionViewDelegate>
+@interface MMAVFDViewController () <TZImagePickerControllerDelegate, TTGTextTagCollectionViewDelegate>
 {
     AudioBufferList *_bufferList;
 }
@@ -27,13 +27,13 @@ static const NSUInteger kMaxSamplesCount = 8192;
 @property (nonatomic, strong) MMAssetReader *assetReader;
 @property (nonatomic, assign) BOOL alreadyDecode;
 @property (nonatomic, strong) MMAudioQueuePlayer *audioPlayer;
-@property (nonatomic, strong) VideoGLPreview *glPreview;
+@property (nonatomic, strong) MMVideoGLPreview *glPreview;
 
 @property (nonatomic, assign) double audioPts;
 @property (nonatomic, assign) double videoPts;
 @end
 
-@implementation EditViewController
+@implementation MMAVFDViewController
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = UIColor.blackColor;
@@ -69,12 +69,12 @@ static const NSUInteger kMaxSamplesCount = 8192;
     if (self.glPreview) return;
     
     CGFloat w = self.view.bounds.size.width;
-    VideoGLPreview *glPreview = [[VideoGLPreview alloc] initWithFrame:CGRectMake(0, kNavBarHeight, w, w*self.videoRatio)];
+    MMVideoGLPreview *glPreview = [[MMVideoGLPreview alloc] initWithFrame:CGRectMake(0, kNavBarHeight, w, w*self.videoRatio)];
     glPreview.backgroundColor = UIColor.blackColor;
     [self.view insertSubview:glPreview atIndex:0];
     self.glPreview = glPreview;
     
-    VideoPreviewConfig *config = [[VideoPreviewConfig alloc] init];
+    MMVideoPreviewConfig *config = [[MMVideoPreviewConfig alloc] init];
     config.renderYUV = YES;
     config.presentRect = CGRectMake(0, 0, w, w*self.videoRatio);
     self.glPreview.config = config;
@@ -93,7 +93,7 @@ static const NSUInteger kMaxSamplesCount = 8192;
     }];
     
     TTGTextTagStyle *style = [TTGTextTagStyle new];
-    style.backgroundColor = kStyleColor;
+    style.backgroundColor = kMMColor;
     style.exactWidth = 75.0f;
     style.exactHeight = 37.5f;
     style.cornerRadius = 0.0f;

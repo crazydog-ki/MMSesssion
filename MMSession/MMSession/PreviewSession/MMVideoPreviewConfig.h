@@ -6,7 +6,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface VideoPreviewConfig : NSObject
+@interface MMVideoPreviewConfig : NSObject
 
 @property (nonatomic, assign) BOOL renderYUV;
 @property (nonatomic, assign) CGFloat rotation;

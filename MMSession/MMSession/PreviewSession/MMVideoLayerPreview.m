@@ -2,9 +2,9 @@
 // Email  : jxyou.ki@gmail.com
 // Github : https://github.com/crazydog-ki
 
-#import "VideoLayerPreview.h"
+#import "MMVideoLayerPreview.h"
 
-@implementation VideoLayerPreview
+@implementation MMVideoLayerPreview
 
 + (Class)layerClass {
     return [AVCaptureVideoPreviewLayer class];

@@ -2,23 +2,23 @@
 // Email  : jxyou.ki@gmail.com
 // Github : https://github.com/crazydog-ki
 
-#import "CameraViewController.h"
-#import "CameraSession.h"
-#import "VideoLayerPreview.h"
-#import "VideoGLPreview.h"
-#import "CameraCompileWriter.h"
+#import "MMCameraViewController.h"
+#import "MMCameraSession.h"
+#import "MMVideoLayerPreview.h"
+#import "MMVideoGLPreview.h"
+#import "MMCameraCompileWriter.h"
 #import <Masonry/Masonry.h>
 
-@interface CameraViewController () <TTGTextTagCollectionViewDelegate>
+@interface MMCameraViewController () <TTGTextTagCollectionViewDelegate>
 @property (nonatomic, strong) TTGTextTagCollectionView *collectionView;
 
-@property (nonatomic, strong) CameraSession *camera;
-@property (nonatomic, strong) VideoLayerPreview *layerPreview;
-@property (nonatomic, strong) VideoGLPreview *glPreview;
-@property (nonatomic, strong) CameraCompileWriter *writer;
+@property (nonatomic, strong) MMCameraSession *camera;
+@property (nonatomic, strong) MMVideoLayerPreview *layerPreview;
+@property (nonatomic, strong) MMVideoGLPreview *glPreview;
+@property (nonatomic, strong) MMCameraCompileWriter *writer;
 @end
 
-@implementation CameraViewController
+@implementation MMCameraViewController
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationItem.title = @"Camera Module";
@@ -52,20 +52,20 @@
 
 #pragma mark - Private
 - (void)_setupCamera {
-    CameraSessionConfig *cameraConfig = [[CameraSessionConfig alloc] init];
-    self.camera = [[CameraSession alloc] initWithConfig:cameraConfig];
+    MMCameraSessionConfig *cameraConfig = [[MMCameraSessionConfig alloc] init];
+    self.camera = [[MMCameraSession alloc] initWithConfig:cameraConfig];
     // [self.camera setVideoPreviewLayerForSession:self.layerPreview.videoPreviewLayer];
 }
 
 - (void)_setupPreview {
     CGFloat w = self.view.bounds.size.width;
     CGFloat videoRatio = self.camera.videoSize.height / self.camera.videoSize.width;
-    VideoGLPreview *glPreview = [[VideoGLPreview alloc] initWithFrame:CGRectMake(0, kNavBarHeight, w, w*videoRatio)];
+    MMVideoGLPreview *glPreview = [[MMVideoGLPreview alloc] initWithFrame:CGRectMake(0, kNavBarHeight, w, w*videoRatio)];
     glPreview.backgroundColor = UIColor.blackColor;
     [self.view insertSubview:glPreview atIndex:0];
     self.glPreview = glPreview;
     
-    VideoPreviewConfig *config = [[VideoPreviewConfig alloc] init];
+    MMVideoPreviewConfig *config = [[MMVideoPreviewConfig alloc] init];
     config.renderYUV = YES;
     // config.rotation = 180;
     config.presentRect = CGRectMake(0, 0, w, w*videoRatio);
@@ -81,7 +81,7 @@
         [[NSFileManager defaultManager] removeItemAtPath:outputPath error:nil];
     }
 
-    CameraCompileWriterConfig *compileConfig = [[CameraCompileWriterConfig alloc] init];
+    MMCameraCompileWriterConfig *compileConfig = [[MMCameraCompileWriterConfig alloc] init];
     compileConfig.outputUrl = [NSURL fileURLWithPath:outputPath];
     compileConfig.videoSetttings = @{
         AVVideoCodecKey : AVVideoCodecTypeH264,
@@ -98,7 +98,7 @@
               AVSampleRateKey: @(44100),
         AVNumberOfChannelsKey: @(2)
     };
-    self.writer = [[CameraCompileWriter alloc] initWithConfig:compileConfig];
+    self.writer = [[MMCameraCompileWriter alloc] initWithConfig:compileConfig];
 }
 
 #pragma mark - Action
@@ -114,7 +114,7 @@
     }];
     
     TTGTextTagStyle *style = [TTGTextTagStyle new];
-    style.backgroundColor = kStyleColor;
+    style.backgroundColor = kMMColor;
     style.exactWidth = 75.0f;
     style.exactHeight = 37.5f;
     style.cornerRadius = 0.0f;

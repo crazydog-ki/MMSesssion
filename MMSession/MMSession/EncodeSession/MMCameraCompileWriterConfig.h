@@ -6,7 +6,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CameraCompileWriterConfig : NSObject
+@interface MMCameraCompileWriterConfig : NSObject
 
 @property (nonatomic, strong) NSURL *outputUrl;
 @property (nonatomic, strong) NSDictionary *videoSetttings;

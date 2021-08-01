@@ -17,6 +17,7 @@
 		124844572687121A003C27DF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 124844502687121A003C27DF /* AppDelegate.m */; };
 		1253B6AC26ABCF4600D7A22C /* UIControl+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 1253B6AB26ABCF4600D7A22C /* UIControl+Extension.m */; };
 		1284DB56268B7EB1008692B8 /* VideoLayerPreview.m in Sources */ = {isa = PBXBuildFile; fileRef = 1284DB55268B7EB1008692B8 /* VideoLayerPreview.m */; };
+		12DA794726B6442900099142 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 12DA794626B6442900099142 /* README.md */; };
 		2B0073992691511A006510A6 /* Shader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 2B0073952691511A006510A6 /* Shader.fsh */; };
 		2B00739A2691511A006510A6 /* Shader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 2B0073972691511A006510A6 /* Shader.vsh */; };
 		2B00739D26915F01006510A6 /* VideoPreviewConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B00739C26915F01006510A6 /* VideoPreviewConfig.m */; };
@@ -56,6 +57,7 @@
 		1253B6AB26ABCF4600D7A22C /* UIControl+Extension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIControl+Extension.m"; sourceTree = "<group>"; };
 		1284DB54268B7EB1008692B8 /* VideoLayerPreview.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoLayerPreview.h; sourceTree = "<group>"; };
 		1284DB55268B7EB1008692B8 /* VideoLayerPreview.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoLayerPreview.m; sourceTree = "<group>"; };
+		12DA794626B6442900099142 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../../README.md; sourceTree = "<group>"; };
 		2B0073952691511A006510A6 /* Shader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Shader.fsh; sourceTree = "<group>"; };
 		2B0073972691511A006510A6 /* Shader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Shader.vsh; sourceTree = "<group>"; };
 		2B00739B26915F01006510A6 /* VideoPreviewConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoPreviewConfig.h; sourceTree = "<group>"; };
@@ -148,6 +150,7 @@
 		1248444B2687121A003C27DF /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				12DA794626B6442900099142 /* README.md */,
 				2B9AC2BD2697F41000DC842D /* Podfile */,
 				1248443C268711C2003C27DF /* Assets.xcassets */,
 				1248443E268711C2003C27DF /* LaunchScreen.storyboard */,
@@ -312,6 +315,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				12DA794726B6442900099142 /* README.md in Resources */,
 				2B0073992691511A006510A6 /* Shader.fsh in Resources */,
 				12484440268711C2003C27DF /* LaunchScreen.storyboard in Resources */,
 				2B9AC2BE2697F41000DC842D /* Podfile in Resources */,

@@ -97,6 +97,7 @@ static const NSUInteger kMaxSamplesCount = 8192;
     style.exactWidth = 75.0f;
     style.exactHeight = 37.5f;
     style.cornerRadius = 0.0f;
+    style.borderWidth = 0.0f;
     
     TTGTextTag *pickTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"视频导入"] style:style];
     [tagCollectionView addTag:pickTag];

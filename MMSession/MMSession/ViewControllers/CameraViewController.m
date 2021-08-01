@@ -118,6 +118,7 @@
     style.exactWidth = 75.0f;
     style.exactHeight = 37.5f;
     style.cornerRadius = 0.0f;
+    style.borderWidth = 0.0f;
     
     TTGTextTag *pickTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"开始预览"] style:style];
     [tagCollectionView addTag:pickTag];
@@ -128,7 +129,7 @@
     TTGTextTag *decodeTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"开始录制"] style:style];
     [tagCollectionView addTag:decodeTag];
     
-    TTGTextTag *playVideoTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"完成录制"] style:style];
+    TTGTextTag *playVideoTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"停止录制"] style:style];
     [tagCollectionView addTag:playVideoTag];
 }
 
@@ -165,7 +166,7 @@
         [self _stopPreview];
     } else if ([content.text isEqualToString:@"开始录制"]) {
         [self _startRecord];
-    } else if ([content.text isEqualToString:@"完成录制"]) {
+    } else if ([content.text isEqualToString:@"停止录制"]) {
         [self _finishRecord];
     }
     return;

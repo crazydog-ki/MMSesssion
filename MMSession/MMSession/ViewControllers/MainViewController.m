@@ -15,7 +15,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"Main Project";
-    self.data = @[@"视频采集", @"视频编辑"];
+    self.data = @[@"Camera",
+                  @"AVFoundation",
+                  @"ToolBox",
+                  @"FFmpeg",
+                  @"Multi-Video",
+                  @"Multi-Audio",
+                  @"Video Filter",
+                  @"Audio Filter"];
     
     UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
     tableView.backgroundColor = UIColor.blackColor;
@@ -54,9 +61,9 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [self _transAnimation];
     
-    if ([self.data[indexPath.row] isEqualToString:@"视频采集"]) {
+    if ([self.data[indexPath.row] isEqualToString:@"Camera"]) {
         [self.navigationController pushViewController:[[CameraViewController alloc] init] animated:NO];
-    } else if ([self.data[indexPath.row] isEqualToString:@"视频编辑"])  {
+    } else if ([self.data[indexPath.row] isEqualToString:@"AVFoundation"])  {
         [self.navigationController pushViewController:[[EditViewController alloc] init] animated:NO];
     }
 }

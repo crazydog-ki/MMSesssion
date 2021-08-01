@@ -1,6 +1,14 @@
 # MMSesssion
 >为什么要取"MMSession"这个名字？其中"MM"是Multi-Media的简称，代表该库主要功能是音视频处理，"Session"借用Apple的命名规则，例如：AVCaptureSession、NSURLSession等。
 
+目前规划的功能包括如下，未来可能在此基础上继续扩充：
+1. 音视频采集、录制 doing
+2. 基于AVFoundation、VideoToolBox、AudioToolBox、FFmpeg等实现音视频编解码 doing
+3. 基于OpenGL ES渲染上屏 doing
+4. 音视频多轨
+5. 音视频特效
+
+
 目前还是在Demo开发阶段，已支持的能力有：
 1. 相机采集到OpenGL ES上屏（支持YUV与RGBA）
 2. 相机录制基于AVAssetWriter写文件

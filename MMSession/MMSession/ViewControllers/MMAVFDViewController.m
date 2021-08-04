@@ -3,10 +3,12 @@
 // Github : https://github.com/crazydog-ki
 
 #import "MMAVFDViewController.h"
-#import "AVMutableComposition+Concat.h"
+#import "AVMutableComposition+Extension.h"
+#import "AVAsset+Extension.h"
 #import "MMVideoGLPreview.h"
 #import "MMAudioQueuePlayer.h"
-#import "MMAssetReader.h"
+#import "MMDecodeReader.h"
+#import "MMCompileWriter.h"
 
 static const NSUInteger kMaxSamplesCount = 8192;
 
@@ -24,13 +26,15 @@ static const NSUInteger kMaxSamplesCount = 8192;
 
 @property (nonatomic, strong) CADisplayLink *displayLink;
 
-@property (nonatomic, strong) MMAssetReader *assetReader;
+@property (nonatomic, strong) MMDecodeReader *reader;
 @property (nonatomic, assign) BOOL alreadyDecode;
 @property (nonatomic, strong) MMAudioQueuePlayer *audioPlayer;
 @property (nonatomic, strong) MMVideoGLPreview *glPreview;
 
 @property (nonatomic, assign) double audioPts;
 @property (nonatomic, assign) double videoPts;
+
+@property (nonatomic, strong) MMCompileWriter *writer;
 @end
 
 @implementation MMAVFDViewController
@@ -64,6 +68,10 @@ static const NSUInteger kMaxSamplesCount = 8192;
     }
 }
 
+- (void)dealloc {
+    NSLog(@"[yjx] avfd controller destroy");
+}
+
 #pragma mark - Private
 - (void)_setupPreview {
     if (self.glPreview) return;
@@ -77,6 +85,7 @@ static const NSUInteger kMaxSamplesCount = 8192;
     MMVideoPreviewConfig *config = [[MMVideoPreviewConfig alloc] init];
     config.renderYUV = YES;
     config.presentRect = CGRectMake(0, 0, w, w*self.videoRatio);
+    config.rotation = -self.composition.rotation;
     self.glPreview.config = config;
     [self.glPreview setupGLEnv];
 }
@@ -107,6 +116,9 @@ static const NSUInteger kMaxSamplesCount = 8192;
     
     TTGTextTag *allPlayTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"视频播放"] style:style];
     [tagCollectionView addTag:allPlayTag];
+    
+    TTGTextTag *exportTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"视频导出"] style:style];
+    [tagCollectionView addTag:exportTag];
 }
 
 - (AudioBufferList *)_createAudioBufferList:(AudioStreamBasicDescription)audioFormat
@@ -147,12 +159,12 @@ static const NSUInteger kMaxSamplesCount = 8192;
         AVAsset *asset = self.videoAssets[idx];
         AVAssetTrack *videoTrack = [asset tracksWithMediaType:AVMediaTypeVideo].firstObject;
         
-        // 自定义裁切范围
+        /// 自定义裁切范围
         CMTime cmStart = CMTimeMake(start*videoTrack.timeRange.start.timescale, videoTrack.timeRange.start.timescale);
         CMTime cmDuration = CMTimeMake(duration*videoTrack.timeRange.duration.timescale, videoTrack.timeRange.duration.timescale);
 
         [composition concatVideo:self.videoAssets[idx] timeRange:CMTimeRangeMake(cmStart, cmDuration)];
-//        [composition concatVideo:self.videoAssets[idx] timeRange:videoTrack.timeRange];
+        // [composition concatVideo:self.videoAssets[idx] timeRange:videoTrack.timeRange];
         
         NSLog(@"[yjx] video asset start: %lf, duration: %lf", CMTimeGetSeconds(videoTrack.timeRange.start), CMTimeGetSeconds(videoTrack.timeRange.duration));
         NSLog(@"[yjx] video asset after clip start: %lf, duration: %lf", start, duration);
@@ -162,17 +174,17 @@ static const NSUInteger kMaxSamplesCount = 8192;
 }
 
 - (void)_play {
-    // 音视频解码
+    /// 音视频解码
     [self _startDecode];
     
-    // 视频驱动
+    /// 视频驱动
     if (!self.displayLink) {
         self.displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(_playVideo)];
         [self.displayLink addToRunLoop:NSRunLoop.mainRunLoop forMode:NSRunLoopCommonModes];
         [self.displayLink setPaused:NO];
     }
     
-    // 音频驱动
+    /// 音频驱动
     [self _playAudio];
 }
 
@@ -182,16 +194,20 @@ static const NSUInteger kMaxSamplesCount = 8192;
         if (!self.alreadyDecode) break;
     }
     
-    if (self.assetReader) {
+    if (self.reader) {
         [self _setupPreview];
         
-        MMSampleData *videoData = [self.assetReader pullSampleBuffer:MMSampleDataTypeVideo];
+        MMSampleData *videoData = [self.reader pullSampleBuffer:MMSampleDataTypeVideo];
         if (videoData.flag == MMSampleDataFlagEnd) {
             [self.displayLink setPaused:YES];
             NSLog(@"[yjx] pull video buffer end");
             return;
         }
         CMSampleBufferRef videoBuffer = videoData.sampleBuffer;
+        if (self.writer) {
+            [self.writer processVideoBuffer:videoBuffer];
+        }
+        
         self.videoPts = CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(videoBuffer));
         NSLog(@"[yjx] pull video buffer, pts: %lf", self.videoPts);
         
@@ -219,16 +235,24 @@ static const NSUInteger kMaxSamplesCount = 8192;
     _bufferList = [self _createAudioBufferList:self.audioPlayer.asbd numberFrames:kMaxSamplesCount];
     self.audioPlayer.pullDataBlk = ^(AudioBufferBlock  _Nonnull block) {
         strongify(self);
-        MMSampleData *sampleData = [self.assetReader pullSampleBuffer:MMSampleDataTypeAudio];
+        MMSampleData *sampleData = [self.reader pullSampleBuffer:MMSampleDataTypeAudio];
         if (sampleData.flag == MMSampleDataFlagEnd) {
             NSLog(@"[yjx] pull audio buffer end");
-            self.assetReader = nil;
+            self.reader = nil;
+            
+            [self.writer stopEncodeWithCompleteHandle:^(NSURL * _Nullable fileUrl, NSError * _Nullable error) {
+                NSLog(@"[yjx] writer output url: %@", fileUrl);
+                /// 保存相册，便于调试
+                if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(fileUrl.path)) {
+                    UISaveVideoAtPathToSavedPhotosAlbum(fileUrl.path, nil, nil, nil);
+                }
+                self.writer = nil;
+            }];
             
             self.alreadyDecode = NO;
             self.audioPts = 0.0f;
             self.videoPts = 0.0f;
             
-            [self.displayLink removeFromRunLoop:NSRunLoop.mainRunLoop forMode:NSRunLoopCommonModes];
             [self.displayLink setPaused:YES];
             [self.displayLink invalidate];
             self.displayLink = nil;
@@ -245,6 +269,10 @@ static const NSUInteger kMaxSamplesCount = 8192;
         NSLog(@"[yjx] pull audio buffer, samples: %ld, pts: %lf", samplesCount, self.audioPts);
         
         if (sampleBuffer) {
+            if (self.writer) {
+                [self.writer processAudioBuffer:sampleBuffer];
+            }
+            
             UInt32 samples = (UInt32)CMSampleBufferGetNumSamples(sampleBuffer);
             self->_bufferList->mBuffers[0].mDataByteSize = samples * self.audioPlayer.asbd.mBytesPerFrame;
             CMSampleBufferCopyPCMDataIntoAudioBufferList(sampleBuffer, 0, samples, self->_bufferList);
@@ -274,27 +302,64 @@ static const NSUInteger kMaxSamplesCount = 8192;
 }
 
 - (void)_startDecode {
-    if (_alreadyDecode || _assetReader) {
+    if (_alreadyDecode || _reader) {
         NSLog(@"[yjx] reader is not available now");
         return;
     }
     
-    MMAssetReaderConfig *readerConfig = [[MMAssetReaderConfig alloc] init];
+    MMDecodeReaderConfig *readerConfig = [[MMDecodeReaderConfig alloc] init];
     readerConfig.videoAsset = self.composition;
-    _assetReader = [[MMAssetReader alloc] initWithConfig:readerConfig];
+    _reader = [[MMDecodeReader alloc] initWithConfig:readerConfig];
 
-    [self.assetReader startReading];
+    [self.reader startDecode];
     _alreadyDecode = YES;
+}
+
+- (void)_export {
+    if (!_writer) {
+        NSString *docPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
+        NSString *outputPath = [docPath stringByAppendingString:@"/yjx.mov"];
+        if ([[NSFileManager defaultManager] fileExistsAtPath:outputPath]) {
+            [[NSFileManager defaultManager] removeItemAtPath:outputPath error:nil];
+        }
+        
+        CGSize outputSize = CGSizeMake(720, 1280);
+        if (self.composition.rotation == M_PI_2 ||
+            self.composition.rotation == 3*M_PI_2) {
+            outputSize = CGSizeMake(1280, 720);
+        }
+        
+        MMCompileWriterConfig *compileConfig = [[MMCompileWriterConfig alloc] init];
+        compileConfig.outputUrl = [NSURL fileURLWithPath:outputPath];
+        compileConfig.roration = self.composition.rotation;
+        compileConfig.videoSetttings = @{
+            AVVideoCodecKey : AVVideoCodecTypeH264,
+            AVVideoWidthKey : @(outputSize.width),
+            AVVideoHeightKey: @(outputSize.height)
+        };
+        compileConfig.pixelBufferAttributes = @{
+            (__bridge NSString *)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_32BGRA),
+                      (__bridge NSString *)kCVPixelBufferWidthKey: @(outputSize.width),
+                     (__bridge NSString *)kCVPixelBufferHeightKey: @(outputSize.height)
+        };
+        compileConfig.audioSetttings = @{
+                    AVFormatIDKey: @(kAudioFormatMPEG4AAC),
+                  AVSampleRateKey: @(44100),
+            AVNumberOfChannelsKey: @(2)
+        };
+        _writer = [[MMCompileWriter alloc] initWithConfig:compileConfig];
+        [_writer startEncode];
+    }
 }
 
 #pragma mark - TZImagePickerControllerDelegate
 - (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingPhotos:(NSArray<UIImage *> *)photos sourceAssets:(NSArray *)assets isSelectOriginalPhoto:(BOOL)isSelectOriginalPhoto infos:(NSArray<NSDictionary *> *)infos {
     
-    // 图片
+    /// 图片
     PHImageRequestOptions *imageOptions = [[PHImageRequestOptions alloc] init];
     imageOptions.version = PHImageRequestOptionsVersionOriginal;
     
-    // 视频
+    /// 视频
     PHVideoRequestOptions *videoOptions = [[PHVideoRequestOptions alloc] init];
     videoOptions.version = PHVideoRequestOptionsVersionOriginal;
     
@@ -308,9 +373,15 @@ static const NSUInteger kMaxSamplesCount = 8192;
             if ([asset isKindOfClass:[AVURLAsset class]]) {
                 AVURLAsset *urlAsset = (AVURLAsset *)asset;
                 self.composition = urlAsset;
+                double rotation = self.composition.rotation;
+                if (rotation) {
+                    NSLog(@"[yjx] import video with rotation msg: %lf", rotation);
+                }
                 AVAssetTrack *track = [urlAsset tracksWithMediaType:AVMediaTypeVideo].firstObject;
                 if (track) {
-                    self.videoRatio = track.naturalSize.height / track.naturalSize.width;
+                    CGFloat w = track.naturalSize.width;
+                    CGFloat h = track.naturalSize.height;
+                    self.videoRatio = MAX(w, h) / MIN(w, h);
                 }
                 [self.videoAssets addObject:urlAsset];
                 NSLog(@"[yjx] picked video from album URL: %@", urlAsset.URL.path);
@@ -330,6 +401,8 @@ static const NSUInteger kMaxSamplesCount = 8192;
         [self _startConcat];
     } else if ([content.text isEqualToString:@"视频播放"]) {
         [self _play];
+    } else if ([content.text isEqualToString:@"视频导出"]) {
+        [self _export];
     }
     return;
 }

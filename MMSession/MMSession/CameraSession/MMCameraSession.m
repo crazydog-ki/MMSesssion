@@ -70,13 +70,13 @@
             [_captureSession addInput:_videoDeviceInput];
         }
         
-        // 竖屏
+        /// 竖屏
         AVCaptureConnection *videoConnection = [_videoOutput connectionWithMediaType:AVMediaTypeVideo];
         if ([videoConnection isVideoOrientationSupported]) {
             [videoConnection setVideoOrientation:AVCaptureVideoOrientationPortrait];
         }
         
-        // 处理前置摄像头镜像
+        /// 处理前置摄像头镜像
         if (position == AVCaptureDevicePositionFront) {
             if ([videoConnection isVideoMirroringSupported]) {
                 [videoConnection setVideoMirrored:YES];
@@ -156,13 +156,13 @@
     
     [_videoOutput setSampleBufferDelegate:self queue:_videoQueue];
     
-    // 竖屏
+    /// 竖屏
     AVCaptureConnection *videoConnection = [_videoOutput connectionWithMediaType:AVMediaTypeVideo];
     if ([videoConnection isVideoOrientationSupported]) {
         [videoConnection setVideoOrientation:AVCaptureVideoOrientationPortrait];
     }
     
-    // 镜像
+    /// 镜像
     if ([videoConnection isVideoMirroringSupported]) {
         [videoConnection setVideoMirrored:YES];
     }

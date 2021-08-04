@@ -4,12 +4,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface AVMutableComposition (Concat)
+@interface AVMutableComposition (Extension)
 
 - (void)concatVideo:(AVAsset *)videoAsset
           timeRange:(CMTimeRange)timeRange;
-
-- (AVVideoComposition *)videoComposition;
 
 @end
 

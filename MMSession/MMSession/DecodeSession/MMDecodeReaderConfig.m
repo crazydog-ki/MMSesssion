@@ -2,8 +2,8 @@
 // Email  : jxyou.ki@gmail.com
 // Github : https://github.com/crazydog-ki
 
-#import "MMAssetReaderConfig.h"
+#import "MMDecodeReaderConfig.h"
 
-@implementation MMAssetReaderConfig
+@implementation MMDecodeReaderConfig
 
 @end

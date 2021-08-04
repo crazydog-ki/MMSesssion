@@ -6,7 +6,7 @@
 #import "MMCameraSession.h"
 #import "MMVideoLayerPreview.h"
 #import "MMVideoGLPreview.h"
-#import "MMCameraCompileWriter.h"
+#import "MMCompileWriter.h"
 #import <Masonry/Masonry.h>
 
 @interface MMCameraViewController () <TTGTextTagCollectionViewDelegate>
@@ -15,7 +15,7 @@
 @property (nonatomic, strong) MMCameraSession *camera;
 @property (nonatomic, strong) MMVideoLayerPreview *layerPreview;
 @property (nonatomic, strong) MMVideoGLPreview *glPreview;
-@property (nonatomic, strong) MMCameraCompileWriter *writer;
+@property (nonatomic, strong) MMCompileWriter *writer;
 @end
 
 @implementation MMCameraViewController
@@ -67,7 +67,7 @@
     
     MMVideoPreviewConfig *config = [[MMVideoPreviewConfig alloc] init];
     config.renderYUV = YES;
-    // config.rotation = 180;
+    // config.rotation = M_PI;
     config.presentRect = CGRectMake(0, 0, w, w*videoRatio);
     self.glPreview.config = config;
     [self.glPreview setupGLEnv];
@@ -81,7 +81,7 @@
         [[NSFileManager defaultManager] removeItemAtPath:outputPath error:nil];
     }
 
-    MMCameraCompileWriterConfig *compileConfig = [[MMCameraCompileWriterConfig alloc] init];
+    MMCompileWriterConfig *compileConfig = [[MMCompileWriterConfig alloc] init];
     compileConfig.outputUrl = [NSURL fileURLWithPath:outputPath];
     compileConfig.videoSetttings = @{
         AVVideoCodecKey : AVVideoCodecTypeH264,
@@ -98,7 +98,7 @@
               AVSampleRateKey: @(44100),
         AVNumberOfChannelsKey: @(2)
     };
-    self.writer = [[MMCameraCompileWriter alloc] initWithConfig:compileConfig];
+    self.writer = [[MMCompileWriter alloc] initWithConfig:compileConfig];
 }
 
 #pragma mark - Action
@@ -151,13 +151,13 @@
 }
 
 - (void)_startRecord {
-    [self.writer startRecord];
+    [self.writer startEncode];
 }
 
 - (void)_finishRecord {
-    [self.writer stopRecordWithCompleteHandle:^(NSURL * _Nullable fileUrl, NSError * _Nullable error) {
+    [self.writer stopEncodeWithCompleteHandle:^(NSURL * _Nullable fileUrl, NSError * _Nullable error) {
         NSLog(@"[yjx] writer output url: %@", fileUrl);
-        // 保存相册，便于调试
+        /// 保存相册，便于调试
         if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(fileUrl.path)) {
             UISaveVideoAtPathToSavedPhotosAlbum(fileUrl.path, nil, nil, nil);
         }

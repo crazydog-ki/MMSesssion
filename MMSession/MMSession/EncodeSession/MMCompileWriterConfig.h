@@ -6,12 +6,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MMCameraCompileWriterConfig : NSObject
+@interface MMCompileWriterConfig : NSObject
 
 @property (nonatomic, strong) NSURL *outputUrl;
 @property (nonatomic, strong) NSDictionary *videoSetttings;
 @property (nonatomic, strong) NSDictionary *pixelBufferAttributes;
-
+@property (nonatomic, assign) double roration;
 @property (nonatomic, strong) NSDictionary *audioSetttings;
 
 @end

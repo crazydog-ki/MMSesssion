@@ -2,11 +2,11 @@
 // Email  : jxyou.ki@gmail.com
 // Github : https://github.com/crazydog-ki
 
-#import "MMCameraCompileWriter.h"
+#import "MMCompileWriter.h"
 
-@interface MMCameraCompileWriter ()
+@interface MMCompileWriter ()
 
-@property (nonatomic, strong) MMCameraCompileWriterConfig *config;
+@property (nonatomic, strong) MMCompileWriterConfig *config;
 @property (nonatomic, strong) dispatch_queue_t writerQueue;
 @property (nonatomic, strong) AVAssetWriter *assetWriter;
 
@@ -20,9 +20,9 @@
 
 @end
 
-@implementation MMCameraCompileWriter
+@implementation MMCompileWriter
 
-- (instancetype)initWithConfig:(MMCameraCompileWriterConfig *)config {
+- (instancetype)initWithConfig:(MMCompileWriterConfig *)config {
     if (self = [super init]) {
         _config = config;
         _writerQueue = dispatch_queue_create("mmsession_camera_compile_queue", DISPATCH_QUEUE_SERIAL);
@@ -33,25 +33,25 @@
     return self;
 }
 
-- (void)startRecord {
+- (void)startEncode {
     dispatch_sync(_writerQueue, ^{
         _stopFlag = NO;
         if (self.assetWriter.status == AVAssetWriterStatusUnknown && [self.assetWriter startWriting]) {
-            NSLog(@"[yjx] start writing");
+            NSLog(@"[yjx] start encode success");
         } else {
-            NSLog(@"[yjx] start writing error status: %zd", self.assetWriter.status);
+            NSLog(@"[yjx] start encode error status: %zd", self.assetWriter.status);
         }
     });
 }
 
-- (void)stopRecordWithCompleteHandle:(CompleteHandle)handler {
+- (void)stopEncodeWithCompleteHandle:(CompleteHandle)handler {
     void (^completionHandler)(void) = ^{
         if (self.assetWriter.error || self.assetWriter.status != AVAssetWriterStatusCompleted) {
             handler(nil, [[NSError alloc] init]);
         } else {
             handler(self.config.outputUrl, nil);
         }
-        NSLog(@"[yjx] stop writing");
+        NSLog(@"[yjx] complete encode success");
     };
     
     dispatch_sync(_writerQueue, ^{
@@ -74,12 +74,11 @@
     CFRetain(sampleBuffer);
     dispatch_async(_writerQueue, ^{
         CMTime frameTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
-        NSLog(@"[yjx] video pts: %lf", CMTimeGetSeconds(frameTime));
+        NSLog(@"[yjx] encode video pts: %lf", CMTimeGetSeconds(frameTime));
         
         if (self.isFirstFrame) {
-            // startRecord可提前初始化编码器
             if (self.assetWriter.status == AVAssetWriterStatusUnknown && [self.assetWriter startWriting]) {
-                NSLog(@"[yjx] start writing success");
+                NSLog(@"[yjx] start encode success");
             }
             [self.assetWriter startSessionAtSourceTime:frameTime];
             self.isFirstFrame = NO;
@@ -88,10 +87,10 @@
         CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
         if (self.videoWriterInput.readyForMoreMediaData && self.assetWriter.status == AVAssetWriterStatusWriting) {
             if (![self.videoAdaptor appendPixelBuffer:pixelBuffer withPresentationTime:frameTime]) {
-                NSLog(@"[youjianxia] drop video frame-1");
+                NSLog(@"[youjianxia] encode drop video frame-1");
             }
         } else {
-            NSLog(@"[youjianxia] drop video frame-2");
+            NSLog(@"[youjianxia] encode drop video frame-2");
         }
         CFRelease(sampleBuffer);
     });
@@ -105,12 +104,11 @@
     CFRetain(sampleBuffer);
     dispatch_async(_writerQueue, ^{
         CMTime frameTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
-        NSLog(@"[yjx] audio pts: %lf", CMTimeGetSeconds(frameTime));
+        NSLog(@"[yjx] encode audio pts: %lf", CMTimeGetSeconds(frameTime));
         
         if (self.isFirstFrame) {
-            // startRecord可提前初始化编码器
             if (self.assetWriter.status == AVAssetWriterStatusUnknown && [self.assetWriter startWriting]) {
-                NSLog(@"[yjx] start writing success");
+                NSLog(@"[yjx] start encode success");
             }
             [self.assetWriter startSessionAtSourceTime:frameTime];
             self.isFirstFrame = NO;
@@ -128,16 +126,17 @@
     NSError *error;
     _assetWriter = [[AVAssetWriter alloc] initWithURL:_config.outputUrl fileType:AVFileTypeQuickTimeMovie error:&error];
     
-    // video
+    /// video
     _videoWriterInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo outputSettings:_config.videoSetttings];
     _videoWriterInput.expectsMediaDataInRealTime = YES;
+    _videoWriterInput.transform = CGAffineTransformMakeRotation(_config.roration);
     _videoAdaptor = [AVAssetWriterInputPixelBufferAdaptor assetWriterInputPixelBufferAdaptorWithAssetWriterInput:_videoWriterInput sourcePixelBufferAttributes:_config.pixelBufferAttributes];
 
     if ([_assetWriter canAddInput:_videoWriterInput]) {
         [_assetWriter addInput:_videoWriterInput];
     }
     
-    // audio
+    /// audio
     _audioWriterInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeAudio outputSettings:_config.audioSetttings];
     _audioWriterInput.expectsMediaDataInRealTime = YES;
     if ([_assetWriter canAddInput:_audioWriterInput]) {

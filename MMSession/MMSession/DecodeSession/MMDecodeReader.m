@@ -2,21 +2,21 @@
 // Email  : jxyou.ki@gmail.com
 // Github : https://github.com/crazydog-ki
 
-#import "MMAssetReader.h"
+#import "MMDecodeReader.h"
 
-@interface MMAssetReader ()
+@interface MMDecodeReader ()
 
 @property (nonatomic, strong) dispatch_queue_t readerQueue;
-@property (nonatomic, strong) MMAssetReaderConfig *config;
+@property (nonatomic, strong) MMDecodeReaderConfig *config;
 @property (nonatomic, strong) AVAssetReader *assetReader;
 @property (nonatomic, strong) AVAssetReaderTrackOutput *videoOutput;
 @property (nonatomic, strong) AVAssetReaderTrackOutput *audioOutput;
  
 @end
 
-@implementation MMAssetReader
+@implementation MMDecodeReader
 
-- (instancetype)initWithConfig:(MMAssetReaderConfig *)config {
+- (instancetype)initWithConfig:(MMDecodeReaderConfig *)config {
     if (self = [super init]) {
         _readerQueue = dispatch_queue_create("mmsession_reader_queue", DISPATCH_QUEUE_SERIAL);
         _config = config;
@@ -25,15 +25,15 @@
     return self;
 }
 
-- (BOOL)startReading {
+- (BOOL)startDecode {
     __block BOOL ret = NO;
     dispatch_sync(_readerQueue, ^{
         if (self.assetReader.status == AVAssetReaderStatusUnknown) {
             if ([self.assetReader startReading]) {
-                NSLog(@"[yjx] start reading success");
+                NSLog(@"[yjx] start decode success");
                 ret = YES;
             } else {
-                NSLog(@"[yjx] start reading error");
+                NSLog(@"[yjx] start decode error: %@", self.assetReader.error);
                 ret = NO;
             }
         }
@@ -41,7 +41,7 @@
     return ret;
 }
 
-- (void)stopReading {
+- (void)stopDecode {
     dispatch_sync(_readerQueue, ^{
         if (self.assetReader && self.assetReader.status == AVAssetReaderStatusReading) {
             [self.assetReader cancelReading];
@@ -85,7 +85,7 @@
     NSError *error;
     _assetReader = [AVAssetReader assetReaderWithAsset:videoAsset error:&error];
     
-    // 视频轨
+    /// 视频轨
     AVAssetTrack *videoTrack = [videoAsset tracksWithMediaType:AVMediaTypeVideo].firstObject;
     if (videoTrack) {
         NSDictionary *videoOutputAttr = @{(__bridge NSString *)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)};
@@ -96,7 +96,7 @@
         _videoOutput = videoOutput;
     }
     
-    // 音频轨
+    /// 音频轨
     AVAssetTrack *audioTrack = [videoAsset tracksWithMediaType:AVMediaTypeAudio].firstObject;
     if (audioTrack) {
         AudioChannelLayout acl;

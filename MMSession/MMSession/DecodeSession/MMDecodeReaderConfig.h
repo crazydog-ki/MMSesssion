@@ -4,7 +4,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MMAssetReaderConfig : NSObject
+@interface MMDecodeReaderConfig : NSObject
 
 @property (nonatomic, strong) NSURL *videoURL;
 @property (nonatomic, strong) AVAsset *videoAsset;

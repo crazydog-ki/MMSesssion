@@ -3,16 +3,16 @@
 // Github : https://github.com/crazydog-ki
 
 #import <Foundation/Foundation.h>
-#import "MMAssetReaderConfig.h"
+#import "MMDecodeReaderConfig.h"
 #import "MMSampleData.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MMAssetReader : NSObject
+@interface MMDecodeReader : NSObject
 
-- (instancetype)initWithConfig:(MMAssetReaderConfig *)config;
-- (BOOL)startReading;
-- (void)stopReading;
+- (instancetype)initWithConfig:(MMDecodeReaderConfig *)config;
+- (BOOL)startDecode;
+- (void)stopDecode;
 - (MMSampleData *)pullSampleBuffer:(MMSampleDataType)type;
 
 @end

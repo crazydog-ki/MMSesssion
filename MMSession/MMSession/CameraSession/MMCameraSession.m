@@ -23,7 +23,6 @@
 @end
 
 @implementation MMCameraSession
-
 - (instancetype)initWithConfig:(MMCameraSessionConfig *)config {
     if (self = [super init]) {
         _videoSize = CGSizeZero;
@@ -215,5 +214,4 @@
 - (void)captureOutput:(AVCaptureOutput *)output didDropSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection {
     NSLog(@"[yjx] camera drop sampleBuffer");
 }
-
 @end

@@ -4,8 +4,30 @@
 
 #import "MMSampleData.h"
 
-@implementation MMSampleData
+@implementation MMParseVideoInfo
+- (void)dealloc {
+    if (_data) {
+        free(_data);
+        _data = NULL;
+    }
+    
+    if (_extraData) {
+        free(_extraData);
+        _extraData = NULL;
+    }
+}
+@end
 
+@implementation MMParseAudioInfo
+- (void)dealloc {
+    if (_data) {
+        free(_data);
+        _data = NULL;
+    }
+}
+@end
+
+@implementation MMSampleData
 - (void)setSampleBuffer:(CMSampleBufferRef)sampleBuffer {
     if (_sampleBuffer) {
         CFRelease(_sampleBuffer);
@@ -38,6 +60,6 @@
         CFRelease(_pixelBuffer);
         _pixelBuffer = nil;
     }
+    // NSLog(@"[yjx] sample data destroy");
 }
-
 @end

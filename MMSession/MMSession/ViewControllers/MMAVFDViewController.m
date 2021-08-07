@@ -8,7 +8,7 @@
 #import "MMVideoGLPreview.h"
 #import "MMAudioQueuePlayer.h"
 #import "MMDecodeReader.h"
-#import "MMCompileWriter.h"
+#import "MMEncodeWriter.h"
 
 static const NSUInteger kMaxSamplesCount = 8192;
 
@@ -34,7 +34,7 @@ static const NSUInteger kMaxSamplesCount = 8192;
 @property (nonatomic, assign) double audioPts;
 @property (nonatomic, assign) double videoPts;
 
-@property (nonatomic, strong) MMCompileWriter *writer;
+@property (nonatomic, strong) MMEncodeWriter *writer;
 @end
 
 @implementation MMAVFDViewController
@@ -157,6 +157,10 @@ static const NSUInteger kMaxSamplesCount = 8192;
     AVMutableComposition *composition = [AVMutableComposition composition];
     for (NSUInteger idx = 0; idx < self.videoAssets.count; idx++) {
         AVAsset *asset = self.videoAssets[idx];
+        if (asset.rotation) {
+            NSLog(@"[yjx] not support concat video with rotation currently");
+            continue;
+        }
         AVAssetTrack *videoTrack = [asset tracksWithMediaType:AVMediaTypeVideo].firstObject;
         
         /// 自定义裁切范围
@@ -197,7 +201,7 @@ static const NSUInteger kMaxSamplesCount = 8192;
     if (self.reader) {
         [self _setupPreview];
         
-        MMSampleData *videoData = [self.reader pullSampleBuffer:MMSampleDataTypeVideo];
+        MMSampleData *videoData = [self.reader pullSampleData:MMSampleDataType_Pull_Video];
         if (videoData.flag == MMSampleDataFlagEnd) {
             [self.displayLink setPaused:YES];
             NSLog(@"[yjx] pull video buffer end");
@@ -235,7 +239,7 @@ static const NSUInteger kMaxSamplesCount = 8192;
     _bufferList = [self _createAudioBufferList:self.audioPlayer.asbd numberFrames:kMaxSamplesCount];
     self.audioPlayer.pullDataBlk = ^(AudioBufferBlock  _Nonnull block) {
         strongify(self);
-        MMSampleData *sampleData = [self.reader pullSampleBuffer:MMSampleDataTypeAudio];
+        MMSampleData *sampleData = [self.reader pullSampleData:MMSampleDataType_Pull_Audio];
         if (sampleData.flag == MMSampleDataFlagEnd) {
             NSLog(@"[yjx] pull audio buffer end");
             self.reader = nil;
@@ -307,7 +311,7 @@ static const NSUInteger kMaxSamplesCount = 8192;
         return;
     }
     
-    MMDecodeReaderConfig *readerConfig = [[MMDecodeReaderConfig alloc] init];
+    MMDecodeConfig *readerConfig = [[MMDecodeConfig alloc] init];
     readerConfig.videoAsset = self.composition;
     _reader = [[MMDecodeReader alloc] initWithConfig:readerConfig];
 
@@ -329,7 +333,7 @@ static const NSUInteger kMaxSamplesCount = 8192;
             outputSize = CGSizeMake(1280, 720);
         }
         
-        MMCompileWriterConfig *compileConfig = [[MMCompileWriterConfig alloc] init];
+        MMEncodeConfig *compileConfig = [[MMEncodeConfig alloc] init];
         compileConfig.outputUrl = [NSURL fileURLWithPath:outputPath];
         compileConfig.roration = self.composition.rotation;
         compileConfig.videoSetttings = @{
@@ -347,7 +351,7 @@ static const NSUInteger kMaxSamplesCount = 8192;
                   AVSampleRateKey: @(44100),
             AVNumberOfChannelsKey: @(2)
         };
-        _writer = [[MMCompileWriter alloc] initWithConfig:compileConfig];
+        _writer = [[MMEncodeWriter alloc] initWithConfig:compileConfig];
         [_writer startEncode];
     }
 }

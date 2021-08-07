@@ -7,7 +7,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface MMMainViewController : UIViewController
-
 @end
 
 NS_ASSUME_NONNULL_END

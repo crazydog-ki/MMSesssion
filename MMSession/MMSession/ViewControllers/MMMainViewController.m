@@ -5,6 +5,7 @@
 #import "MMMainViewController.h"
 #import "MMCameraViewController.h"
 #import "MMAVFDViewController.h"
+#import "MMAVTBViewController.h"
 
 @interface MMMainViewController () <UITableViewDataSource, UITableViewDelegate>
 @property (nonatomic, strong) NSArray<NSString *> *data;
@@ -17,8 +18,7 @@
     self.title = @"MMSession";
     self.data = @[@"Camera",
                   @"AVFD",
-                  @"AVTB",
-                  @"FFmpeg",
+                  @"FFmpeg & AVTB",
                   @"AV-Multi",
                   @"AV-Filter"];
     
@@ -59,10 +59,13 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [self _transAnimation];
     
-    if ([self.data[indexPath.row] isEqualToString:@"Camera"]) {
+    NSString *selectedTex = self.data[indexPath.row];
+    if ([selectedTex isEqualToString:@"Camera"]) {
         [self.navigationController pushViewController:[[MMCameraViewController alloc] init] animated:NO];
-    } else if ([self.data[indexPath.row] isEqualToString:@"AVFD"])  {
+    } else if ([selectedTex isEqualToString:@"AVFD"])  {
         [self.navigationController pushViewController:[[MMAVFDViewController alloc] init] animated:NO];
+    } else if ([selectedTex isEqualToString:@"FFmpeg & AVTB"]) {
+        [self.navigationController pushViewController:[[MMAVTBViewController alloc] init] animated:NO];
     }
 }
 

@@ -1,10 +1,6 @@
-//
-//  AVAsset+Extension.m
-//  MMSession
-//
-//  Created by bytedance on 2021/8/3.
-//
-
+// Created by crazydog-ki
+// Email  : jxyou.ki@gmail.com
+// Github : https://github.com/crazydog-ki
 #import "AVAsset+Extension.h"
 
 @implementation AVAsset (Extension)

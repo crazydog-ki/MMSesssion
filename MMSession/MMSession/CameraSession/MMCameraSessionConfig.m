@@ -5,5 +5,4 @@
 #import "MMCameraSessionConfig.h"
 
 @implementation MMCameraSessionConfig
-
 @end

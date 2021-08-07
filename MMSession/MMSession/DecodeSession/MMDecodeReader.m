@@ -7,7 +7,7 @@
 @interface MMDecodeReader ()
 
 @property (nonatomic, strong) dispatch_queue_t readerQueue;
-@property (nonatomic, strong) MMDecodeReaderConfig *config;
+@property (nonatomic, strong) MMDecodeConfig *config;
 @property (nonatomic, strong) AVAssetReader *assetReader;
 @property (nonatomic, strong) AVAssetReaderTrackOutput *videoOutput;
 @property (nonatomic, strong) AVAssetReaderTrackOutput *audioOutput;
@@ -16,7 +16,7 @@
 
 @implementation MMDecodeReader
 
-- (instancetype)initWithConfig:(MMDecodeReaderConfig *)config {
+- (instancetype)initWithConfig:(MMDecodeConfig *)config {
     if (self = [super init]) {
         _readerQueue = dispatch_queue_create("mmsession_reader_queue", DISPATCH_QUEUE_SERIAL);
         _config = config;
@@ -49,25 +49,29 @@
     });
 }
 
-- (MMSampleData *)pullSampleBuffer:(MMSampleDataType)type {
+- (MMSampleData *)pullSampleData:(MMSampleDataType)type {
     if (self.assetReader.status != AVAssetReaderStatusReading) {
         NSLog(@"[yjx] must pull buffer in readering status");
         return nil;
     }
     MMSampleData *sampleData = [[MMSampleData alloc] init];
-    sampleData.bufferType = type;
-    if (type == MMSampleDataTypeVideo) {
+    if (type == MMSampleDataType_Pull_Video) {
         CMSampleBufferRef sampleBuffer = [self.videoOutput copyNextSampleBuffer];
+        sampleData.pts = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
         if (sampleBuffer) {
             sampleData.flag = MMSampleDataFlagProcess;
+            sampleData.pts = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
             sampleData.sampleBuffer = sampleBuffer;
+            sampleData.dataType = MMSampleDataType_Decoded_Video;
         } else {
             sampleData.flag = MMSampleDataFlagEnd;
         }
-    } else if (type == MMSampleDataTypeAudio) {
+    } else if (type == MMSampleDataType_Pull_Audio) {
         CMSampleBufferRef sampleBuffer = [self.audioOutput copyNextSampleBuffer];
         if (sampleBuffer) {
             sampleData.flag = MMSampleDataFlagProcess;
+            sampleData.pts = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
+            sampleData.dataType = MMSampleDataType_Decoded_Audio;
             sampleData.sampleBuffer = sampleBuffer;
         } else {
             sampleData.flag = MMSampleDataFlagEnd;

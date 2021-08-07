@@ -6,8 +6,7 @@
 #import "MMCameraSession.h"
 #import "MMVideoLayerPreview.h"
 #import "MMVideoGLPreview.h"
-#import "MMCompileWriter.h"
-#import <Masonry/Masonry.h>
+#import "MMEncodeWriter.h"
 
 @interface MMCameraViewController () <TTGTextTagCollectionViewDelegate>
 @property (nonatomic, strong) TTGTextTagCollectionView *collectionView;
@@ -15,7 +14,7 @@
 @property (nonatomic, strong) MMCameraSession *camera;
 @property (nonatomic, strong) MMVideoLayerPreview *layerPreview;
 @property (nonatomic, strong) MMVideoGLPreview *glPreview;
-@property (nonatomic, strong) MMCompileWriter *writer;
+@property (nonatomic, strong) MMEncodeWriter *writer;
 @end
 
 @implementation MMCameraViewController
@@ -50,6 +49,10 @@
     };
 }
 
+- (void)dealloc {
+    NSLog(@"[yjx] camera controller destroy");
+}
+
 #pragma mark - Private
 - (void)_setupCamera {
     MMCameraSessionConfig *cameraConfig = [[MMCameraSessionConfig alloc] init];
@@ -81,7 +84,7 @@
         [[NSFileManager defaultManager] removeItemAtPath:outputPath error:nil];
     }
 
-    MMCompileWriterConfig *compileConfig = [[MMCompileWriterConfig alloc] init];
+    MMEncodeConfig *compileConfig = [[MMEncodeConfig alloc] init];
     compileConfig.outputUrl = [NSURL fileURLWithPath:outputPath];
     compileConfig.videoSetttings = @{
         AVVideoCodecKey : AVVideoCodecTypeH264,
@@ -98,7 +101,7 @@
               AVSampleRateKey: @(44100),
         AVNumberOfChannelsKey: @(2)
     };
-    self.writer = [[MMCompileWriter alloc] initWithConfig:compileConfig];
+    self.writer = [[MMEncodeWriter alloc] initWithConfig:compileConfig];
 }
 
 #pragma mark - Action

@@ -21,4 +21,5 @@ _Pragma("clang diagnostic push") \
 _Pragma("clang diagnostic ignored \"-Wshadow\"") \
 __strong typeof(var) var = weak_##var; \
 _Pragma("clang diagnostic pop")
+
 #endif /* MMPrefixHeader_pch */

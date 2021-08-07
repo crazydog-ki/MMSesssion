@@ -9,7 +9,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface MMCameraSession : NSObject
-
 - (instancetype)initWithConfig:(MMCameraSessionConfig *)config;
 
 - (void)startCapture;
@@ -33,7 +32,6 @@ typedef void(^VideoOutputCallback)(CMSampleBufferRef sampleBuffer);
 typedef void(^AudioOutputCallback)(CMSampleBufferRef sampleBuffer);
 @property (nonatomic, strong) VideoOutputCallback _Nullable videoOutputCallback;
 @property (nonatomic, strong) AudioOutputCallback _Nullable audioOutputCallback;
-
 @end
 
 NS_ASSUME_NONNULL_END

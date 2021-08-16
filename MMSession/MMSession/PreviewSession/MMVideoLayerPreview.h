@@ -7,10 +7,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface MMVideoLayerPreview : UIView
-
 @property (nonatomic, readonly) AVCaptureVideoPreviewLayer *videoPreviewLayer;
 @property (nonatomic, strong) AVCaptureSession *captureSession;
-
 @end
 
 NS_ASSUME_NONNULL_END

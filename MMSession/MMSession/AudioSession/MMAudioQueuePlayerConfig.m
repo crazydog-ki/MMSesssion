@@ -5,5 +5,4 @@
 #import "MMAudioQueuePlayerConfig.h"
 
 @implementation MMAudioQueuePlayerConfig
-
 @end

@@ -6,7 +6,6 @@
 #import <objc/runtime.h>
 
 @implementation UIControl (Extension)
-
 + (void)load {
     Method a = class_getInstanceMethod(self, @selector(sendAction:to:forEvent:));
     Method b = class_getInstanceMethod(self, @selector(_sendAction:to:forEvent:));
@@ -34,5 +33,4 @@
     animation.values = values;
     [button.layer addAnimation:animation forKey:nil];
 }
-
 @end

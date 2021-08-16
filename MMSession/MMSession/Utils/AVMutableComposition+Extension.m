@@ -9,7 +9,6 @@ static const int32_t kCMTrackID_Video = 1;
 static const int32_t kCMTrackID_Audio = 2;
 
 @implementation AVMutableComposition (Concat)
-
 - (void)concatVideo:(AVAsset *)videoAsset
           timeRange:(CMTimeRange)timeRange {
     /// 视频轨
@@ -46,6 +45,5 @@ static const int32_t kCMTrackID_Audio = 2;
 - (AVMutableCompositionTrack *)_audioTracks {
     return [self trackWithTrackID:kCMTrackID_Audio];
 }
-
 @end
 

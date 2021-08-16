@@ -21,12 +21,17 @@
     return self;
 }
 
+- (void)dealloc {
+    [self _finishEncode];
+}
+
+#pragma mark - MMSessionProcessProtocol
 - (void)processSampleData:(MMSampleData *)sampleData {
     dispatch_sync(_vtEncoderQueue, ^{
         CMTime pts = sampleData.pts;
         OSStatus status = noErr;
         
-        if (sampleData.flag == MMSampleDataFlagEnd) {
+        if (sampleData.statusFlag == MMSampleDataFlagEnd) {
             [self _finishEncode];
             NSLog(@"[yjx] vt encode finish");
             return;
@@ -101,10 +106,6 @@
         CFRelease(_encodeSession);
         _encodeSession = NULL;
     }
-}
-
-- (void)dealloc {
-    [self _finishEncode];
 }
 
 void vt_encode_callback(void *outputCallbackRefCon,

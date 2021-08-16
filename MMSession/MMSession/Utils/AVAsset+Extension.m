@@ -4,7 +4,6 @@
 #import "AVAsset+Extension.h"
 
 @implementation AVAsset (Extension)
-
 - (double)rotation {
     double rotation = 0;
     NSArray *tracks = [self tracksWithMediaType:AVMediaTypeVideo];
@@ -28,5 +27,4 @@
     }
     return rotation;
 }
-
 @end

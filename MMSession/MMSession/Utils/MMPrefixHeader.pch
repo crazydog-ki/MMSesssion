@@ -10,7 +10,11 @@
 #import <TZImagePickerController/TZImagePickerController.h>
 #import <TTGTagCollectionView/TTGTextTagCollectionView.h>
 
-static const CGFloat kNavBarHeight = 88.0f;
+/// 获取状态栏的高度
+#define kStatusBarH self.view.window.windowScene.statusBarManager.statusBarFrame.size.height
+
+/// 获取导航栏的高度
+#define kNavBarH self.navigationController.navigationBar.frame.size.height
 
 #define kColor(r, g, b, a) [UIColor colorWithRed:(r)/255.0f green:(g)/255.0f blue:(b)/255.0f alpha:(a)]
 #define kMMColor kColor(255.0f, 215.0f, 0.0f, 1.0f)

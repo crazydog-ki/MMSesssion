@@ -4,7 +4,7 @@
 
 #import "MMSampleData.h"
 
-@implementation MMParseVideoInfo
+@implementation MMParsedVideoInfo
 - (void)dealloc {
     if (_data) {
         free(_data);
@@ -18,7 +18,7 @@
 }
 @end
 
-@implementation MMParseAudioInfo
+@implementation MMParsedAudioInfo
 - (void)dealloc {
     if (_data) {
         free(_data);

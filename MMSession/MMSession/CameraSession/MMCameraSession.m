@@ -186,7 +186,6 @@
 }
 
 #pragma mark - AVCaptureVideoDataOutputSampleBufferDelegate
-
 - (void)captureOutput:(AVCaptureOutput *)output didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection {
     if (_isFirstFrame && _firstFrameBlk && output == _videoOutput) {
         if (CGSizeEqualToSize(_videoSize, CGSizeZero)) {

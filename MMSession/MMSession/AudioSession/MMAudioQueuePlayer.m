@@ -3,33 +3,38 @@
 // Github : https://github.com/crazydog-ki
 
 #import "MMAudioQueuePlayer.h"
+#import "MMBufferUtils.h"
 
-static const NSInteger kMaxByteSize = 1024 * sizeof(float) * 16;
-static const NSInteger kBufferCount = 3;
+static const NSInteger kMaxByteSize    = 1024 * sizeof(float) * 16;
+static const NSInteger kBufferListSize = 8192;
+static const NSInteger kBufferCount    = 3;
+static const NSInteger kBufferCaches   = 80;
 
 @interface MMAudioQueuePlayer () {
     AudioQueueBufferRef *_audioBufferArr; // 音频流缓冲区
+    AudioBufferList *_bufferList;
 }
 
 @property (nonatomic, strong) dispatch_queue_t audioPlayerQueue;
 @property (nonatomic, strong) MMAudioQueuePlayerConfig *config;
 @property (nonatomic, assign) AudioQueueRef audioQueue;
-
+@property (nonatomic, strong) NSMutableArray<NSValue *> *bufferCaches;
+@property (nonatomic, assign) double audioPts;
 @end
 
 @implementation MMAudioQueuePlayer
-
+#pragma mark - Public
 - (instancetype)initWithConfig:(MMAudioQueuePlayerConfig *)config {
     if (self = [super init]) {
-        _audioPlayerQueue = dispatch_queue_create("mmsession_audio_palyer_queue", DISPATCH_QUEUE_SERIAL);
         _config = config;
+        _audioPlayerQueue = dispatch_queue_create("mmsession_audio_palyer_queue", DISPATCH_QUEUE_SERIAL);
+        _bufferCaches = [NSMutableArray arrayWithCapacity:kBufferCaches];
+        _audioPts = 0.0f;
+        _bufferList = [MMBufferUtils produceAudioBufferList:MMBufferUtils.asbd
+                                               numberFrames:kBufferListSize];
         [self _initAudioQueue];
     }
     return self;
-}
-
-- (AudioStreamBasicDescription)asbd {
-    return *([[AVAudioFormat alloc] initWithCommonFormat:AVAudioPCMFormatFloat32 sampleRate:44100 channels:2 interleaved:YES].streamDescription);
 }
 
 - (void)play {
@@ -94,10 +99,32 @@ static const NSInteger kBufferCount = 3;
     }
 }
 
+#pragma mark - MMSessionProcessProtocol
+- (void)processSampleData:(MMSampleData *)sampleData {
+    CMSampleBufferRef sampleBuffer = sampleData.sampleBuffer;
+    while (kBufferCaches <= self.bufferCaches.count) {
+        [NSThread sleepForTimeInterval:0.001];
+    }
+    
+    CFRetain(sampleBuffer);
+    NSValue *audioBuffer = [NSValue valueWithPointer:sampleBuffer];
+    [self.bufferCaches insertObject:audioBuffer atIndex:0];
+}
+
+- (double)getPts {
+    return self.audioPts;
+}
+
 #pragma mark - Private
 - (void)_initAudioQueue {
-    AudioStreamBasicDescription asbd = self.asbd;
-    OSStatus ret = AudioQueueNewOutput(&asbd, MMAudioQueuePullData, (__bridge void *)self, NULL, NULL, 0, &_audioQueue);
+    AudioStreamBasicDescription asbd = MMBufferUtils.asbd;
+    OSStatus ret = AudioQueueNewOutput(&asbd,
+                                       MMAudioQueuePullData,
+                                       (__bridge void *)self,
+                                       NULL,
+                                       NULL,
+                                       0,
+                                       &_audioQueue);
     if (ret != noErr) {
         NSLog(@"[yjx] create audio queue error: %d", ret);
         AudioQueueDispose(self.audioQueue, YES);
@@ -105,7 +132,10 @@ static const NSInteger kBufferCount = 3;
         return;
     }
     
-    ret = AudioQueueAddPropertyListener(_audioQueue, kAudioQueueProperty_IsRunning, MMAudioQueuePropertyCallback, (__bridge void *)(self));
+    ret = AudioQueueAddPropertyListener(_audioQueue,
+                                        kAudioQueueProperty_IsRunning,
+                                        MMAudioQueuePropertyCallback,
+                                        (__bridge void *)(self));
 }
 
 static void MMAudioQueuePropertyCallback(void *inUserData,
@@ -122,7 +152,7 @@ static void MMAudioQueuePropertyCallback(void *inUserData,
 static void MMAudioQueuePullData(void* __nullable inUserData,
                             AudioQueueRef inAQ,
                             AudioQueueBufferRef inBuffer) {
-    MMAudioQueuePlayer *self = (__bridge  MMAudioQueuePlayer *)inUserData;
+    MMAudioQueuePlayer *self = (__bridge MMAudioQueuePlayer *)inUserData;
     if (!self) {
         NSLog(@"[yjx] audio queue callback self is nil");
         return;
@@ -139,21 +169,41 @@ static void MMAudioQueuePullData(void* __nullable inUserData,
         }
     }
     
-    /// 向外拉数据
-    weakify(self);
-    self.pullDataBlk(^(AudioBufferList * _Nonnull bufferList) {
-        strongify(self);
+    if (self.config.needPullData) { /// 向外拉数据
+        weakify(self);
+        self.pullDataBlk(^(AudioBufferList * _Nonnull bufferList) {
+            strongify(self);
+            if (bufferList) {
+                UInt32 dataSize = bufferList->mBuffers[0].mDataByteSize;
+                memcpy(inBuffer->mAudioData, bufferList->mBuffers[0].mData, dataSize);
+                inBuffer->mAudioDataByteSize = dataSize;
+                ret = AudioQueueEnqueueBuffer(self.audioQueue, inBuffer, 0, NULL);
+            } else {
+                memset(inBuffer->mAudioData, 0, kMaxByteSize);
+                inBuffer->mAudioDataByteSize = kMaxByteSize;
+                ret = AudioQueueEnqueueBuffer(self.audioQueue, inBuffer, 0, NULL);
+            }
+        });
+    } else { /// 使用内部缓存
+        AudioBufferList *bufferList = self->_bufferList;
+        [MMBufferUtils resetAudioBufferList:bufferList];
+        if (self.bufferCaches.count) {
+            CMSampleBufferRef sampleBuffer = (CMSampleBufferRef)[self.bufferCaches.lastObject pointerValue];
+            self.audioPts = CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(sampleBuffer));
+            UInt32 samples = (UInt32)CMSampleBufferGetNumSamples(sampleBuffer);
+            bufferList->mBuffers[0].mDataByteSize = samples * MMBufferUtils.asbd.mBytesPerFrame;
+            CMSampleBufferCopyPCMDataIntoAudioBufferList(sampleBuffer, 0, samples, self->_bufferList);
+            
+            [self.bufferCaches removeLastObject];
+            CFRelease(sampleBuffer);
+        }
+        
         if (bufferList) {
             UInt32 dataSize = bufferList->mBuffers[0].mDataByteSize;
             memcpy(inBuffer->mAudioData, bufferList->mBuffers[0].mData, dataSize);
             inBuffer->mAudioDataByteSize = dataSize;
             ret = AudioQueueEnqueueBuffer(self.audioQueue, inBuffer, 0, NULL);
-        } else {
-            memset(inBuffer->mAudioData, 0, kMaxByteSize);
-            inBuffer->mAudioDataByteSize = kMaxByteSize;
-            ret = AudioQueueEnqueueBuffer(self.audioQueue, inBuffer, 0, NULL);
         }
-    });
+    }
 }
-
 @end

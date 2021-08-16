@@ -3,11 +3,14 @@
 // Github : https://github.com/crazydog-ki
 
 #import <Foundation/Foundation.h>
-#import "MMSessionDecodeProtocol.h"
+#import "MMSessionProcessProtocol.h"
+#import "MMDecodeConfig.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MMFFDecoder : NSObject <MMSessionDecodeProtocol>
+@interface MMFFDecoder : NSObject <MMSessionProcessProtocol>
+- (instancetype)initWithConfig:(MMDecodeConfig *)config;
+- (MMSampleData *)pullSampleData:(MMSampleDataType)type;
 @end
 
 NS_ASSUME_NONNULL_END

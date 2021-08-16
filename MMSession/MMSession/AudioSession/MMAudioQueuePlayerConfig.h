@@ -5,7 +5,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface MMAudioQueuePlayerConfig : NSObject
-
+@property (nonatomic, assign) BOOL needPullData;
 @end
 
 NS_ASSUME_NONNULL_END

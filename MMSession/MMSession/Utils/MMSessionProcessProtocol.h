@@ -9,10 +9,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol MMSessionProcessProtocol <NSObject>
 @optional
-- (void)processVideoBuffer:(CMSampleBufferRef)sampleBuffer;
-- (void)processAudioBuffer:(CMSampleBufferRef)sampleBuffer;
+- (void)addNextVideoNode:(id<MMSessionProcessProtocol>)node;
+- (void)addNextAudioNode:(id<MMSessionProcessProtocol>)node;
 - (void)processSampleData:(MMSampleData *)sampleData;
-@property (nonatomic, strong) id<MMSessionProcessProtocol> nextNodes;
+- (double)getPts;
 @end
 
 NS_ASSUME_NONNULL_END

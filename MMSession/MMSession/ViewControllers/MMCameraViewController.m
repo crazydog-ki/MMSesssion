@@ -35,15 +35,21 @@
         self.camera.videoOutputCallback = ^(CMSampleBufferRef  _Nonnull sampleBuffer) {
             strongify(self);
             dispatch_sync(dispatch_get_main_queue(), ^{
-                [self.glPreview processVideoBuffer:sampleBuffer];
-                [self.writer processVideoBuffer:sampleBuffer];
+                MMSampleData *videoData = [[MMSampleData alloc] init];
+                videoData.dataType = MMSampleDataType_Decoded_Video;
+                videoData.sampleBuffer = sampleBuffer;
+                [self.glPreview processSampleData:videoData];
+                [self.writer processSampleData:videoData];
             });
         };
         
         self.camera.audioOutputCallback = ^(CMSampleBufferRef  _Nonnull sampleBuffer) {
             strongify(self);
             dispatch_sync(dispatch_get_main_queue(), ^{
-                [self.writer processAudioBuffer:sampleBuffer];
+                MMSampleData *audioData = [[MMSampleData alloc] init];
+                audioData.dataType = MMSampleDataType_Decoded_Audio;
+                audioData.sampleBuffer = sampleBuffer;
+                [self.writer processSampleData:audioData];
             });
         };
     };
@@ -63,7 +69,7 @@
 - (void)_setupPreview {
     CGFloat w = self.view.bounds.size.width;
     CGFloat videoRatio = self.camera.videoSize.height / self.camera.videoSize.width;
-    MMVideoGLPreview *glPreview = [[MMVideoGLPreview alloc] initWithFrame:CGRectMake(0, kNavBarHeight, w, w*videoRatio)];
+    MMVideoGLPreview *glPreview = [[MMVideoGLPreview alloc] initWithFrame:CGRectMake(0, kStatusBarH+kNavBarH, w, w*videoRatio)];
     glPreview.backgroundColor = UIColor.blackColor;
     [self.view insertSubview:glPreview atIndex:0];
     self.glPreview = glPreview;
@@ -112,7 +118,7 @@
     self.collectionView = tagCollectionView;
     [tagCollectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.equalTo(self.view);
-        make.top.equalTo(self.view).offset(kNavBarHeight);
+        make.top.equalTo(self.view).offset(kStatusBarH+kNavBarH);
         make.bottom.equalTo(self.view);
     }];
     

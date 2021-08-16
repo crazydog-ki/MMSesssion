@@ -19,6 +19,7 @@
 @end
 
 @implementation MMEncodeWriter
+#pragma mark - Public
 - (instancetype)initWithConfig:(MMEncodeConfig *)config {
     if (self = [super init]) {
         _config = config;
@@ -63,57 +64,54 @@
     });
 }
 
-- (void)processVideoBuffer:(CMSampleBufferRef)sampleBuffer {
+#pragma mark - MMSessionProcessProtocol
+- (void)processSampleData:(MMSampleData *)sampleData {
     if (_stopFlag) {
         return;
     }
     
+    BOOL isVideo = (sampleData.dataType==MMSampleDataType_Decoded_Video);
+    CMSampleBufferRef sampleBuffer = sampleData.sampleBuffer;
+    
     CFRetain(sampleBuffer);
     dispatch_async(_writerQueue, ^{
-        CMTime frameTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
-        NSLog(@"[yjx] encode video pts: %lf", CMTimeGetSeconds(frameTime));
-        
-        if (self.isFirstFrame) {
-            if (self.assetWriter.status == AVAssetWriterStatusUnknown && [self.assetWriter startWriting]) {
-                NSLog(@"[yjx] start encode success");
+        if (isVideo) {
+            CMTime frameTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
+            NSLog(@"[yjx] encode video pts: %lf", CMTimeGetSeconds(frameTime));
+            
+            if (self.isFirstFrame) {
+                if (self.assetWriter.status == AVAssetWriterStatusUnknown && [self.assetWriter startWriting]) {
+                    NSLog(@"[yjx] start encode success");
+                }
+                [self.assetWriter startSessionAtSourceTime:frameTime];
+                self.isFirstFrame = NO;
             }
-            [self.assetWriter startSessionAtSourceTime:frameTime];
-            self.isFirstFrame = NO;
-        }
-        
-        CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
-        if (self.videoWriterInput.readyForMoreMediaData && self.assetWriter.status == AVAssetWriterStatusWriting) {
-            if (![self.videoAdaptor appendPixelBuffer:pixelBuffer withPresentationTime:frameTime]) {
-                NSLog(@"[youjianxia] encode drop video frame-1");
+            
+            CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+            if (self.videoWriterInput.readyForMoreMediaData && self.assetWriter.status == AVAssetWriterStatusWriting) {
+                if (![self.videoAdaptor appendPixelBuffer:pixelBuffer withPresentationTime:frameTime]) {
+                    NSLog(@"[youjianxia] encode drop video frame-1");
+                }
+            } else {
+                NSLog(@"[youjianxia] encode drop video frame-2");
             }
         } else {
-            NSLog(@"[youjianxia] encode drop video frame-2");
-        }
-        CFRelease(sampleBuffer);
-    });
-}
-
-- (void)processAudioBuffer:(CMSampleBufferRef)sampleBuffer {
-    if (_stopFlag) {
-        return;
-    }
-    
-    CFRetain(sampleBuffer);
-    dispatch_async(_writerQueue, ^{
-        CMTime frameTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
-        NSLog(@"[yjx] encode audio pts: %lf", CMTimeGetSeconds(frameTime));
-        
-        if (self.isFirstFrame) {
-            if (self.assetWriter.status == AVAssetWriterStatusUnknown && [self.assetWriter startWriting]) {
-                NSLog(@"[yjx] start encode success");
+            CMTime frameTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
+            NSLog(@"[yjx] encode audio pts: %lf", CMTimeGetSeconds(frameTime));
+            
+            if (self.isFirstFrame) {
+                if (self.assetWriter.status == AVAssetWriterStatusUnknown && [self.assetWriter startWriting]) {
+                    NSLog(@"[yjx] start encode success");
+                }
+                [self.assetWriter startSessionAtSourceTime:frameTime];
+                self.isFirstFrame = NO;
             }
-            [self.assetWriter startSessionAtSourceTime:frameTime];
-            self.isFirstFrame = NO;
+            
+            if (self.audioWriterInput.readyForMoreMediaData && self.assetWriter.status == AVAssetWriterStatusWriting) {
+                [self.audioWriterInput appendSampleBuffer:sampleBuffer];
+            }
         }
         
-        if (self.audioWriterInput.readyForMoreMediaData && self.assetWriter.status == AVAssetWriterStatusWriting) {
-            [self.audioWriterInput appendSampleBuffer:sampleBuffer];
-        }
         CFRelease(sampleBuffer);
     });
 }

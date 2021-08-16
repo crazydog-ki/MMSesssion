@@ -5,17 +5,15 @@
 #import "MMDecodeReader.h"
 
 @interface MMDecodeReader ()
-
 @property (nonatomic, strong) dispatch_queue_t readerQueue;
 @property (nonatomic, strong) MMDecodeConfig *config;
 @property (nonatomic, strong) AVAssetReader *assetReader;
 @property (nonatomic, strong) AVAssetReaderTrackOutput *videoOutput;
 @property (nonatomic, strong) AVAssetReaderTrackOutput *audioOutput;
- 
 @end
 
 @implementation MMDecodeReader
-
+#pragma mark - Public
 - (instancetype)initWithConfig:(MMDecodeConfig *)config {
     if (self = [super init]) {
         _readerQueue = dispatch_queue_create("mmsession_reader_queue", DISPATCH_QUEUE_SERIAL);
@@ -55,26 +53,26 @@
         return nil;
     }
     MMSampleData *sampleData = [[MMSampleData alloc] init];
-    if (type == MMSampleDataType_Pull_Video) {
+    if (type == MMSampleDataType_None_Video) {
         CMSampleBufferRef sampleBuffer = [self.videoOutput copyNextSampleBuffer];
         sampleData.pts = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
         if (sampleBuffer) {
-            sampleData.flag = MMSampleDataFlagProcess;
+            sampleData.statusFlag = MMSampleDataFlagProcess;
             sampleData.pts = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
             sampleData.sampleBuffer = sampleBuffer;
             sampleData.dataType = MMSampleDataType_Decoded_Video;
         } else {
-            sampleData.flag = MMSampleDataFlagEnd;
+            sampleData.statusFlag = MMSampleDataFlagEnd;
         }
-    } else if (type == MMSampleDataType_Pull_Audio) {
+    } else if (type == MMSampleDataType_None_Audio) {
         CMSampleBufferRef sampleBuffer = [self.audioOutput copyNextSampleBuffer];
         if (sampleBuffer) {
-            sampleData.flag = MMSampleDataFlagProcess;
+            sampleData.statusFlag = MMSampleDataFlagProcess;
             sampleData.pts = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
             sampleData.dataType = MMSampleDataType_Decoded_Audio;
             sampleData.sampleBuffer = sampleBuffer;
         } else {
-            sampleData.flag = MMSampleDataFlagEnd;
+            sampleData.statusFlag = MMSampleDataFlagEnd;
         }
     }
     return sampleData;
@@ -118,5 +116,4 @@
         _audioOutput = audioOutput;
     }
 }
-
 @end

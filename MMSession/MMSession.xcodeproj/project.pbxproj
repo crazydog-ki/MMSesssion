@@ -21,6 +21,7 @@
 		2B0073992691511A006510A6 /* Shader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 2B0073952691511A006510A6 /* Shader.fsh */; };
 		2B00739A2691511A006510A6 /* Shader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 2B0073972691511A006510A6 /* Shader.vsh */; };
 		2B00739D26915F01006510A6 /* MMVideoPreviewConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B00739C26915F01006510A6 /* MMVideoPreviewConfig.m */; };
+		2B4C0DEA26C52997004B1321 /* MMAudioQueue.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B4C0DE926C52997004B1321 /* MMAudioQueue.mm */; };
 		2B5072D0268C6D0C00444623 /* MMEncodeWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B5072CF268C6D0C00444623 /* MMEncodeWriter.m */; };
 		2B50795D268C732200444623 /* MMEncodeConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B50795C268C732200444623 /* MMEncodeConfig.m */; };
 		2B508D04268EC21700444623 /* MMVideoGLPreview.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B508D03268EC21700444623 /* MMVideoGLPreview.m */; };
@@ -31,6 +32,7 @@
 		2B9AC2B72697E19500DC842D /* MMAVFDViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B9AC2B62697E19500DC842D /* MMAVFDViewController.m */; };
 		2B9AC2BC2697E36700DC842D /* MMMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B9AC2BB2697E36700DC842D /* MMMainViewController.m */; };
 		2B9AC2BE2697F41000DC842D /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 2B9AC2BD2697F41000DC842D /* Podfile */; };
+		2B9C80F226CA4DDD00248E56 /* MMBufferUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B9C80F126CA4DDD00248E56 /* MMBufferUtils.m */; };
 		2B9D5E5526A031CF00F401D2 /* MMDecodeReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B9D5E5426A031CF00F401D2 /* MMDecodeReader.m */; };
 		2B9D5E5826A0321000F401D2 /* MMDecodeConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B9D5E5726A0321000F401D2 /* MMDecodeConfig.m */; };
 		2BE611DE26BA9C72006C2E32 /* MMVTEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BE611DD26BA9C72006C2E32 /* MMVTEncoder.m */; };
@@ -86,7 +88,8 @@
 		2B0073972691511A006510A6 /* Shader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Shader.vsh; sourceTree = "<group>"; };
 		2B00739B26915F01006510A6 /* MMVideoPreviewConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMVideoPreviewConfig.h; sourceTree = "<group>"; };
 		2B00739C26915F01006510A6 /* MMVideoPreviewConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMVideoPreviewConfig.m; sourceTree = "<group>"; };
-		2B4CA97126BE6928004B1321 /* MMSessionParseProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMSessionParseProtocol.h; sourceTree = "<group>"; };
+		2B4C0DE826C52997004B1321 /* MMAudioQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMAudioQueue.h; sourceTree = "<group>"; };
+		2B4C0DE926C52997004B1321 /* MMAudioQueue.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MMAudioQueue.mm; sourceTree = "<group>"; };
 		2B5072CE268C6D0C00444623 /* MMEncodeWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEncodeWriter.h; sourceTree = "<group>"; };
 		2B5072CF268C6D0C00444623 /* MMEncodeWriter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEncodeWriter.m; sourceTree = "<group>"; };
 		2B50795B268C732200444623 /* MMEncodeConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEncodeConfig.h; sourceTree = "<group>"; };
@@ -107,6 +110,8 @@
 		2B9AC2BA2697E36700DC842D /* MMMainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMMainViewController.h; sourceTree = "<group>"; };
 		2B9AC2BB2697E36700DC842D /* MMMainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMMainViewController.m; sourceTree = "<group>"; };
 		2B9AC2BD2697F41000DC842D /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		2B9C80F026CA4DDD00248E56 /* MMBufferUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMBufferUtils.h; sourceTree = "<group>"; };
+		2B9C80F126CA4DDD00248E56 /* MMBufferUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMBufferUtils.m; sourceTree = "<group>"; };
 		2B9D5E5326A031CF00F401D2 /* MMDecodeReader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMDecodeReader.h; sourceTree = "<group>"; };
 		2B9D5E5426A031CF00F401D2 /* MMDecodeReader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMDecodeReader.m; sourceTree = "<group>"; };
 		2B9D5E5626A0321000F401D2 /* MMDecodeConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMDecodeConfig.h; sourceTree = "<group>"; };
@@ -116,8 +121,6 @@
 		2BE611E226BABFA7006C2E32 /* MMAVTBViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMAVTBViewController.h; sourceTree = "<group>"; };
 		2BE611E326BABFA7006C2E32 /* MMAVTBViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMAVTBViewController.m; sourceTree = "<group>"; };
 		2BE611E626BAC273006C2E32 /* dilireba.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = dilireba.mp4; sourceTree = "<group>"; };
-		2BE611F226BB8B19006C2E32 /* MMSessionDecodeProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMSessionDecodeProtocol.h; sourceTree = "<group>"; };
-		2BE611F326BB8E8C006C2E32 /* MMSessionEncodeProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMSessionEncodeProtocol.h; sourceTree = "<group>"; };
 		2BE611F826BB94CB006C2E32 /* libswresample.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libswresample.a; path = "MMSession/FFmpeg-iOS/lib/libswresample.a"; sourceTree = "<group>"; };
 		2BE611F926BB94CB006C2E32 /* libavfilter.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavfilter.a; path = "MMSession/FFmpeg-iOS/lib/libavfilter.a"; sourceTree = "<group>"; };
 		2BE611FA26BB94CB006C2E32 /* libavformat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavformat.a; path = "MMSession/FFmpeg-iOS/lib/libavformat.a"; sourceTree = "<group>"; };
@@ -412,15 +415,14 @@
 			children = (
 				1253B68026ABC81600D7A22C /* MMPrefixHeader.pch */,
 				2B508D07268F056D00444623 /* MMSessionProcessProtocol.h */,
-				2B4CA97126BE6928004B1321 /* MMSessionParseProtocol.h */,
-				2BE611F226BB8B19006C2E32 /* MMSessionDecodeProtocol.h */,
-				2BE611F326BB8E8C006C2E32 /* MMSessionEncodeProtocol.h */,
 				1253B6AA26ABCF4600D7A22C /* UIControl+Extension.h */,
 				1253B6AB26ABCF4600D7A22C /* UIControl+Extension.m */,
 				2BE6F06A26B8F446006C2E32 /* AVAsset+Extension.h */,
 				2BE6F06B26B8F446006C2E32 /* AVAsset+Extension.m */,
 				2B9AC2AB2696E60000DC842D /* AVMutableComposition+Extension.h */,
 				2B9AC2AC2696E60000DC842D /* AVMutableComposition+Extension.m */,
+				2B9C80F026CA4DDD00248E56 /* MMBufferUtils.h */,
+				2B9C80F126CA4DDD00248E56 /* MMBufferUtils.m */,
 				2B7B87CF26A51A43006D5456 /* MMSampleData.h */,
 				2B7B87D026A51A43006D5456 /* MMSampleData.m */,
 			);
@@ -430,10 +432,12 @@
 		2B7B87D226A52C2F006D5456 /* AudioSession */ = {
 			isa = PBXGroup;
 			children = (
-				2B7B87D326A52C60006D5456 /* MMAudioQueuePlayer.h */,
-				2B7B87D426A52C60006D5456 /* MMAudioQueuePlayer.m */,
 				2B7B8C6026A530E4006D5456 /* MMAudioQueuePlayerConfig.h */,
 				2B7B8C6126A530E4006D5456 /* MMAudioQueuePlayerConfig.m */,
+				2B7B87D326A52C60006D5456 /* MMAudioQueuePlayer.h */,
+				2B7B87D426A52C60006D5456 /* MMAudioQueuePlayer.m */,
+				2B4C0DE826C52997004B1321 /* MMAudioQueue.h */,
+				2B4C0DE926C52997004B1321 /* MMAudioQueue.mm */,
 			);
 			path = AudioSession;
 			sourceTree = "<group>";
@@ -826,9 +830,11 @@
 				2B00739D26915F01006510A6 /* MMVideoPreviewConfig.m in Sources */,
 				2BF08E1426BD467F0072B990 /* MMFFDecoder.mm in Sources */,
 				124844552687121A003C27DF /* SceneDelegate.m in Sources */,
+				2B4C0DEA26C52997004B1321 /* MMAudioQueue.mm in Sources */,
 				2B9AC2BC2697E36700DC842D /* MMMainViewController.m in Sources */,
 				2BE6F06C26B8F446006C2E32 /* AVAsset+Extension.m in Sources */,
 				2B9D5E5826A0321000F401D2 /* MMDecodeConfig.m in Sources */,
+				2B9C80F226CA4DDD00248E56 /* MMBufferUtils.m in Sources */,
 				124844572687121A003C27DF /* AppDelegate.m in Sources */,
 				1253B6AC26ABCF4600D7A22C /* UIControl+Extension.m in Sources */,
 				2BE619FD26BBC400006C2E32 /* MMParseConfig.m in Sources */,
@@ -1001,7 +1007,7 @@
 					"$(PROJECT_DIR)/MMSession/FFmpeg-iOS/include",
 				);
 				INFOPLIST_FILE = MMSession/Other/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1010,7 +1016,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/MMSession/FFmpeg-iOS/lib",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.crazydog.MMSession;
+				PRODUCT_BUNDLE_IDENTIFIER = crazydog.MMSession;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1036,7 +1042,7 @@
 					"$(PROJECT_DIR)/MMSession/FFmpeg-iOS/include",
 				);
 				INFOPLIST_FILE = MMSession/Other/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1045,7 +1051,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/MMSession/FFmpeg-iOS/lib",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.crazydog.MMSession;
+				PRODUCT_BUNDLE_IDENTIFIER = crazydog.MMSession;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;

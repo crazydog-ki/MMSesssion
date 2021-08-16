@@ -6,6 +6,8 @@
 #import "AVAsset+Extension.h"
 #import "MMFFParser.h"
 #import "MMFFDecoder.h"
+#import "MMVideoGLPreview.h"
+#import "MMAudioQueuePlayer.h"
 
 @interface MMAVTBViewController () <TZImagePickerControllerDelegate, TTGTextTagCollectionViewDelegate>
 @property (nonatomic, strong) TTGTextTagCollectionView *collectionView;
@@ -17,10 +19,20 @@
 @property (nonatomic, strong) NSString *videoPath;
 @property (nonatomic, assign) CGFloat videoRatio;
 
-@property (nonatomic, strong) MMFFParser *ffParser;
-@property (nonatomic, strong) MMFFDecoder *ffDecoder;
+@property (nonatomic, strong) MMFFParser *ffVideoParser;
+@property (nonatomic, strong) MMFFParser *ffAudioParser;
+@property (nonatomic, strong) MMFFDecoder *ffVideoDecoder;
+@property (nonatomic, strong) MMFFDecoder *ffAudioDecoder;
+@property (nonatomic, strong) MMVideoGLPreview *glPreview;
+@property (nonatomic, strong) MMAudioQueuePlayer *audioPlayer;
 
-@property (nonatomic, strong) CADisplayLink *displayLink;
+@property (nonatomic, strong) NSThread *videoThread;
+@property (nonatomic, strong) NSThread *audioThread;
+
+@property (nonatomic, assign) double videoPts;
+@property (nonatomic, assign) double audioPts;
+
+@property (nonatomic, assign) BOOL isReady;
 @end
 
 @implementation MMAVTBViewController
@@ -30,6 +42,12 @@
     self.navigationItem.title = @"AVTB Module";
     
     [self _setupCollectionView];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    [self _stopThread];
 }
 
 - (void)dealloc {
@@ -44,7 +62,7 @@
     self.collectionView = tagCollectionView;
     [tagCollectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.equalTo(self.view);
-        make.top.equalTo(self.view).offset(kNavBarHeight);
+        make.top.equalTo(self.view).offset(kStatusBarH+kNavBarH);
         make.bottom.equalTo(self.view);
     }];
     
@@ -65,6 +83,91 @@
     [tagCollectionView addTag:exportTag];
 }
 
+- (void)_setupParser {
+    if (_ffVideoParser || _ffAudioParser) return;
+    
+    MMParseConfig *videoConfig = [[MMParseConfig alloc] init];
+    videoConfig.parseType = MMFFParseType_Video;
+    videoConfig.inPath = self.videoPath;
+    _ffVideoParser = [[MMFFParser alloc] initWithConfig:videoConfig];
+    
+    MMParseConfig *audioConfig = [[MMParseConfig alloc] init];
+    audioConfig.parseType = MMFFParseType_Audio;
+    audioConfig.inPath = self.videoPath;
+    _ffAudioParser = [[MMFFParser alloc] initWithConfig:audioConfig];
+}
+
+- (void)_setupDecoder {
+    if (_ffVideoDecoder || _ffAudioDecoder) return;
+    
+    MMDecodeConfig *videoConfig = [[MMDecodeConfig alloc] init];
+    videoConfig.decodeType = MMFFDecodeType_Video;
+    videoConfig.fmtCtx = (void *)_ffVideoParser.getFmtCtx;
+    _ffVideoDecoder = [[MMFFDecoder alloc] initWithConfig:videoConfig];
+    
+    MMDecodeConfig *audioConfig = [[MMDecodeConfig alloc] init];
+    audioConfig.decodeType = MMFFDecodeType_Audio;
+    audioConfig.fmtCtx = (void *)_ffAudioParser.getFmtCtx;
+    _ffAudioDecoder = [[MMFFDecoder alloc] initWithConfig:audioConfig];
+}
+
+- (void)_setupPreview {
+    if (self.glPreview) return;
+    
+    CGFloat w = self.view.bounds.size.width;
+    MMVideoGLPreview *glPreview = [[MMVideoGLPreview alloc] initWithFrame:CGRectMake(0, kStatusBarH+kNavBarH, w, w*self.videoRatio)];
+    glPreview.backgroundColor = UIColor.blackColor;
+    [self.view insertSubview:glPreview atIndex:0];
+    self.glPreview = glPreview;
+    
+    MMVideoPreviewConfig *config = [[MMVideoPreviewConfig alloc] init];
+    config.renderYUV = YES;
+    config.presentRect = CGRectMake(0, 0, w, w*self.videoRatio);
+    config.rotation = -self.composition.rotation;
+    self.glPreview.config = config;
+    [self.glPreview setupGLEnv];
+}
+
+- (void)_setupAudioPlayer {
+    if (self.audioPlayer) return;
+    
+    MMAudioQueuePlayerConfig *playerConfig = [[MMAudioQueuePlayerConfig alloc] init];
+    MMAudioQueuePlayer *audioPlayer = [[MMAudioQueuePlayer alloc] initWithConfig:playerConfig];
+    self.audioPlayer = audioPlayer;
+}
+
+- (void)_startThread {
+    self.isReady = YES;
+    self.videoPts = 0.0f;
+    self.audioPts = 0.0f;
+    
+    if (!self.videoThread) {
+        self.videoThread = [[NSThread alloc] initWithTarget:self selector:@selector(_playVideo) object:nil];
+        [self.videoThread start];
+    }
+    
+    if (!self.audioThread) {
+        self.audioThread = [[NSThread alloc] initWithTarget:self selector:@selector(_playAudio) object:nil];
+        [self.audioThread start];
+    }
+}
+
+- (void)_stopThread {
+    self.isReady = NO;
+    self.videoPts = 0.0f;
+    self.audioPts = 0.0f;
+    
+    if (self.videoThread) {
+        [self.videoThread cancel];
+        self.videoThread = nil;
+    }
+    
+    if (self.audioThread) {
+        [self.audioThread cancel];
+        self.audioThread = nil;
+    }
+}
+
 #pragma mark - Action
 - (void)_startPick {
     TZImagePickerController *imagePickerVc = [[TZImagePickerController alloc] initWithMaxImagesCount:9 delegate:self];
@@ -74,32 +177,45 @@
 }
 
 - (void)_play {
-    if (!_ffParser) {
-        MMParseConfig *config = [[MMParseConfig alloc] init];
-        config.inPath = self.videoPath;
-        _ffParser = [[MMFFParser alloc] initWithConfig:config];
-    }
+    [self _setupParser];
+    [self _setupDecoder];
+    [self _setupPreview];
+    [self _setupAudioPlayer];
     
-    if (!_ffDecoder) {
-        MMDecodeConfig *config = [[MMDecodeConfig alloc] init];
-        config.fmtCtx = (void *)_ffParser.getFmtCtx;
-        _ffDecoder = [[MMFFDecoder alloc] initWithConfig:config];
-    }
+    /// 视频处理链路
+    [self.ffVideoParser addNextVideoNode:self.ffVideoDecoder];
+    [self.ffVideoDecoder addNextVideoNode:self.glPreview];
     
-    weakify(self);
-    [_ffParser startParse:^(MMSampleData * _Nonnull data) {
-        strongify(self);
-        if (data.dataType == MMSampleDataType_Parsed_Video) {
-            NSLog(@"[yjx] get parsed video, size: %d, pts: %lf", data.videoInfo.dataSize, data.videoInfo.pts);
-            data.dataType = MMSampleDataType_Pull_Video;
-            MMSampleData *videoData = [self.ffDecoder decodeParsedData:data];
-            CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(videoData.sampleBuffer);
-            NSLog(@"[yjx] get decoded video data: %p", pixelBuffer);
-        } else if (data.dataType == MMSampleDataType_Parsed_Audio) {
-            NSLog(@"[yjx] get parsed audio, size: %d, pts: %lf", data.audioInfo.dataSize, data.audioInfo.pts);
-            data.dataType = MMSampleDataType_Pull_Audio;
+    /// 音频处理链路
+    [self.ffAudioParser addNextAudioNode:self.ffAudioDecoder];
+    [self.ffAudioDecoder addNextAudioNode:self.audioPlayer];
+    [self.audioPlayer play];
+    
+    [self _startThread];
+}
+
+- (void)_playVideo {
+    while (self.isReady) {
+        while (self.audioPts <= self.videoPts) {
+            [NSThread sleepForTimeInterval:0.0001];
         }
-    }];
+
+        MMSampleData *sampleData = [[MMSampleData alloc] init];
+        sampleData.dataType = MMSampleDataType_None_Video;
+        [self.ffVideoParser processSampleData:sampleData];
+        
+        self.videoPts = self.glPreview.getPts;
+    }
+}
+
+- (void)_playAudio {
+    while (self.isReady) {
+        MMSampleData *sampleData = [[MMSampleData alloc] init];
+        sampleData.dataType = MMSampleDataType_None_Audio;
+        [self.ffAudioParser processSampleData:sampleData];
+        
+        self.audioPts = self.audioPlayer.getPts;
+    }
 }
 
 #pragma mark - TZImagePickerControllerDelegate

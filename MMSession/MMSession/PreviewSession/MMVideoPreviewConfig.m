@@ -5,5 +5,4 @@
 #import "MMVideoPreviewConfig.h"
 
 @implementation MMVideoPreviewConfig
-
 @end

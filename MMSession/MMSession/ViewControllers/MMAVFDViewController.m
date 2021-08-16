@@ -9,6 +9,7 @@
 #import "MMAudioQueuePlayer.h"
 #import "MMDecodeReader.h"
 #import "MMEncodeWriter.h"
+#import "MMBufferUtils.h"
 
 static const NSUInteger kMaxSamplesCount = 8192;
 
@@ -77,7 +78,7 @@ static const NSUInteger kMaxSamplesCount = 8192;
     if (self.glPreview) return;
     
     CGFloat w = self.view.bounds.size.width;
-    MMVideoGLPreview *glPreview = [[MMVideoGLPreview alloc] initWithFrame:CGRectMake(0, kNavBarHeight, w, w*self.videoRatio)];
+    MMVideoGLPreview *glPreview = [[MMVideoGLPreview alloc] initWithFrame:CGRectMake(0, kStatusBarH+kNavBarH, w, w*self.videoRatio)];
     glPreview.backgroundColor = UIColor.blackColor;
     [self.view insertSubview:glPreview atIndex:0];
     self.glPreview = glPreview;
@@ -97,7 +98,7 @@ static const NSUInteger kMaxSamplesCount = 8192;
     self.collectionView = tagCollectionView;
     [tagCollectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.equalTo(self.view);
-        make.top.equalTo(self.view).offset(kNavBarHeight);
+        make.top.equalTo(self.view).offset(kStatusBarH+kNavBarH);
         make.bottom.equalTo(self.view);
     }];
     
@@ -119,23 +120,6 @@ static const NSUInteger kMaxSamplesCount = 8192;
     
     TTGTextTag *exportTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"视频导出"] style:style];
     [tagCollectionView addTag:exportTag];
-}
-
-- (AudioBufferList *)_createAudioBufferList:(AudioStreamBasicDescription)audioFormat
-                               numberFrames:(UInt32)frameCount {
-    BOOL isInterleaved = !(audioFormat.mFormatFlags & kAudioFormatFlagIsNonInterleaved);
-    int bufferNum = isInterleaved ? 1:audioFormat.mChannelsPerFrame;
-    int channelsPerBuffer = isInterleaved ? audioFormat.mChannelsPerFrame:1;
-    int bytesPerBuffer = audioFormat.mBytesPerFrame * frameCount;
-
-    AudioBufferList *audioBuffer = calloc(1, sizeof(AudioBufferList) + (bufferNum-1) * sizeof(AudioBuffer));
-    audioBuffer->mNumberBuffers = bufferNum;
-    for (int i = 0; i < bufferNum; i++) {
-        audioBuffer->mBuffers[i].mData = calloc(bytesPerBuffer, 1);
-        audioBuffer->mBuffers[i].mDataByteSize = bytesPerBuffer;
-        audioBuffer->mBuffers[i].mNumberChannels = channelsPerBuffer;
-    }
-    return audioBuffer;
 }
 
 #pragma mark - Action
@@ -201,26 +185,21 @@ static const NSUInteger kMaxSamplesCount = 8192;
     if (self.reader) {
         [self _setupPreview];
         
-        MMSampleData *videoData = [self.reader pullSampleData:MMSampleDataType_Pull_Video];
-        if (videoData.flag == MMSampleDataFlagEnd) {
+        MMSampleData *videoData = [self.reader pullSampleData:MMSampleDataType_None_Video];
+        if (videoData.statusFlag == MMSampleDataFlagEnd) {
             [self.displayLink setPaused:YES];
             NSLog(@"[yjx] pull video buffer end");
             return;
         }
-        CMSampleBufferRef videoBuffer = videoData.sampleBuffer;
         if (self.writer) {
-            [self.writer processVideoBuffer:videoBuffer];
+            [self.writer processSampleData:videoData];
         }
         
-        self.videoPts = CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(videoBuffer));
+        self.videoPts = CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(videoData.sampleBuffer));
         NSLog(@"[yjx] pull video buffer, pts: %lf", self.videoPts);
         
         if (self.glPreview) {
-            [self.glPreview processVideoBuffer:videoBuffer];
-        }
-        if (videoBuffer) {
-            CFRelease(videoBuffer);
-            videoBuffer = nil;
+            [self.glPreview processSampleData:videoData];
         }
     }
 }
@@ -228,6 +207,7 @@ static const NSUInteger kMaxSamplesCount = 8192;
 - (void)_playAudio {
     if (!self.audioPlayer) {
         MMAudioQueuePlayerConfig *playerConfig = [[MMAudioQueuePlayerConfig alloc] init];
+        playerConfig.needPullData = YES;
         MMAudioQueuePlayer *audioPlayer = [[MMAudioQueuePlayer alloc] initWithConfig:playerConfig];
         self.audioPlayer = audioPlayer;
     } else {
@@ -236,11 +216,12 @@ static const NSUInteger kMaxSamplesCount = 8192;
     }
     
     weakify(self);
-    _bufferList = [self _createAudioBufferList:self.audioPlayer.asbd numberFrames:kMaxSamplesCount];
+    _bufferList = [MMBufferUtils produceAudioBufferList:MMBufferUtils.asbd
+                                           numberFrames:kMaxSamplesCount];
     self.audioPlayer.pullDataBlk = ^(AudioBufferBlock  _Nonnull block) {
         strongify(self);
-        MMSampleData *sampleData = [self.reader pullSampleData:MMSampleDataType_Pull_Audio];
-        if (sampleData.flag == MMSampleDataFlagEnd) {
+        MMSampleData *sampleData = [self.reader pullSampleData:MMSampleDataType_None_Audio];
+        if (sampleData.statusFlag == MMSampleDataFlagEnd) {
             NSLog(@"[yjx] pull audio buffer end");
             self.reader = nil;
             
@@ -274,11 +255,11 @@ static const NSUInteger kMaxSamplesCount = 8192;
         
         if (sampleBuffer) {
             if (self.writer) {
-                [self.writer processAudioBuffer:sampleBuffer];
+                [self.writer processSampleData:sampleData];
             }
             
             UInt32 samples = (UInt32)CMSampleBufferGetNumSamples(sampleBuffer);
-            self->_bufferList->mBuffers[0].mDataByteSize = samples * self.audioPlayer.asbd.mBytesPerFrame;
+            self->_bufferList->mBuffers[0].mDataByteSize = samples * MMBufferUtils.asbd.mBytesPerFrame;
             CMSampleBufferCopyPCMDataIntoAudioBufferList(sampleBuffer, 0, samples, self->_bufferList);
             CFRelease(sampleBuffer);
         }

@@ -7,9 +7,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface AVAsset (Extension)
-
 - (double)rotation;
-
 @end
 
 NS_ASSUME_NONNULL_END

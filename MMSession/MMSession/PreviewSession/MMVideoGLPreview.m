@@ -49,9 +49,18 @@ static const GLfloat kColorConversion709[] = {
 @property (nonatomic) CVOpenGLESTextureRef lumaTexture;
 @property (nonatomic) CVOpenGLESTextureRef chromaTexture;
 @property (nonatomic) CVOpenGLESTextureRef rgbaTexture;
+
+@property (nonatomic, assign) double videoPts;
 @end
 
 @implementation MMVideoGLPreview
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _videoPts = 0.0f;
+    }
+    return self;
+}
 
 + (Class)layerClass {
     return [CAEAGLLayer class];
@@ -65,10 +74,19 @@ static const GLfloat kColorConversion709[] = {
     [self _setShaderParams];
 }
 
-- (void)processVideoBuffer:(CMSampleBufferRef)sampleBuffer {
+- (void)dealloc {
+    [self _destoryRenderAndFrameBuffer];
+    [self _cleanUpTextures];
+}
+
+#pragma mark - MMSessionProcessProtocol
+- (void)processSampleData:(MMSampleData *)sampleData {
     BOOL renderYUV = _config.renderYUV;
-    CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+    self.videoPts = CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(sampleData.sampleBuffer));
+    CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleData.sampleBuffer);
     CVPixelBufferRetain(pixelBuffer);
+    if (!pixelBuffer) return;
+    
     if (renderYUV) {
         [self _rendYUVPixbuffer:pixelBuffer];
     } else {
@@ -77,9 +95,8 @@ static const GLfloat kColorConversion709[] = {
     CVPixelBufferRelease(pixelBuffer);
 }
 
-- (void)dealloc {
-    [self _destoryRenderAndFrameBuffer];
-    [self _cleanUpTextures];
+- (double)getPts {
+    return self.videoPts;
 }
 
 #pragma mark - Private
@@ -228,6 +245,11 @@ static const GLfloat kColorConversion709[] = {
 }
 
 - (void)_rendYUVPixbuffer:(CVPixelBufferRef)buffer {
+    if (_context != [EAGLContext currentContext]) {
+        NSLog(@"[yjx] reset gl context");
+        [EAGLContext setCurrentContext:_context];
+    }
+    
     CVReturn err;
     if (buffer == NULL) {
         return;
@@ -298,6 +320,11 @@ static const GLfloat kColorConversion709[] = {
 }
 
 - (void)_rendRGBPixbuffer:(CVPixelBufferRef)buffer {
+    if (_context != [EAGLContext currentContext]) {
+        NSLog(@"[yjx] reset gl context");
+        [EAGLContext setCurrentContext:_context];
+    }
+    
     CVReturn err;
     if (buffer == NULL) {
         return;
@@ -338,5 +365,4 @@ static const GLfloat kColorConversion709[] = {
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     [self.context presentRenderbuffer:GL_RENDERBUFFER];
 }
-
 @end

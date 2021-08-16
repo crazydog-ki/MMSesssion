@@ -16,11 +16,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"MMSession";
-    self.data = @[@"Camera",
-                  @"AVFD",
-                  @"FFmpeg & AVTB",
-                  @"AV-Multi",
-                  @"AV-Filter"];
+    self.data = @[@"相机",
+                  @"AVFoundation",
+                  @"FFmpeg",
+                  @"ToolBox",
+                  @"音视频多轨",
+                  @"音视频特效"];
     
     UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
     tableView.backgroundColor = UIColor.blackColor;
@@ -60,11 +61,11 @@
     [self _transAnimation];
     
     NSString *selectedTex = self.data[indexPath.row];
-    if ([selectedTex isEqualToString:@"Camera"]) {
+    if ([selectedTex isEqualToString:@"相机"]) {
         [self.navigationController pushViewController:[[MMCameraViewController alloc] init] animated:NO];
-    } else if ([selectedTex isEqualToString:@"AVFD"])  {
+    } else if ([selectedTex isEqualToString:@"AVFoundation"])  {
         [self.navigationController pushViewController:[[MMAVFDViewController alloc] init] animated:NO];
-    } else if ([selectedTex isEqualToString:@"FFmpeg & AVTB"]) {
+    } else if ([selectedTex isEqualToString:@"FFmpeg"]) {
         [self.navigationController pushViewController:[[MMAVTBViewController alloc] init] animated:NO];
     }
 }
@@ -72,7 +73,7 @@
 #pragma mark - Private
 - (void)_transAnimation {
     CATransition *animation = [CATransition animation];
-    [animation setDuration:0.5f];
+    [animation setDuration:0.8f];
     [animation setType:kCATransitionFade];
     [animation setSubtype:kCATransitionFromTop];
     [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault]];

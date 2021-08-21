@@ -70,6 +70,13 @@
         return;
     }
     
+    if (sampleData.statusFlag == MMSampleDataFlagEnd) {
+        if (self.endEncodeBlk) {
+            self.endEncodeBlk();
+        }
+        return;
+    }
+    
     BOOL isVideo = (sampleData.dataType==MMSampleDataType_Decoded_Video);
     CMSampleBufferRef sampleBuffer = sampleData.sampleBuffer;
     
@@ -77,11 +84,11 @@
     dispatch_async(_writerQueue, ^{
         if (isVideo) {
             CMTime frameTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
-            NSLog(@"[yjx] encode video pts: %lf", CMTimeGetSeconds(frameTime));
+            double ptsSec = CMTimeGetSeconds(frameTime);
             
             if (self.isFirstFrame) {
                 if (self.assetWriter.status == AVAssetWriterStatusUnknown && [self.assetWriter startWriting]) {
-                    NSLog(@"[yjx] start encode success");
+                    NSLog(@"[yjx] start encode success, pts: %lf", ptsSec);
                 }
                 [self.assetWriter startSessionAtSourceTime:frameTime];
                 self.isFirstFrame = NO;
@@ -90,25 +97,29 @@
             CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
             if (self.videoWriterInput.readyForMoreMediaData && self.assetWriter.status == AVAssetWriterStatusWriting) {
                 if (![self.videoAdaptor appendPixelBuffer:pixelBuffer withPresentationTime:frameTime]) {
-                    NSLog(@"[youjianxia] encode drop video frame-1");
+                    NSLog(@"[yjx] encode drop video frame-1, pts: %lf", ptsSec);
                 }
             } else {
-                NSLog(@"[youjianxia] encode drop video frame-2");
+                NSLog(@"[yjx] encode drop video frame-2, pts: %lf", ptsSec);
             }
         } else {
             CMTime frameTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
-            NSLog(@"[yjx] encode audio pts: %lf", CMTimeGetSeconds(frameTime));
+            double ptsSec = CMTimeGetSeconds(frameTime);
             
             if (self.isFirstFrame) {
                 if (self.assetWriter.status == AVAssetWriterStatusUnknown && [self.assetWriter startWriting]) {
-                    NSLog(@"[yjx] start encode success");
+                    NSLog(@"[yjx] start encode success, pts: %lf", ptsSec);
                 }
                 [self.assetWriter startSessionAtSourceTime:frameTime];
                 self.isFirstFrame = NO;
             }
             
             if (self.audioWriterInput.readyForMoreMediaData && self.assetWriter.status == AVAssetWriterStatusWriting) {
-                [self.audioWriterInput appendSampleBuffer:sampleBuffer];
+                if (![self.audioWriterInput appendSampleBuffer:sampleBuffer]) {
+                    NSLog(@"[yjx] encode drop audio frame-1, pts: %lf", ptsSec);
+                }
+            } else {
+                NSLog(@"[yjx] encode drop audio frame-2, pts: %lf", ptsSec);
             }
         }
         
@@ -120,6 +131,7 @@
 - (void)_initWriter {
     NSError *error;
     _assetWriter = [[AVAssetWriter alloc] initWithURL:_config.outputUrl fileType:AVFileTypeQuickTimeMovie error:&error];
+    _assetWriter.movieFragmentInterval = CMTimeMakeWithSeconds(1.0, 1000);
     
     /// video
     _videoWriterInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo outputSettings:_config.videoSetttings];

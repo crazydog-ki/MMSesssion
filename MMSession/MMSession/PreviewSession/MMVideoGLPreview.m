@@ -55,8 +55,7 @@ static const GLfloat kColorConversion709[] = {
 
 @implementation MMVideoGLPreview
 - (instancetype)init {
-    self = [super init];
-    if (self) {
+    if (self = [super init]) {
         _videoPts = 0.0f;
     }
     return self;
@@ -81,8 +80,18 @@ static const GLfloat kColorConversion709[] = {
 
 #pragma mark - MMSessionProcessProtocol
 - (void)processSampleData:(MMSampleData *)sampleData {
+    if (sampleData.statusFlag == MMSampleDataFlagEnd) {
+        if (self.renderEndBlk) {
+            self.renderEndBlk();
+        }
+        
+        NSLog(@"[yjx] end video render");
+        return;
+    }
+    
     BOOL renderYUV = _config.renderYUV;
     self.videoPts = CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(sampleData.sampleBuffer));
+    // NSLog(@"[yjx] render video pts: %lf", self.videoPts);
     CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleData.sampleBuffer);
     CVPixelBufferRetain(pixelBuffer);
     if (!pixelBuffer) return;

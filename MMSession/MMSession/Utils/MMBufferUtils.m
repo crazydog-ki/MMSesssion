@@ -75,6 +75,15 @@
     return audioBuffer;
 }
 
++ (void)freeAudioBufferList:(AudioBufferList *)bufferList {
+    for (int i = 0; i < bufferList->mNumberBuffers; i++) {
+        if (bufferList->mBuffers[i].mData) {
+            free(bufferList->mBuffers[i].mData);
+        }
+    }
+    free(bufferList);
+}
+
 #pragma mark - Video
 + (CMSampleBufferRef)produceVideoBuffer:(CVImageBufferRef)pixelBuffer
                              timingInfo:(CMSampleTimingInfo)timingInfo {
@@ -98,7 +107,6 @@
     CFRelease(videoInfo);
     
     CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
-    CFRetain(sampleBuffer); /// 保证其生命周期
     return sampleBuffer;
 }
 @end

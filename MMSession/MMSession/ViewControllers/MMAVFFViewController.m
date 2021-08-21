@@ -2,14 +2,15 @@
 // Email  : jxyou.ki@gmail.com
 // Github : https://github.com/crazydog-ki
 
-#import "MMAVTBViewController.h"
+#import "MMAVFFViewController.h"
 #import "AVAsset+Extension.h"
 #import "MMFFParser.h"
 #import "MMFFDecoder.h"
 #import "MMVideoGLPreview.h"
 #import "MMAudioQueuePlayer.h"
+#import "MMEncodeWriter.h"
 
-@interface MMAVTBViewController () <TZImagePickerControllerDelegate, TTGTextTagCollectionViewDelegate>
+@interface MMAVFFViewController () <TZImagePickerControllerDelegate, TTGTextTagCollectionViewDelegate>
 @property (nonatomic, strong) TTGTextTagCollectionView *collectionView;
 
 @property (nonatomic, strong) NSMutableArray<AVAsset *> *videoAssets;
@@ -25,6 +26,7 @@
 @property (nonatomic, strong) MMFFDecoder *ffAudioDecoder;
 @property (nonatomic, strong) MMVideoGLPreview *glPreview;
 @property (nonatomic, strong) MMAudioQueuePlayer *audioPlayer;
+@property (nonatomic, strong) MMEncodeWriter *encodeWriter;
 
 @property (nonatomic, strong) NSThread *videoThread;
 @property (nonatomic, strong) NSThread *audioThread;
@@ -35,11 +37,11 @@
 @property (nonatomic, assign) BOOL isReady;
 @end
 
-@implementation MMAVTBViewController
+@implementation MMAVFFViewController
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = UIColor.blackColor;
-    self.navigationItem.title = @"AVTB Module";
+    self.navigationItem.title = @"FFmpeg Module";
     
     [self _setupCollectionView];
 }
@@ -81,6 +83,9 @@
     
     TTGTextTag *exportTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"视频导出"] style:style];
     [tagCollectionView addTag:exportTag];
+    
+    TTGTextTag *seekTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"seek-0"] style:style];
+    [tagCollectionView addTag:seekTag];
 }
 
 - (void)_setupParser {
@@ -126,14 +131,33 @@
     config.rotation = -self.composition.rotation;
     self.glPreview.config = config;
     [self.glPreview setupGLEnv];
+
+    weakify(self);
+    [self.glPreview setRenderEndBlk:^{
+        strongify(self);
+        self.videoPts = 0.0f;
+        
+        [self.videoThread cancel];
+        self.videoThread = nil;
+    }];
 }
 
 - (void)_setupAudioPlayer {
     if (self.audioPlayer) return;
     
     MMAudioQueuePlayerConfig *playerConfig = [[MMAudioQueuePlayerConfig alloc] init];
+    playerConfig.needPullData = NO;
     MMAudioQueuePlayer *audioPlayer = [[MMAudioQueuePlayer alloc] initWithConfig:playerConfig];
     self.audioPlayer = audioPlayer;
+    
+    weakify(self);
+    [self.audioPlayer setPlayEndBlk:^{
+        strongify(self);
+        self.audioPts = 0.0f;
+        
+        [self.audioThread cancel];
+        self.audioThread = nil;
+    }];
 }
 
 - (void)_startThread {
@@ -177,6 +201,11 @@
 }
 
 - (void)_play {
+    if (self.isReady) {
+        NSLog(@"[yjx] video & audio is already playing");
+        return;
+    }
+    
     [self _setupParser];
     [self _setupDecoder];
     [self _setupPreview];
@@ -189,33 +218,89 @@
     /// 音频处理链路
     [self.ffAudioParser addNextAudioNode:self.ffAudioDecoder];
     [self.ffAudioDecoder addNextAudioNode:self.audioPlayer];
+    
+    if (self.encodeWriter) {
+        [self.ffVideoDecoder addNextVideoNode:self.encodeWriter];
+        [self.ffAudioDecoder addNextAudioNode:self.encodeWriter];
+    }
+    
     [self.audioPlayer play];
     
     [self _startThread];
 }
 
 - (void)_playVideo {
-    while (self.isReady) {
+    while (self.isReady && self.ffVideoParser && self.ffVideoDecoder && self.glPreview) {
         while (self.audioPts <= self.videoPts) {
             [NSThread sleepForTimeInterval:0.0001];
         }
-
         MMSampleData *sampleData = [[MMSampleData alloc] init];
         sampleData.dataType = MMSampleDataType_None_Video;
         [self.ffVideoParser processSampleData:sampleData];
-        
         self.videoPts = self.glPreview.getPts;
     }
 }
 
 - (void)_playAudio {
-    while (self.isReady) {
+    while (self.isReady && self.ffAudioParser && self.ffAudioDecoder && self.audioPlayer) {
         MMSampleData *sampleData = [[MMSampleData alloc] init];
         sampleData.dataType = MMSampleDataType_None_Audio;
         [self.ffAudioParser processSampleData:sampleData];
-        
         self.audioPts = self.audioPlayer.getPts;
     }
+}
+
+- (void)_export {
+    if (!_encodeWriter) {
+        NSString *docPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
+        NSString *outputPath = [docPath stringByAppendingString:@"/yjx.mov"];
+        if ([[NSFileManager defaultManager] fileExistsAtPath:outputPath]) {
+            [[NSFileManager defaultManager] removeItemAtPath:outputPath error:nil];
+        }
+        
+        CGSize outputSize = CGSizeMake(720, 1280);
+        
+        MMEncodeConfig *compileConfig = [[MMEncodeConfig alloc] init];
+        compileConfig.outputUrl = [NSURL fileURLWithPath:outputPath];
+        compileConfig.videoSetttings = @{
+            AVVideoCodecKey : AVVideoCodecTypeH264,
+            AVVideoWidthKey : @(outputSize.width),
+            AVVideoHeightKey: @(outputSize.height)
+        };
+        compileConfig.pixelBufferAttributes = @{
+            (__bridge NSString *)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_32BGRA),
+                      (__bridge NSString *)kCVPixelBufferWidthKey: @(outputSize.width),
+                     (__bridge NSString *)kCVPixelBufferHeightKey: @(outputSize.height)
+        };
+        compileConfig.audioSetttings = @{
+                    AVFormatIDKey: @(kAudioFormatMPEG4AAC),
+                  AVSampleRateKey: @(44100),
+            AVNumberOfChannelsKey: @(2)
+        };
+        _encodeWriter = [[MMEncodeWriter alloc] initWithConfig:compileConfig];
+        [_encodeWriter startEncode];
+        
+        weakify(self);
+        [_encodeWriter setEndEncodeBlk:^{
+            strongify(self);
+            [self.encodeWriter stopEncodeWithCompleteHandle:^(NSURL * _Nullable fileUrl, NSError * _Nullable error) {
+                NSLog(@"[yjx] writer output url: %@", fileUrl);
+                /// 保存相册，便于调试
+                if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(fileUrl.path)) {
+                    UISaveVideoAtPathToSavedPhotosAlbum(fileUrl.path, nil, nil, nil);
+                }
+                self.encodeWriter = nil;
+            }];
+        }];
+    }
+}
+
+- (void)_seek {
+    self.videoPts = 0.0f;
+    self.audioPts = 0.0f;
+    
+    [self.ffVideoParser seekToTime:0.0f];
+    [self.ffAudioParser seekToTime:0.0f];
 }
 
 #pragma mark - TZImagePickerControllerDelegate
@@ -248,7 +333,7 @@
                 if (track) {
                     CGFloat w = track.naturalSize.width;
                     CGFloat h = track.naturalSize.height;
-                    self.videoRatio = MAX(w, h) / MIN(w, h);
+                    self.videoRatio = h/w;
                 }
                 [self.videoAssets addObject:urlAsset];
                 NSLog(@"[yjx] picked video from album URL: %@", urlAsset.URL.path);
@@ -267,7 +352,9 @@
     } else if ([content.text isEqualToString:@"视频播放"]) {
         [self _play];
     } else if ([content.text isEqualToString:@"视频导出"]) {
-        // [self _export];
+        [self _export];
+    } else if ([content.text isEqualToString:@"seek-0"]) {
+        [self _seek];
     }
     return;
 }

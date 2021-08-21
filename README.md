@@ -12,6 +12,6 @@
 1. 相机采集到OpenGL ES上屏（支持YUV与RGBA）
 2. 相机录制基于AVAssetWriter写文件
 3. 基于AssetReader实现音视频解封装/解码，并利用OpenGL ES实现视频帧上屏、利用Audio Queue实现音频帧播放，以音频时间戳为基准，实现音视频同步
-4. 基于FFmpeg实现音视频的解封装/解码，并利用OpenGL ES实现视频帧上屏、利用Audio Queue实现音频帧播放，以音频时间戳为基准，实现音视频同步
+4. 基于FFmpeg实现音视频的解封装/解码，并利用OpenGL ES实现视频帧上屏、利用Audio Queue实现音频帧播放，以音频时间戳为基准，实现音视频同步；实现seek功能；实现编码写文件
 
 后续会对Demo进行详细全面的归纳总结，以第三方库的形式给出

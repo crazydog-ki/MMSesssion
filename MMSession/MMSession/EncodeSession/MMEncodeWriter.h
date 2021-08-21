@@ -13,6 +13,9 @@ typedef void (^CompleteHandle)(NSURL *_Nullable fileUrl, NSError *_Nullable erro
 - (instancetype)initWithConfig:(MMEncodeConfig *)config;
 - (void)startEncode;
 - (void)stopEncodeWithCompleteHandle:(CompleteHandle)handler;
+
+typedef void(^WriterEndEncodeBlock)(void);
+@property (nonatomic, strong) WriterEndEncodeBlock endEncodeBlk;
 @end
 
 NS_ASSUME_NONNULL_END

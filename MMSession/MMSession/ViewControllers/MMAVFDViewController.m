@@ -71,6 +71,10 @@ static const NSUInteger kMaxSamplesCount = 8192;
 
 - (void)dealloc {
     NSLog(@"[yjx] avfd controller destroy");
+    if (_bufferList) {
+        [MMBufferUtils freeAudioBufferList:_bufferList];
+        _bufferList = nil;
+    }
 }
 
 #pragma mark - Private
@@ -366,7 +370,7 @@ static const NSUInteger kMaxSamplesCount = 8192;
                 if (track) {
                     CGFloat w = track.naturalSize.width;
                     CGFloat h = track.naturalSize.height;
-                    self.videoRatio = MAX(w, h) / MIN(w, h);
+                    self.videoRatio = h/w;
                 }
                 [self.videoAssets addObject:urlAsset];
                 NSLog(@"[yjx] picked video from album URL: %@", urlAsset.URL.path);

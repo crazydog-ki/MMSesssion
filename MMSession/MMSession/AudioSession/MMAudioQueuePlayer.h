@@ -17,6 +17,9 @@ NS_ASSUME_NONNULL_BEGIN
 typedef void(^AudioBufferBlock)(AudioBufferList *bufferList);
 typedef void(^PullAudioDataBlock)(AudioBufferBlock block);
 @property (nonatomic, strong) PullAudioDataBlock pullDataBlk;
+
+typedef void(^AudioPlayEndBlock)(void);
+@property (nonatomic, strong) AudioPlayEndBlock playEndBlk;
 @end
 
 NS_ASSUME_NONNULL_END

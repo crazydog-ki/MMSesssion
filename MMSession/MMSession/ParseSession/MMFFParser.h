@@ -10,6 +10,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MMFFParser : NSObject <MMSessionProcessProtocol>
 - (instancetype)initWithConfig:(MMParseConfig *)config;
+- (void)seekToTime:(double)time;
 - (void *)getFmtCtx;
 @end
 

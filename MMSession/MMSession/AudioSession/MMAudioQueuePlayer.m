@@ -8,7 +8,7 @@
 static const NSInteger kMaxByteSize    = 1024 * sizeof(float) * 16;
 static const NSInteger kBufferListSize = 8192;
 static const NSInteger kBufferCount    = 3;
-static const NSInteger kBufferCaches   = 80;
+static const NSInteger kBufferCaches   = 3;
 
 @interface MMAudioQueuePlayer () {
     AudioQueueBufferRef *_audioBufferArr; // 音频流缓冲区
@@ -19,6 +19,7 @@ static const NSInteger kBufferCaches   = 80;
 @property (nonatomic, strong) MMAudioQueuePlayerConfig *config;
 @property (nonatomic, assign) AudioQueueRef audioQueue;
 @property (nonatomic, strong) NSMutableArray<NSValue *> *bufferCaches;
+@property (nonatomic, strong) NSCondition *condition;
 @property (nonatomic, assign) double audioPts;
 @end
 
@@ -29,6 +30,7 @@ static const NSInteger kBufferCaches   = 80;
         _config = config;
         _audioPlayerQueue = dispatch_queue_create("mmsession_audio_palyer_queue", DISPATCH_QUEUE_SERIAL);
         _bufferCaches = [NSMutableArray arrayWithCapacity:kBufferCaches];
+        _condition = [[NSCondition alloc] init];
         _audioPts = 0.0f;
         _bufferList = [MMBufferUtils produceAudioBufferList:MMBufferUtils.asbd
                                                numberFrames:kBufferListSize];
@@ -101,14 +103,26 @@ static const NSInteger kBufferCaches   = 80;
 
 #pragma mark - MMSessionProcessProtocol
 - (void)processSampleData:(MMSampleData *)sampleData {
+    if (sampleData.statusFlag == MMSampleDataFlagEnd) {
+        if (self.playEndBlk) {
+            self.playEndBlk();
+        }
+        NSLog(@"[yjx] end audio play");
+        return;
+    }
+
+    [_condition lock];
     CMSampleBufferRef sampleBuffer = sampleData.sampleBuffer;
-    while (kBufferCaches <= self.bufferCaches.count) {
-        [NSThread sleepForTimeInterval:0.001];
+    self.audioPts = CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(sampleBuffer));
+    // NSLog(@"[yjx] render audio pts: %lf", self.audioPts);
+    while (kBufferCaches == self.bufferCaches.count) {
+        [self.condition wait];
     }
     
     CFRetain(sampleBuffer);
     NSValue *audioBuffer = [NSValue valueWithPointer:sampleBuffer];
     [self.bufferCaches insertObject:audioBuffer atIndex:0];
+    [_condition unlock];
 }
 
 - (double)getPts {
@@ -188,14 +202,16 @@ static void MMAudioQueuePullData(void* __nullable inUserData,
         AudioBufferList *bufferList = self->_bufferList;
         [MMBufferUtils resetAudioBufferList:bufferList];
         if (self.bufferCaches.count) {
+            [self.condition lock];
             CMSampleBufferRef sampleBuffer = (CMSampleBufferRef)[self.bufferCaches.lastObject pointerValue];
-            self.audioPts = CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(sampleBuffer));
             UInt32 samples = (UInt32)CMSampleBufferGetNumSamples(sampleBuffer);
             bufferList->mBuffers[0].mDataByteSize = samples * MMBufferUtils.asbd.mBytesPerFrame;
             CMSampleBufferCopyPCMDataIntoAudioBufferList(sampleBuffer, 0, samples, self->_bufferList);
             
             [self.bufferCaches removeLastObject];
             CFRelease(sampleBuffer);
+            [self.condition signal];
+            [self.condition unlock];
         }
         
         if (bufferList) {

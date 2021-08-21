@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
                              timingInfo:(CMSampleTimingInfo)timingInfo
                               frameNums:(UInt32)frameNums;
 + (void)resetAudioBufferList:(AudioBufferList *)bufferList;
++ (void)freeAudioBufferList:(AudioBufferList *)bufferList;
 
 + (CMSampleBufferRef)produceVideoBuffer:(CVImageBufferRef)pixelBuffer
                              timingInfo:(CMSampleTimingInfo)timingInfo;

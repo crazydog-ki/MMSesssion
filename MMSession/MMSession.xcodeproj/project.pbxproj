@@ -36,7 +36,7 @@
 		2B9D5E5526A031CF00F401D2 /* MMDecodeReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B9D5E5426A031CF00F401D2 /* MMDecodeReader.m */; };
 		2B9D5E5826A0321000F401D2 /* MMDecodeConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B9D5E5726A0321000F401D2 /* MMDecodeConfig.m */; };
 		2BE611DE26BA9C72006C2E32 /* MMVTEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BE611DD26BA9C72006C2E32 /* MMVTEncoder.m */; };
-		2BE611E426BABFA7006C2E32 /* MMAVTBViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BE611E326BABFA7006C2E32 /* MMAVTBViewController.m */; };
+		2BE611E426BABFA7006C2E32 /* MMAVFFViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BE611E326BABFA7006C2E32 /* MMAVFFViewController.m */; };
 		2BE611E726BAC273006C2E32 /* dilireba.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 2BE611E626BAC273006C2E32 /* dilireba.mp4 */; };
 		2BE611FF26BB94DC006C2E32 /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BE611FC26BB94CB006C2E32 /* libavcodec.a */; };
 		2BE6120026BB94DC006C2E32 /* libavdevice.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BE611FD26BB94CB006C2E32 /* libavdevice.a */; };
@@ -118,8 +118,8 @@
 		2B9D5E5726A0321000F401D2 /* MMDecodeConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMDecodeConfig.m; sourceTree = "<group>"; };
 		2BE611DC26BA9C72006C2E32 /* MMVTEncoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMVTEncoder.h; sourceTree = "<group>"; };
 		2BE611DD26BA9C72006C2E32 /* MMVTEncoder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMVTEncoder.m; sourceTree = "<group>"; };
-		2BE611E226BABFA7006C2E32 /* MMAVTBViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMAVTBViewController.h; sourceTree = "<group>"; };
-		2BE611E326BABFA7006C2E32 /* MMAVTBViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMAVTBViewController.m; sourceTree = "<group>"; };
+		2BE611E226BABFA7006C2E32 /* MMAVFFViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMAVFFViewController.h; sourceTree = "<group>"; };
+		2BE611E326BABFA7006C2E32 /* MMAVFFViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMAVFFViewController.m; sourceTree = "<group>"; };
 		2BE611E626BAC273006C2E32 /* dilireba.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = dilireba.mp4; sourceTree = "<group>"; };
 		2BE611F826BB94CB006C2E32 /* libswresample.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libswresample.a; path = "MMSession/FFmpeg-iOS/lib/libswresample.a"; sourceTree = "<group>"; };
 		2BE611F926BB94CB006C2E32 /* libavfilter.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavfilter.a; path = "MMSession/FFmpeg-iOS/lib/libavfilter.a"; sourceTree = "<group>"; };
@@ -389,8 +389,8 @@
 				1248444D2687121A003C27DF /* MMCameraViewController.m */,
 				2B9AC2B52697E19500DC842D /* MMAVFDViewController.h */,
 				2B9AC2B62697E19500DC842D /* MMAVFDViewController.m */,
-				2BE611E226BABFA7006C2E32 /* MMAVTBViewController.h */,
-				2BE611E326BABFA7006C2E32 /* MMAVTBViewController.m */,
+				2BE611E226BABFA7006C2E32 /* MMAVFFViewController.h */,
+				2BE611E326BABFA7006C2E32 /* MMAVFFViewController.m */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -846,7 +846,7 @@
 				2B50795D268C732200444623 /* MMEncodeConfig.m in Sources */,
 				120387122688C77300D9EDCA /* MMCameraSessionConfig.m in Sources */,
 				2B7B8C6226A530E4006D5456 /* MMAudioQueuePlayerConfig.m in Sources */,
-				2BE611E426BABFA7006C2E32 /* MMAVTBViewController.m in Sources */,
+				2BE611E426BABFA7006C2E32 /* MMAVFFViewController.m in Sources */,
 				2B7B87D126A51A43006D5456 /* MMSampleData.m in Sources */,
 				2B9D5E5526A031CF00F401D2 /* MMDecodeReader.m in Sources */,
 				2B7B87D526A52C60006D5456 /* MMAudioQueuePlayer.m in Sources */,
@@ -992,6 +992,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4G7XDBY9J6;
 				GCC_PREFIX_HEADER = MMSession/Utils/MMPrefixHeader.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (

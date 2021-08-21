@@ -6,7 +6,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MMAVTBViewController : UIViewController
+@interface MMAVFFViewController : UIViewController
 @end
 
 NS_ASSUME_NONNULL_END

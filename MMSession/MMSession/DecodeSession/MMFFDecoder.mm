@@ -73,7 +73,20 @@ static const NSUInteger kAudioTimeScale  = 44100;
     }
     
     dispatch_sync(_ffDecodeQueue, ^{
+        BOOL isEnd = (sampleData.statusFlag==MMSampleDataFlagEnd);
         BOOL isVideo = (sampleData.dataType==MMSampleDataType_Parsed_Video);
+        if (isEnd) { /// 解码结束，提前跳出
+            if (isVideo) {
+                for (id<MMSessionProcessProtocol> node in self.nextVideoNodes) {
+                    [node processSampleData:sampleData];
+                }
+            } else {
+                for (id<MMSessionProcessProtocol> node in self.nextAudioNodes) {
+                    [node processSampleData:sampleData];
+                }
+            }
+            return;
+        }
         
         AVCodecContext *codecCtx = _codecCtx;
         AVPacket packet;
@@ -92,7 +105,7 @@ static const NSUInteger kAudioTimeScale  = 44100;
                 CMSampleTimingInfo timingInfo;
                 timingInfo.duration              = kCMTimeInvalid;
                 timingInfo.decodeTimeStamp       = CMTimeMake(sampleData.videoInfo.dts*kVideoTimeScale, kVideoTimeScale);
-                timingInfo.presentationTimeStamp = CMTimeMake(sampleData.videoInfo.pts*kVideoTimeScale, kVideoTimeScale);
+                timingInfo.presentationTimeStamp = CMTimeMake(sampleData.videoInfo.dts*kVideoTimeScale, kVideoTimeScale);
                 CMSampleBufferRef sampleBuffer = [MMBufferUtils produceVideoBuffer:pixelBuffer timingInfo:timingInfo];
                 if (sampleBuffer) {
                     sampleData.sampleBuffer = sampleBuffer;
@@ -102,7 +115,11 @@ static const NSUInteger kAudioTimeScale  = 44100;
                             [node processSampleData:sampleData];
                         }
                     }
+                }
+                
+                if (sampleBuffer) {
                     CFRelease(sampleBuffer);
+                    sampleBuffer = NULL;
                 }
             } else { /// 解码音频
                 if (!self->_swrCtx) {
@@ -145,19 +162,23 @@ static const NSUInteger kAudioTimeScale  = 44100;
                 /// bufferList -> CMSampleBufferRef
                 CMSampleTimingInfo timingInfo;
                 timingInfo.duration              = CMTimeMake(1, kAudioTimeScale);
-                timingInfo.presentationTimeStamp = CMTimeMake(sampleData.audioInfo.pts*kAudioTimeScale, kAudioTimeScale);
+                timingInfo.presentationTimeStamp = CMTimeMake(sampleData.audioInfo.dts*kAudioTimeScale, kAudioTimeScale);
                 timingInfo.decodeTimeStamp       = CMTimeMake(sampleData.audioInfo.dts*kAudioTimeScale, kAudioTimeScale);
                 CMSampleBufferRef sampleBuffer = [MMBufferUtils produceAudioBuffer:bufferList
                                                                         timingInfo:timingInfo
                                                                          frameNums:samplesNum];
                 sampleData.sampleBuffer = sampleBuffer;
-                
+                sampleData.dataType = MMSampleDataType_Decoded_Audio;
                 if (self.nextAudioNodes) {
                     for (id<MMSessionProcessProtocol> node in self.nextAudioNodes) {
                         [node processSampleData:sampleData];
                     }
                 }
                 
+                if (sampleBuffer) {
+                    CFRelease(sampleBuffer);
+                    sampleBuffer = NULL;
+                }
                 av_free(outBuffer);
             }
         }
@@ -243,6 +264,11 @@ static const NSUInteger kAudioTimeScale  = 44100;
     if (_swrCtx) {
         swr_free(&_swrCtx);
         _swrCtx = NULL;
+    }
+    
+    if (_audioBufferList) {
+        [MMBufferUtils freeAudioBufferList:_audioBufferList];
+        _audioBufferList = NULL;
     }
 }
 @end

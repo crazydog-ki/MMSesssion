@@ -20,6 +20,8 @@ extern "C" {
     AVFormatContext *_fmtCtx;
     AVBSFContext    *_bsfCtx;
     AVPacket        *_packet;
+    AVStream        *_videoStream;
+    AVStream        *_audioStream;
 }
 @property (nonatomic, strong) dispatch_queue_t ffParseQueue;
 @property (nonatomic, strong) MMParseConfig *config;
@@ -44,6 +46,26 @@ extern "C" {
     return self;
 }
 
+- (void)seekToTime:(double)time {
+    if (!_fmtCtx) {
+        NSLog(@"[yjx] not suppport seek because of fmtCtx is nil");
+        return;
+    }
+    
+    dispatch_sync(_ffParseQueue, ^{
+        BOOL isVideo = (_config.parseType==MMFFParseType_Video);
+        int64_t seekTime = -1;
+        int ret = -1;
+        if (isVideo) {
+            seekTime = (int64_t)time*_videoStream->time_base.den;
+            ret = av_seek_frame(self->_fmtCtx, _videoIdx, seekTime, AVSEEK_FLAG_FRAME);
+        } else {
+            seekTime = (int64_t)time*_audioStream->time_base.den;
+            ret = av_seek_frame(self->_fmtCtx, _audioIdx, seekTime, AVSEEK_FLAG_FRAME);
+        }
+    });
+}
+
 - (void *)getFmtCtx {
     if (!_fmtCtx) {
         return NULL;
@@ -65,8 +87,8 @@ extern "C" {
             AVFormatContext *fmtCtx = self->_fmtCtx;
             int videoIdx = self->_videoIdx;
             int audioIdx = self->_audioIdx;
-            AVStream *videoStream = fmtCtx->streams[videoIdx];
-            AVStream *audioStream = fmtCtx->streams[audioIdx];
+            AVStream *videoStream = _videoStream;
+            AVStream *audioStream = _audioStream;
             
             AVPacket *packet = self->_packet;
             av_packet_unref(packet);
@@ -77,8 +99,17 @@ extern "C" {
             
             if (ret == AVERROR_EOF) {
                 sampleData.statusFlag = MMSampleDataFlagEnd;
+                if (self.nextVideoNodes) {
+                    for (id<MMSessionProcessProtocol> node in self.nextVideoNodes) {
+                        [node processSampleData:sampleData];
+                    }
+                }
+                if (self.nextAudioNodes) {
+                    for (id<MMSessionProcessProtocol> node in self.nextAudioNodes) {
+                        [node processSampleData:sampleData];
+                    }
+                }
                 [self _freeAll];
-                break;
             } else if (packet->stream_index == videoIdx) { /// 视频轨
                 if (!isVideo) continue;
                 /// bsf对SPS、PPS等数据进行格式转换，使其可被解码器处理
@@ -137,6 +168,7 @@ extern "C" {
                 int pktSize = packet->size;
                 memcpy(data, packet->data, pktSize);
 
+                audioInfo.data        = data;
                 audioInfo.dataSize    = pktSize;
                 audioInfo.channel     = audioStream->codecpar->channels;
                 audioInfo.sampleRate  = audioStream->codecpar->sample_rate;
@@ -196,8 +228,10 @@ extern "C" {
         FFAVMediaType type = fmtCtx->streams[i]->codecpar->codec_type;
         if (type == AVMEDIA_TYPE_VIDEO) {
             _videoIdx = i;
+            _videoStream = fmtCtx->streams[i];
         } else if (type == AVMEDIA_TYPE_AUDIO) {
             _audioIdx = i;
+            _audioStream = fmtCtx->streams[i];
         }
     }
     

@@ -11,6 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface MMVideoGLPreview : UIView<MMSessionProcessProtocol>
 @property (nonatomic, strong) MMVideoPreviewConfig *config;
 - (void)setupGLEnv;
+
+typedef void(^RenderEndBlock)(void);
+@property (nonatomic, strong) RenderEndBlock renderEndBlk;
 @end
 
 NS_ASSUME_NONNULL_END

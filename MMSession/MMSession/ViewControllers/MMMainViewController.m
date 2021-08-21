@@ -5,7 +5,7 @@
 #import "MMMainViewController.h"
 #import "MMCameraViewController.h"
 #import "MMAVFDViewController.h"
-#import "MMAVTBViewController.h"
+#import "MMAVFFViewController.h"
 
 @interface MMMainViewController () <UITableViewDataSource, UITableViewDelegate>
 @property (nonatomic, strong) NSArray<NSString *> *data;
@@ -66,7 +66,7 @@
     } else if ([selectedTex isEqualToString:@"AVFoundation"])  {
         [self.navigationController pushViewController:[[MMAVFDViewController alloc] init] animated:NO];
     } else if ([selectedTex isEqualToString:@"FFmpeg"]) {
-        [self.navigationController pushViewController:[[MMAVTBViewController alloc] init] animated:NO];
+        [self.navigationController pushViewController:[[MMAVFFViewController alloc] init] animated:NO];
     }
 }
 

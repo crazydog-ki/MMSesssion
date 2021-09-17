@@ -94,10 +94,14 @@
                 self.isFirstFrame = NO;
             }
             
+            BOOL onlyMux = self->_config.onlyMux;
             CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
             if (self.videoWriterInput.readyForMoreMediaData && self.assetWriter.status == AVAssetWriterStatusWriting) {
-                if (![self.videoAdaptor appendPixelBuffer:pixelBuffer withPresentationTime:frameTime]) {
-                    NSLog(@"[yjx] encode drop video frame-1, pts: %lf", ptsSec);
+                BOOL ret = false;
+                if (onlyMux) {
+                    ret = [self.videoWriterInput appendSampleBuffer:sampleBuffer];
+                } else {
+                    ret = [self.videoAdaptor appendPixelBuffer:pixelBuffer withPresentationTime:frameTime];
                 }
             } else {
                 NSLog(@"[yjx] encode drop video frame-2, pts: %lf", ptsSec);
@@ -133,11 +137,15 @@
     _assetWriter = [[AVAssetWriter alloc] initWithURL:_config.outputUrl fileType:AVFileTypeQuickTimeMovie error:&error];
     _assetWriter.movieFragmentInterval = CMTimeMakeWithSeconds(1.0, 1000);
     
+    BOOL onlyMux = _config.onlyMux;
+    NSDictionary *videoSettings = onlyMux ? nil : _config.videoSetttings;
     /// video
-    _videoWriterInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo outputSettings:_config.videoSetttings];
-    _videoWriterInput.expectsMediaDataInRealTime = YES;
-    _videoWriterInput.transform = CGAffineTransformMakeRotation(_config.roration);
-    _videoAdaptor = [AVAssetWriterInputPixelBufferAdaptor assetWriterInputPixelBufferAdaptorWithAssetWriterInput:_videoWriterInput sourcePixelBufferAttributes:_config.pixelBufferAttributes];
+    _videoWriterInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo outputSettings:videoSettings];
+    if (!onlyMux) {
+        _videoWriterInput.expectsMediaDataInRealTime = YES;
+        _videoWriterInput.transform = CGAffineTransformMakeRotation(_config.roration);
+        _videoAdaptor = [AVAssetWriterInputPixelBufferAdaptor assetWriterInputPixelBufferAdaptorWithAssetWriterInput:_videoWriterInput sourcePixelBufferAttributes:_config.pixelBufferAttributes];
+    }
 
     if ([_assetWriter canAddInput:_videoWriterInput]) {
         [_assetWriter addInput:_videoWriterInput];
@@ -145,7 +153,9 @@
     
     /// audio
     _audioWriterInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeAudio outputSettings:_config.audioSetttings];
-    _audioWriterInput.expectsMediaDataInRealTime = YES;
+    if (!onlyMux) {
+        _audioWriterInput.expectsMediaDataInRealTime = YES;
+    }
     if ([_assetWriter canAddInput:_audioWriterInput]) {
         [_assetWriter addInput:_audioWriterInput];
     }

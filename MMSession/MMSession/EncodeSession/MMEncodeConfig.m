@@ -10,8 +10,9 @@
         _pixelFormat = MMPixelFormatTypeFullRangeYUV;
         _videoSize = CGSizeMake(720, 1280);
         _keyframeInterval = 1.0f;
-        _isRealtime = NO;
-        _isBFrame = NO;
+        _allowRealtime = NO;
+        _allowBFrame = NO;
+        _onlyMux = NO;
         _bitrate = 2560000;
     }
     return self;

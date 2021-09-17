@@ -5,7 +5,7 @@
 #import "MMMainViewController.h"
 #import "MMCameraViewController.h"
 #import "MMAVFDViewController.h"
-#import "MMAVFFViewController.h"
+#import "MMAVFFTBViewController.h"
 
 @interface MMMainViewController () <UITableViewDataSource, UITableViewDelegate>
 @property (nonatomic, strong) NSArray<NSString *> *data;
@@ -18,8 +18,7 @@
     self.title = @"MMSession";
     self.data = @[@"相机",
                   @"AVFoundation",
-                  @"FFmpeg",
-                  @"ToolBox",
+                  @"FFmpeg & ToolBox",
                   @"音视频多轨",
                   @"音视频特效"];
     
@@ -65,8 +64,8 @@
         [self.navigationController pushViewController:[[MMCameraViewController alloc] init] animated:NO];
     } else if ([selectedTex isEqualToString:@"AVFoundation"])  {
         [self.navigationController pushViewController:[[MMAVFDViewController alloc] init] animated:NO];
-    } else if ([selectedTex isEqualToString:@"FFmpeg"]) {
-        [self.navigationController pushViewController:[[MMAVFFViewController alloc] init] animated:NO];
+    } else if ([selectedTex isEqualToString:@"FFmpeg & ToolBox"]) {
+        [self.navigationController pushViewController:[[MMAVFFTBViewController alloc] init] animated:NO];
     }
 }
 

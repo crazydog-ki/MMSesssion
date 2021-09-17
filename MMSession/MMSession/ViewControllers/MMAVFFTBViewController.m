@@ -2,15 +2,16 @@
 // Email  : jxyou.ki@gmail.com
 // Github : https://github.com/crazydog-ki
 
-#import "MMAVFFViewController.h"
+#import "MMAVFFTBViewController.h"
 #import "AVAsset+Extension.h"
 #import "MMFFParser.h"
 #import "MMFFDecoder.h"
 #import "MMVideoGLPreview.h"
 #import "MMAudioQueuePlayer.h"
 #import "MMEncodeWriter.h"
+#import "MMVTEncoder.h"
 
-@interface MMAVFFViewController () <TZImagePickerControllerDelegate, TTGTextTagCollectionViewDelegate>
+@interface MMAVFFTBViewController () <TZImagePickerControllerDelegate, TTGTextTagCollectionViewDelegate>
 @property (nonatomic, strong) TTGTextTagCollectionView *collectionView;
 
 @property (nonatomic, strong) NSMutableArray<AVAsset *> *videoAssets;
@@ -27,6 +28,7 @@
 @property (nonatomic, strong) MMVideoGLPreview *glPreview;
 @property (nonatomic, strong) MMAudioQueuePlayer *audioPlayer;
 @property (nonatomic, strong) MMEncodeWriter *encodeWriter;
+@property (nonatomic, strong) MMVTEncoder *vtEncoder;
 
 @property (nonatomic, strong) NSThread *videoThread;
 @property (nonatomic, strong) NSThread *audioThread;
@@ -37,11 +39,11 @@
 @property (nonatomic, assign) BOOL isReady;
 @end
 
-@implementation MMAVFFViewController
+@implementation MMAVFFTBViewController
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = UIColor.blackColor;
-    self.navigationItem.title = @"FFmpeg Module";
+    self.navigationItem.title = @"FFTB Module";
     
     [self _setupCollectionView];
 }
@@ -53,7 +55,7 @@
 }
 
 - (void)dealloc {
-    NSLog(@"[yjx] avtb controller destroy");
+    NSLog(@"[yjx] fftb controller destroy");
 }
 
 #pragma mark - Private
@@ -211,21 +213,30 @@
     [self _setupPreview];
     [self _setupAudioPlayer];
     
-    /// 视频处理链路
+    /**视频处理链路
+     Demux(FFmpeg) -> Decode(FFmpeg) -> Render(OpenGL ES)
+                                     -> Encode(VideoToolBox) -> Mux(AVAssetWriter)
+     */
     [self.ffVideoParser addNextVideoNode:self.ffVideoDecoder];
     [self.ffVideoDecoder addNextVideoNode:self.glPreview];
+    if (self.vtEncoder) {
+        [self.ffVideoDecoder addNextVideoNode:self.vtEncoder];
+    }
+    if (self.encodeWriter) {
+        [self.vtEncoder addNextVideoNode:self.encodeWriter];
+    }
     
-    /// 音频处理链路
+    /**音频处理链路
+     Demux(FFmpeg) -> Decode(FFmpeg) -> Render(AudioQueueRef)
+                                     -> Encode & Mux(AVAssetWriter)
+     */
     [self.ffAudioParser addNextAudioNode:self.ffAudioDecoder];
     [self.ffAudioDecoder addNextAudioNode:self.audioPlayer];
-    
     if (self.encodeWriter) {
-        [self.ffVideoDecoder addNextVideoNode:self.encodeWriter];
         [self.ffAudioDecoder addNextAudioNode:self.encodeWriter];
     }
     
     [self.audioPlayer play];
-    
     [self _startThread];
 }
 
@@ -261,6 +272,7 @@
         CGSize outputSize = CGSizeMake(720, 1280);
         
         MMEncodeConfig *compileConfig = [[MMEncodeConfig alloc] init];
+        compileConfig.onlyMux = YES;
         compileConfig.outputUrl = [NSURL fileURLWithPath:outputPath];
         compileConfig.videoSetttings = @{
             AVVideoCodecKey : AVVideoCodecTypeH264,
@@ -292,6 +304,18 @@
                 self.encodeWriter = nil;
             }];
         }];
+    }
+    
+    if (!_vtEncoder) {
+        MMEncodeConfig *encodeConfg = [[MMEncodeConfig alloc] init];
+        encodeConfg.pixelFormat = MMPixelFormatTypeFullRangeYUV;
+        encodeConfg.videoSize = CGSizeMake(720, 1280);
+        encodeConfg.keyframeInterval = 1.0f;
+        encodeConfg.allowBFrame = NO;
+        encodeConfg.allowRealtime = NO;
+        encodeConfg.bitrate = 2560000;
+        
+        self.vtEncoder = [[MMVTEncoder alloc] initWithConfig:encodeConfg];
     }
 }
 

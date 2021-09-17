@@ -8,6 +8,7 @@
 @property (nonatomic, strong) MMEncodeConfig *config;
 @property (nonatomic, strong) dispatch_queue_t vtEncoderQueue;
 @property (nonatomic, assign) VTCompressionSessionRef encodeSession;
+@property (nonatomic, strong) NSMutableArray *nextVideoNodes;
 @end
 
 @implementation MMVTEncoder
@@ -15,6 +16,7 @@
 - (instancetype)initWithConfig:(MMEncodeConfig *)config {
     if (self = [super init]) {
         _config = config;
+        _nextVideoNodes = [NSMutableArray array];
         _vtEncoderQueue = dispatch_queue_create("mmsession_vt_encoder_queue", DISPATCH_QUEUE_SERIAL);
         [self _initVtEncoder];
     }
@@ -28,7 +30,6 @@
 #pragma mark - MMSessionProcessProtocol
 - (void)processSampleData:(MMSampleData *)sampleData {
     dispatch_sync(_vtEncoderQueue, ^{
-        CMTime pts = sampleData.pts;
         OSStatus status = noErr;
         
         if (sampleData.statusFlag == MMSampleDataFlagEnd) {
@@ -37,13 +38,12 @@
             return;
         }
         
+        CMSampleBufferRef sampleBuffer = sampleData.sampleBuffer;
+        CMTime pts = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
+        
         VTEncodeInfoFlags infoFlags;
-        if (sampleData.dataType == MMSampleDataType_Parsed_Video) {
-            CVPixelBufferRef pixelBuffer = sampleData.pixelBuffer;
-            status = VTCompressionSessionEncodeFrame(_encodeSession, pixelBuffer, pts, kCMTimeInvalid, NULL, NULL, &infoFlags);
-        } else if (sampleData.dataType == MMSampleDataType_Parsed_Audio) {
-            
-        }
+        CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+        status = VTCompressionSessionEncodeFrame(_encodeSession, pixelBuffer, pts, kCMTimeInvalid, NULL, NULL, &infoFlags);
         
         if (status != noErr) {
             VTCompressionSessionInvalidate(_encodeSession);
@@ -51,6 +51,12 @@
             _encodeSession = NULL;
             NSLog(@"[yjx] vt encode frame failed: %d", status);
         }
+    });
+}
+
+- (void)addNextVideoNode:(id<MMSessionProcessProtocol>)node {
+    dispatch_sync(_vtEncoderQueue, ^{
+        [self.nextVideoNodes addObject:node];
     });
 }
 
@@ -85,11 +91,18 @@
             NSLog(@"[yjx] vt encoder create success");
         }
         
-        status = VTSessionSetProperty(_encodeSession, kVTCompressionPropertyKey_MaxKeyFrameInterval, (__bridge void *)[NSNumber numberWithFloat:_config.keyframeInterval]);
-        CFBooleanRef isBFrame = _config.isBFrame ? kCFBooleanTrue : kCFBooleanFalse;
+        /// 最大关键帧间隔
+        status = VTSessionSetProperty(_encodeSession, kVTCompressionPropertyKey_MaxKeyFrameIntervalDuration, (__bridge void *)[NSNumber numberWithFloat:_config.keyframeInterval]);
+        
+        /// B帧
+        CFBooleanRef isBFrame = _config.allowBFrame ? kCFBooleanTrue : kCFBooleanFalse;
         status = VTSessionSetProperty(_encodeSession, kVTCompressionPropertyKey_AllowFrameReordering, isBFrame);
-        CFBooleanRef isRealtime = _config.isRealtime ? kCFBooleanTrue : kCFBooleanFalse;
+        
+        /// 实时编码
+        CFBooleanRef isRealtime = _config.allowRealtime ? kCFBooleanTrue : kCFBooleanFalse;
         status = VTSessionSetProperty(_encodeSession, kVTCompressionPropertyKey_RealTime, isRealtime);
+        
+        /// 码率
         status = VTSessionSetProperty(_encodeSession, kVTCompressionPropertyKey_AverageBitRate, (__bridge CFTypeRef _Nonnull)[NSNumber numberWithFloat:_config.bitrate]);
         if (status == noErr) {
             NSLog(@"[yjx] vt encoder set properties success");
@@ -116,7 +129,16 @@ void vt_encode_callback(void *outputCallbackRefCon,
     MMVTEncoder *encoder = (__bridge MMVTEncoder *)outputCallbackRefCon;
     if (status != noErr) {
         NSLog(@"[yjx] vt encoder callback error: %d", status);
+        return;
     }
-    NSLog(@"[yjx] receive samplebuffer: %p", sampleBuffer);
+    
+    if (encoder.nextVideoNodes) {
+        for (id<MMSessionProcessProtocol> node in encoder.nextVideoNodes) {
+            MMSampleData *sampleData = [[MMSampleData alloc] init];
+            sampleData.sampleBuffer = sampleBuffer;
+            sampleData.dataType = MMSampleDataType_Decoded_Video;
+            [node processSampleData:sampleData];
+        }
+    }
 }
 @end

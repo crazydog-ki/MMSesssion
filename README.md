@@ -15,10 +15,11 @@
 4. 基于FFmpeg实现音视频的解封装/解码，并利用OpenGL ES实现视频帧上屏、利用Audio Queue实现音频帧播放，以音频时间戳为基准，实现音视频同步；实现seek功能；实现编码写文件
 5. 打通音视频流进阶处理链路v1：
 `视频处理链路
-渲染：Demux(FFmpeg) -> Decode(FFmpeg) -> Render(OpenGL ES)           合成：Demux(FFmpeg) -> Decode(FFmpeg) -> Encode(VideoToolBox) -> Mux(AVAssetWriter)`
+* 渲染：Demux(FFmpeg) -> Decode(FFmpeg) -> Render(OpenGL ES)
+* 合成：Demux(FFmpeg) -> Decode(FFmpeg) -> Encode(VideoToolBox) -> Mux(AVAssetWriter)`
 
 `音频处理链路
-渲染：Demux(FFmpeg) -> Decode(FFmpeg) -> Render(AudioQueueRef)
-合成：Demux(FFmpeg) -> Decode(FFmpeg) -> Encode & Mux(AVAssetWriter)`
+* 渲染：Demux(FFmpeg) -> Decode(FFmpeg) -> Render(AudioQueueRef)
+* 合成：Demux(FFmpeg) -> Decode(FFmpeg) -> Encode & Mux(AVAssetWriter)`
                               
 后续会对Demo进行详细全面的归纳总结，以第三方库的形式给出

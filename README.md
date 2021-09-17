@@ -16,10 +16,10 @@
 5. 打通音视频流进阶处理链路：
 >**视频处理链路**
 Demux(FFmpeg) -> Decode(FFmpeg) -> Render(OpenGL ES)                                    
-                                -> Encode(VideoToolBox) -> Mux(AVAssetWriter)
+                               >-> Encode(VideoToolBox) -> Mux(AVAssetWriter)
 
 >**音频处理链路**
  Demux(FFmpeg) -> Decode(FFmpeg) -> Render(AudioQueueRef)
-                                 -> Encode & Mux(AVAssetWriter)
+                                >-> Encode & Mux(AVAssetWriter)
                               
 后续会对Demo进行详细全面的归纳总结，以第三方库的形式给出

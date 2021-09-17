@@ -25,5 +25,6 @@
 * 渲染：Demux(FFmpeg) -> Decode(FFmpeg) -> Render(AudioQueueRef)
 * 合成：Demux(FFmpeg) -> Decode(FFmpeg) -> Encode & Mux(AVAssetWriter)
 ```
+6. 支持音频pcm原始数据提取
                               
 后续会对Demo进行详细全面的归纳总结，以第三方库的形式给出

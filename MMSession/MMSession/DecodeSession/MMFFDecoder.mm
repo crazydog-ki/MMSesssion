@@ -159,6 +159,12 @@ static const NSUInteger kAudioTimeScale  = 44100;
                 memcpy(bufferList->mBuffers[0].mData, outBuffer, outBufferSize);
                 self->_audioBufferList->mBuffers[0].mDataByteSize = outBufferSize;
                 
+                /// 向外传递PCM裸数据
+                if (_config.needPcm && self.pcmCallback) {
+                    NSData *data = [NSData dataWithBytes:outBuffer length:outBufferSize];
+                    self.pcmCallback(data);
+                }
+                
                 /// bufferList -> CMSampleBufferRef
                 CMSampleTimingInfo timingInfo;
                 timingInfo.duration              = CMTimeMake(1, kAudioTimeScale);

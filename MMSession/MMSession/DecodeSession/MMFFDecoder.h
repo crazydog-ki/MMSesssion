@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface MMFFDecoder : NSObject <MMSessionProcessProtocol>
 - (instancetype)initWithConfig:(MMDecodeConfig *)config;
 - (MMSampleData *)pullSampleData:(MMSampleDataType)type;
+typedef void(^PcmDataCallback)(NSData *data);
+@property (nonatomic, copy) PcmDataCallback pcmCallback;
 @end
 
 NS_ASSUME_NONNULL_END

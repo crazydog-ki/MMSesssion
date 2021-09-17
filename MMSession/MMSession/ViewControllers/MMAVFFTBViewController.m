@@ -37,6 +37,11 @@
 @property (nonatomic, assign) double audioPts;
 
 @property (nonatomic, assign) BOOL isReady;
+
+@property (nonatomic, assign) BOOL needExport;
+
+@property (nonatomic, assign) BOOL needWritePcm;
+@property (nonatomic, strong) NSFileHandle *pcmFileHandle;
 @end
 
 @implementation MMAVFFTBViewController
@@ -88,6 +93,9 @@
     
     TTGTextTag *seekTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"seek-0"] style:style];
     [tagCollectionView addTag:seekTag];
+    
+    TTGTextTag *pcmTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"提取pcm"] style:style];
+    [tagCollectionView addTag:pcmTag];
 }
 
 - (void)_setupParser {
@@ -115,6 +123,7 @@
     MMDecodeConfig *audioConfig = [[MMDecodeConfig alloc] init];
     audioConfig.decodeType = MMFFDecodeType_Audio;
     audioConfig.fmtCtx = (void *)_ffAudioParser.getFmtCtx;
+    audioConfig.needPcm = self.needWritePcm;
     _ffAudioDecoder = [[MMFFDecoder alloc] initWithConfig:audioConfig];
 }
 
@@ -162,106 +171,7 @@
     }];
 }
 
-- (void)_startThread {
-    self.isReady = YES;
-    self.videoPts = 0.0f;
-    self.audioPts = 0.0f;
-    
-    if (!self.videoThread) {
-        self.videoThread = [[NSThread alloc] initWithTarget:self selector:@selector(_playVideo) object:nil];
-        [self.videoThread start];
-    }
-    
-    if (!self.audioThread) {
-        self.audioThread = [[NSThread alloc] initWithTarget:self selector:@selector(_playAudio) object:nil];
-        [self.audioThread start];
-    }
-}
-
-- (void)_stopThread {
-    self.isReady = NO;
-    self.videoPts = 0.0f;
-    self.audioPts = 0.0f;
-    
-    if (self.videoThread) {
-        [self.videoThread cancel];
-        self.videoThread = nil;
-    }
-    
-    if (self.audioThread) {
-        [self.audioThread cancel];
-        self.audioThread = nil;
-    }
-}
-
-#pragma mark - Action
-- (void)_startPick {
-    TZImagePickerController *imagePickerVc = [[TZImagePickerController alloc] initWithMaxImagesCount:9 delegate:self];
-    imagePickerVc.allowPickingMultipleVideo = YES;
-    imagePickerVc.isSelectOriginalPhoto = YES;
-    [self presentViewController:imagePickerVc animated:YES completion:nil];
-}
-
-- (void)_play {
-    if (self.isReady) {
-        NSLog(@"[yjx] video & audio is already playing");
-        return;
-    }
-    
-    [self _setupParser];
-    [self _setupDecoder];
-    [self _setupPreview];
-    [self _setupAudioPlayer];
-    
-    /**视频处理链路
-     Demux(FFmpeg) -> Decode(FFmpeg) -> Render(OpenGL ES)
-                                     -> Encode(VideoToolBox) -> Mux(AVAssetWriter)
-     */
-    [self.ffVideoParser addNextVideoNode:self.ffVideoDecoder];
-    [self.ffVideoDecoder addNextVideoNode:self.glPreview];
-    if (self.vtEncoder) {
-        [self.ffVideoDecoder addNextVideoNode:self.vtEncoder];
-    }
-    if (self.encodeWriter) {
-        [self.vtEncoder addNextVideoNode:self.encodeWriter];
-    }
-    
-    /**音频处理链路
-     Demux(FFmpeg) -> Decode(FFmpeg) -> Render(AudioQueueRef)
-                                     -> Encode & Mux(AVAssetWriter)
-     */
-    [self.ffAudioParser addNextAudioNode:self.ffAudioDecoder];
-    [self.ffAudioDecoder addNextAudioNode:self.audioPlayer];
-    if (self.encodeWriter) {
-        [self.ffAudioDecoder addNextAudioNode:self.encodeWriter];
-    }
-    
-    [self.audioPlayer play];
-    [self _startThread];
-}
-
-- (void)_playVideo {
-    while (self.isReady && self.ffVideoParser && self.ffVideoDecoder && self.glPreview) {
-        while (self.audioPts <= self.videoPts) {
-            [NSThread sleepForTimeInterval:0.0001];
-        }
-        MMSampleData *sampleData = [[MMSampleData alloc] init];
-        sampleData.dataType = MMSampleDataType_None_Video;
-        [self.ffVideoParser processSampleData:sampleData];
-        self.videoPts = self.glPreview.getPts;
-    }
-}
-
-- (void)_playAudio {
-    while (self.isReady && self.ffAudioParser && self.ffAudioDecoder && self.audioPlayer) {
-        MMSampleData *sampleData = [[MMSampleData alloc] init];
-        sampleData.dataType = MMSampleDataType_None_Audio;
-        [self.ffAudioParser processSampleData:sampleData];
-        self.audioPts = self.audioPlayer.getPts;
-    }
-}
-
-- (void)_export {
+- (void)_setupWriter {
     if (!_encodeWriter) {
         NSString *docPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
         NSString *outputPath = [docPath stringByAppendingString:@"/yjx.mov"];
@@ -319,12 +229,142 @@
     }
 }
 
+- (void)_setupPcmExtractor {
+    NSString *pcmPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject stringByAppendingPathComponent:@"44100_2_f32le.pcm"];
+    __block NSError *error;
+    [[NSFileManager defaultManager] removeItemAtPath:pcmPath error:&error];
+    [[NSFileManager defaultManager] createFileAtPath:pcmPath contents:nil attributes:nil];
+    NSLog(@"[yjx] start extract pcm, path: %@", pcmPath);
+    self.pcmFileHandle = [NSFileHandle fileHandleForWritingAtPath:pcmPath];
+    weakify(self);
+    self.ffAudioDecoder.pcmCallback = ^(NSData * _Nonnull data) {
+        strongify(self);
+        [self.pcmFileHandle writeData:data error:&error];
+        if (error) {
+            NSLog(@"[yjx] extract pcm error: %@", error);
+        }
+    };
+}
+
+- (void)_startThread {
+    self.isReady = YES;
+    self.videoPts = 0.0f;
+    self.audioPts = 0.0f;
+    
+    if (!self.videoThread) {
+        self.videoThread = [[NSThread alloc] initWithTarget:self selector:@selector(_playVideo) object:nil];
+        [self.videoThread start];
+    }
+    
+    if (!self.audioThread) {
+        self.audioThread = [[NSThread alloc] initWithTarget:self selector:@selector(_playAudio) object:nil];
+        [self.audioThread start];
+    }
+}
+
+- (void)_stopThread {
+    self.isReady = NO;
+    self.videoPts = 0.0f;
+    self.audioPts = 0.0f;
+    
+    if (self.videoThread) {
+        [self.videoThread cancel];
+        self.videoThread = nil;
+    }
+    
+    if (self.audioThread) {
+        [self.audioThread cancel];
+        self.audioThread = nil;
+    }
+}
+
+#pragma mark - Action
+- (void)_startPick {
+    TZImagePickerController *imagePickerVc = [[TZImagePickerController alloc] initWithMaxImagesCount:9 delegate:self];
+    imagePickerVc.allowPickingMultipleVideo = YES;
+    imagePickerVc.isSelectOriginalPhoto = YES;
+    [self presentViewController:imagePickerVc animated:YES completion:nil];
+}
+
+- (void)_play {
+    if (self.isReady) {
+        NSLog(@"[yjx] video & audio is already playing");
+        return;
+    }
+    
+    [self _setupParser];
+    [self _setupDecoder];
+    [self _setupPreview];
+    [self _setupAudioPlayer];
+    if (self.needExport) {
+        [self _setupWriter];
+    }
+    if (self.needWritePcm) {
+        [self _setupPcmExtractor];
+    }
+    
+    /**视频处理链路
+     Demux(FFmpeg) -> Decode(FFmpeg) -> Render(OpenGL ES)
+                                     -> Encode(VideoToolBox) -> Mux(AVAssetWriter)
+     */
+    [self.ffVideoParser addNextVideoNode:self.ffVideoDecoder];
+    [self.ffVideoDecoder addNextVideoNode:self.glPreview];
+    if (self.vtEncoder) {
+        [self.ffVideoDecoder addNextVideoNode:self.vtEncoder];
+    }
+    if (self.encodeWriter) {
+        [self.vtEncoder addNextVideoNode:self.encodeWriter];
+    }
+    
+    /**音频处理链路
+     Demux(FFmpeg) -> Decode(FFmpeg) -> Render(AudioQueueRef)
+                                     -> Encode & Mux(AVAssetWriter)
+     */
+    [self.ffAudioParser addNextAudioNode:self.ffAudioDecoder];
+    [self.ffAudioDecoder addNextAudioNode:self.audioPlayer];
+    if (self.encodeWriter) {
+        [self.ffAudioDecoder addNextAudioNode:self.encodeWriter];
+    }
+    
+    [self.audioPlayer play];
+    [self _startThread];
+}
+
+- (void)_playVideo {
+    while (self.isReady && self.ffVideoParser && self.ffVideoDecoder && self.glPreview) {
+        while (self.audioPts <= self.videoPts) {
+            [NSThread sleepForTimeInterval:0.0001];
+        }
+        MMSampleData *sampleData = [[MMSampleData alloc] init];
+        sampleData.dataType = MMSampleDataType_None_Video;
+        [self.ffVideoParser processSampleData:sampleData];
+        self.videoPts = self.glPreview.getPts;
+    }
+}
+
+- (void)_playAudio {
+    while (self.isReady && self.ffAudioParser && self.ffAudioDecoder && self.audioPlayer) {
+        MMSampleData *sampleData = [[MMSampleData alloc] init];
+        sampleData.dataType = MMSampleDataType_None_Audio;
+        [self.ffAudioParser processSampleData:sampleData];
+        self.audioPts = self.audioPlayer.getPts;
+    }
+}
+
+- (void)_export {
+    self.needExport = YES;
+}
+
 - (void)_seek {
     self.videoPts = 0.0f;
     self.audioPts = 0.0f;
     
     [self.ffVideoParser seekToTime:0.0f];
     [self.ffAudioParser seekToTime:0.0f];
+}
+
+- (void)_extractPcm {
+    self.needWritePcm = YES;
 }
 
 #pragma mark - TZImagePickerControllerDelegate
@@ -379,6 +419,8 @@
         [self _export];
     } else if ([content.text isEqualToString:@"seek-0"]) {
         [self _seek];
+    } else if ([content.text isEqualToString:@"提取pcm"]) {
+        [self _extractPcm];
     }
     return;
 }

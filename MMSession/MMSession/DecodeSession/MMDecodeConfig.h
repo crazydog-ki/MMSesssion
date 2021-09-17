@@ -14,6 +14,7 @@ typedef NS_OPTIONS(NSUInteger, MMFFDecodeType) {
 @property (nonatomic, strong) AVAsset *videoAsset;
 @property (nonatomic, assign) void *fmtCtx;
 @property (nonatomic, assign) MMFFDecodeType decodeType;
+@property (nonatomic, assign) BOOL needPcm;
 @end
 
 NS_ASSUME_NONNULL_END

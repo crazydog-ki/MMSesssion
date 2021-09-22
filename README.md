@@ -33,7 +33,7 @@
 
 ## 音频
 ### PCM
-[PCM格式你该知道的一切](https://www.mdnice.com/writing/f0a026fc7a4d4199880fb57630acea1a)
+[你真的了解PCM吗？](https://juejin.cn/post/7010605590057582599)
 ### AAC
 ### 音频编解码
 ### 音频播放

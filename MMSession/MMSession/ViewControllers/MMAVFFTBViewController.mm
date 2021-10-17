@@ -11,7 +11,13 @@
 #import "MMEncodeWriter.h"
 #import "MMVTEncoder.h"
 
-@interface MMAVFFTBViewController () <TZImagePickerControllerDelegate, TTGTextTagCollectionViewDelegate>
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+@interface MMAVFFTBViewController () <TZImagePickerControllerDelegate, TTGTextTagCollectionViewDelegate> {
+    ofstream _yuvFileHandle;
+}
 @property (nonatomic, strong) TTGTextTagCollectionView *collectionView;
 
 @property (nonatomic, strong) NSMutableArray<AVAsset *> *videoAssets;
@@ -42,6 +48,7 @@
 
 @property (nonatomic, assign) BOOL needWritePcm;
 @property (nonatomic, strong) NSFileHandle *pcmFileHandle;
+@property (nonatomic, assign) BOOL needWriteYuv;
 @end
 
 @implementation MMAVFFTBViewController
@@ -96,6 +103,9 @@
     
     TTGTextTag *pcmTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"提取pcm"] style:style];
     [tagCollectionView addTag:pcmTag];
+    
+    TTGTextTag *yuvTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"提取yuv"] style:style];
+    [tagCollectionView addTag:yuvTag];
 }
 
 - (void)_setupParser {
@@ -118,6 +128,7 @@
     MMDecodeConfig *videoConfig = [[MMDecodeConfig alloc] init];
     videoConfig.decodeType = MMFFDecodeType_Video;
     videoConfig.fmtCtx = (void *)_ffVideoParser.getFmtCtx;
+    videoConfig.needYuv = self.needWriteYuv;
     _ffVideoDecoder = [[MMFFDecoder alloc] initWithConfig:videoConfig];
     
     MMDecodeConfig *audioConfig = [[MMDecodeConfig alloc] init];
@@ -246,6 +257,20 @@
     };
 }
 
+- (void)_setupYuvExtractor {
+    NSString *yuvPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject stringByAppendingPathComponent:@"420p.yuv"];
+    __block NSError *error;
+    [[NSFileManager defaultManager] removeItemAtPath:yuvPath error:&error];
+    [[NSFileManager defaultManager] createFileAtPath:yuvPath contents:nil attributes:nil];
+    NSLog(@"[yjx] start extract yuv, path: %@", yuvPath);
+    self->_yuvFileHandle = ofstream(yuvPath.UTF8String, ios_base::binary);
+    weakify(self);
+    self.ffVideoDecoder.yuvCallback = ^(void * _Nonnull data, int size, MMYUVType type) {
+        strongify(self);
+        self->_yuvFileHandle.write((const char *)data, size);
+    };
+}
+
 - (void)_startThread {
     self.isReady = YES;
     self.videoPts = 0.0f;
@@ -301,6 +326,10 @@
     }
     if (self.needWritePcm) {
         [self _setupPcmExtractor];
+    }
+    
+    if (self.needWriteYuv) {
+        [self _setupYuvExtractor];
     }
     
     /**视频处理链路
@@ -367,6 +396,10 @@
     self.needWritePcm = YES;
 }
 
+- (void)_extractYuv {
+    self.needWriteYuv = YES;
+}
+
 #pragma mark - TZImagePickerControllerDelegate
 - (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingPhotos:(NSArray<UIImage *> *)photos sourceAssets:(NSArray *)assets isSelectOriginalPhoto:(BOOL)isSelectOriginalPhoto infos:(NSArray<NSDictionary *> *)infos {
     
@@ -421,6 +454,8 @@
         [self _seek];
     } else if ([content.text isEqualToString:@"提取pcm"]) {
         [self _extractPcm];
+    } else if ([content.text isEqualToString:@"提取yuv"]) {
+        [self _extractYuv];
     }
     return;
 }

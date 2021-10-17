@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A7B66CF8A43A42F5C8592ECA70A05F6A"
-               BuildableName = "Pods_MMSession.framework"
-               BlueprintName = "Pods-MMSession"
+               BlueprintIdentifier = "F4949B35B65C78C4D7DCBEEA66EC61D4"
+               BuildableName = "TTGTagCollectionView.framework"
+               BlueprintName = "TTGTagCollectionView"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>

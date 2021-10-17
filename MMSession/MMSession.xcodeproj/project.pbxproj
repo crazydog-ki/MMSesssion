@@ -21,7 +21,7 @@
 		2B0073992691511A006510A6 /* Shader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 2B0073952691511A006510A6 /* Shader.fsh */; };
 		2B00739A2691511A006510A6 /* Shader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 2B0073972691511A006510A6 /* Shader.vsh */; };
 		2B00739D26915F01006510A6 /* MMVideoPreviewConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B00739C26915F01006510A6 /* MMVideoPreviewConfig.m */; };
-		2B0F3C9D26F44EE4000F0422 /* MMAVFFTBViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B0F3C9C26F44EE4000F0422 /* MMAVFFTBViewController.m */; };
+		2B0F3C9D26F44EE4000F0422 /* MMAVFFTBViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B0F3C9C26F44EE4000F0422 /* MMAVFFTBViewController.mm */; };
 		2B4C0DEA26C52997004B1321 /* MMAudioQueue.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B4C0DE926C52997004B1321 /* MMAudioQueue.mm */; };
 		2B5072D0268C6D0C00444623 /* MMEncodeWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B5072CF268C6D0C00444623 /* MMEncodeWriter.m */; };
 		2B50795D268C732200444623 /* MMEncodeConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B50795C268C732200444623 /* MMEncodeConfig.m */; };
@@ -89,7 +89,7 @@
 		2B00739B26915F01006510A6 /* MMVideoPreviewConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMVideoPreviewConfig.h; sourceTree = "<group>"; };
 		2B00739C26915F01006510A6 /* MMVideoPreviewConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMVideoPreviewConfig.m; sourceTree = "<group>"; };
 		2B0F3C9B26F44EE4000F0422 /* MMAVFFTBViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMAVFFTBViewController.h; sourceTree = "<group>"; };
-		2B0F3C9C26F44EE4000F0422 /* MMAVFFTBViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAVFFTBViewController.m; sourceTree = "<group>"; };
+		2B0F3C9C26F44EE4000F0422 /* MMAVFFTBViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MMAVFFTBViewController.mm; sourceTree = "<group>"; };
 		2B4C0DE826C52997004B1321 /* MMAudioQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMAudioQueue.h; sourceTree = "<group>"; };
 		2B4C0DE926C52997004B1321 /* MMAudioQueue.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MMAudioQueue.mm; sourceTree = "<group>"; };
 		2B5072CE268C6D0C00444623 /* MMEncodeWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEncodeWriter.h; sourceTree = "<group>"; };
@@ -390,7 +390,7 @@
 				2B9AC2B52697E19500DC842D /* MMAVFDViewController.h */,
 				2B9AC2B62697E19500DC842D /* MMAVFDViewController.m */,
 				2B0F3C9B26F44EE4000F0422 /* MMAVFFTBViewController.h */,
-				2B0F3C9C26F44EE4000F0422 /* MMAVFFTBViewController.m */,
+				2B0F3C9C26F44EE4000F0422 /* MMAVFFTBViewController.mm */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -845,7 +845,7 @@
 				124844542687121A003C27DF /* MMCameraViewController.m in Sources */,
 				2B50795D268C732200444623 /* MMEncodeConfig.m in Sources */,
 				120387122688C77300D9EDCA /* MMCameraSessionConfig.m in Sources */,
-				2B0F3C9D26F44EE4000F0422 /* MMAVFFTBViewController.m in Sources */,
+				2B0F3C9D26F44EE4000F0422 /* MMAVFFTBViewController.mm in Sources */,
 				2B7B8C6226A530E4006D5456 /* MMAudioQueuePlayerConfig.m in Sources */,
 				2B7B87D126A51A43006D5456 /* MMSampleData.m in Sources */,
 				2B9D5E5526A031CF00F401D2 /* MMDecodeReader.m in Sources */,
@@ -990,10 +990,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 7J6BZ7P64G;
+				DEVELOPMENT_TEAM = 4G7XDBY9J6;
 				GCC_PREFIX_HEADER = MMSession/Utils/MMPrefixHeader.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"GLES_SILENCE_DEPRECATION=1",
@@ -1019,7 +1019,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = crazydog.MMSession;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = Guoqi_Wildcard_4UUTELECIJ;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -1030,9 +1030,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = 7J6BZ7P64G;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4G7XDBY9J6;
 				GCC_PREFIX_HEADER = MMSession/Utils/MMPrefixHeader.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = "GLES_SILENCE_DEPRECATION=1";
 				HEADER_SEARCH_PATHS = (
@@ -1054,7 +1054,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = crazydog.MMSession;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = Guoqi_Wildcard_4UUTELECIJ;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

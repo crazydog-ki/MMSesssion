@@ -3,8 +3,8 @@
 // Github : https://github.com/crazydog-ki
 
 #import "MMVideoGLPreview.h"
-#import <OpenGLES/ES2/gl.h>
-#import <OpenGLES/ES2/glext.h>
+#import <OpenGLES/ES3/gl.h>
+#import <OpenGLES/ES3/glext.h>
 
 /// Uniform index
 enum {
@@ -116,7 +116,7 @@ static const GLfloat kColorConversion709[] = {
                                               kEAGLDrawablePropertyColorFormat: kEAGLColorFormatRGBA8};
     self.layer.contentsScale = UIScreen.mainScreen.scale;
     
-    self.context = [[EAGLContext alloc] initWithAPI: kEAGLRenderingAPIOpenGLES2];
+    self.context = [[EAGLContext alloc] initWithAPI: kEAGLRenderingAPIOpenGLES3];
     if (![EAGLContext setCurrentContext:self.context]) {
         NSLog(@"[yjx] set current context failed");
     }

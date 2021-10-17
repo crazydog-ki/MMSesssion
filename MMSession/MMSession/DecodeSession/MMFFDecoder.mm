@@ -100,8 +100,35 @@ static const NSUInteger kAudioTimeScale  = 44100;
         while (0 == avcodec_receive_frame(codecCtx, _frame)) {
             AVFrame *frame = self->_frame;
             if (isVideo) { /// 解码视频
-                CVPixelBufferRef pixelBuffer = (CVPixelBufferRef)frame->data[3];
-                /// 打上时间戳
+                /// YUV裸数据
+                if (_config.needYuv && self.yuvCallback) {
+                    int w = frame->width;
+                    int h = frame->height;
+                    /// Y Plane
+                    int yW = w;
+                    int yH = h;
+                    for (int i = 0; i < yH; i++) {
+                        self.yuvCallback((char *)(frame->data[0]+i*frame->linesize[0]), yW, MMYUVType_Y);
+                    }
+                    /// UV Plane
+                    int uvW = w/2;
+                    int uvH = h/2;
+                    for (int i = 0; i < uvH; i++) {
+                        self.yuvCallback((char *)(frame->data[1]+i*frame->linesize[1]), uvW, MMYUVType_U);
+                    }
+                    for (int i = 0; i < uvH; i++) {
+                        self.yuvCallback((char *)(frame->data[2]+i*frame->linesize[2]), uvW, MMYUVType_V);
+                    }
+                }
+                continue;
+                
+                /**硬解码
+                 CVPixelBufferRef pixelBuffer = (CVPixelBufferRef)frame->data[3];
+                 */
+                
+                /// 软解码
+                CVPixelBufferRef pixelBuffer = nil;
+                /// AVFrame(YUV420P) -> CVPixelBufferRef(NV12)
                 CMSampleTimingInfo timingInfo;
                 timingInfo.duration              = kCMTimeInvalid;
                 timingInfo.decodeTimeStamp       = CMTimeMake(sampleData.videoInfo.dts*kVideoTimeScale, kVideoTimeScale);
@@ -116,7 +143,7 @@ static const NSUInteger kAudioTimeScale  = 44100;
                         }
                     }
                 }
-                
+
                 if (sampleBuffer) {
                     CFRelease(sampleBuffer);
                     sampleBuffer = NULL;
@@ -225,14 +252,21 @@ static const NSUInteger kAudioTimeScale  = 44100;
     int ret = -1;
     MMFFDecodeType type = _config.decodeType;
     if (type == MMFFDecodeType_Video) {
-        ret = av_find_best_stream(fmtCtx, AVMEDIA_TYPE_VIDEO, -1, -1, &codec, 0);
+        /**硬解码
+         ret = av_find_best_stream(fmtCtx, AVMEDIA_TYPE_VIDEO, -1, -1, &codec, 0);
+         codecCtx = avcodec_alloc_context3(codec);
+         ret = avcodec_parameters_to_context(codecCtx, videoStream->codecpar);
+         
+         const char *codecName = av_hwdevice_get_type_name(AV_HWDEVICE_TYPE_VIDEOTOOLBOX);
+         enum AVHWDeviceType type = av_hwdevice_find_type_by_name(codecName);
+         ret = av_hwdevice_ctx_create(&_hwDeviceCtx, type, NULL, NULL, 0);
+         codecCtx->hw_device_ctx = av_buffer_ref(_hwDeviceCtx);
+         */
+        
+        /// 软解码，解码后格式为YUV420P
+        codec = avcodec_find_decoder(videoStream->codecpar->codec_id);
         codecCtx = avcodec_alloc_context3(codec);
         ret = avcodec_parameters_to_context(codecCtx, videoStream->codecpar);
-        
-        const char *codecName = av_hwdevice_get_type_name(AV_HWDEVICE_TYPE_VIDEOTOOLBOX);
-        enum AVHWDeviceType type = av_hwdevice_find_type_by_name(codecName);
-        ret = av_hwdevice_ctx_create(&_hwDeviceCtx, type, NULL, NULL, 0);
-        codecCtx->hw_device_ctx = av_buffer_ref(_hwDeviceCtx);
     } else if (type == MMFFDecodeType_Audio) {
         codec = avcodec_find_decoder(audioStream->codecpar->codec_id);
         codecCtx = avcodec_alloc_context3(codec);

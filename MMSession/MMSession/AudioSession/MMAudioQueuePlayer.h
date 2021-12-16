@@ -20,6 +20,8 @@ typedef void(^PullAudioDataBlock)(AudioBufferBlock block);
 
 typedef void(^AudioPlayEndBlock)(void);
 @property (nonatomic, strong) AudioPlayEndBlock playEndBlk;
+
+- (void)processSampleBuffer:(CMSampleBufferRef)sampleBuffer;
 @end
 
 NS_ASSUME_NONNULL_END

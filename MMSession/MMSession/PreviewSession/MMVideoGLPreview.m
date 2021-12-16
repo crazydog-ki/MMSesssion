@@ -78,6 +78,19 @@ static const GLfloat kColorConversion709[] = {
     [self _cleanUpTextures];
 }
 
+- (void)processPixelBuffer:(CVPixelBufferRef)pixelBuffer {
+    BOOL renderYUV = _config.renderYUV;
+    CVPixelBufferRetain(pixelBuffer);
+    if (!pixelBuffer) return;
+    
+    if (renderYUV) {
+        [self _rendYUVPixbuffer:pixelBuffer];
+    } else {
+        [self _rendRGBPixbuffer:pixelBuffer];
+    }
+    CVPixelBufferRelease(pixelBuffer);
+}
+
 #pragma mark - MMSessionProcessProtocol
 - (void)processSampleData:(MMSampleData *)sampleData {
     if (sampleData.statusFlag == MMSampleDataFlagEnd) {

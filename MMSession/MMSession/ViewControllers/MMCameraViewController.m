@@ -92,15 +92,17 @@
 
     MMEncodeConfig *compileConfig = [[MMEncodeConfig alloc] init];
     compileConfig.outputUrl = [NSURL fileURLWithPath:outputPath];
+    CGFloat w = self.camera.videoSize.width;
+    CGFloat h = self.camera.videoSize.height;
     compileConfig.videoSetttings = @{
         AVVideoCodecKey : AVVideoCodecTypeH264,
-        AVVideoWidthKey : @(self.camera.videoSize.width),
-        AVVideoHeightKey: @(self.camera.videoSize.height)
+        AVVideoWidthKey : @(w),
+        AVVideoHeightKey: @(h)
     };
     compileConfig.pixelBufferAttributes = @{
         (__bridge NSString *)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_32BGRA),
-                  (__bridge NSString *)kCVPixelBufferWidthKey: @(1080),
-                 (__bridge NSString *)kCVPixelBufferHeightKey: @(1920)
+                  (__bridge NSString *)kCVPixelBufferWidthKey: @(w),
+                 (__bridge NSString *)kCVPixelBufferHeightKey: @(h)
     };
     compileConfig.audioSetttings = @{
                 AVFormatIDKey: @(kAudioFormatMPEG4AAC),

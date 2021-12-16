@@ -13,8 +13,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)addNextAudioNode:(id<MMSessionProcessProtocol>)node;
 - (void)processSampleData:(MMSampleData *)sampleData;
 - (double)getPts;
-
-typedef void(^ProcessBufferCallback)(MMSampleData *sampleData);
 @end
 
 NS_ASSUME_NONNULL_END

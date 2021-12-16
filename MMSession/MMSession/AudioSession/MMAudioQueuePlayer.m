@@ -101,6 +101,20 @@ static const NSInteger kBufferCaches   = 3;
     }
 }
 
+- (void)processSampleBuffer:(CMSampleBufferRef)sampleBuffer {
+    [_condition lock];
+    self.audioPts = CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(sampleBuffer));
+    // NSLog(@"[yjx] render audio pts: %lf", self.audioPts);
+    while (kBufferCaches == self.bufferCaches.count) {
+        [self.condition wait];
+    }
+    
+    CFRetain(sampleBuffer);
+    NSValue *audioBuffer = [NSValue valueWithPointer:sampleBuffer];
+    [self.bufferCaches insertObject:audioBuffer atIndex:0];
+    [_condition unlock];
+}
+
 #pragma mark - MMSessionProcessProtocol
 - (void)processSampleData:(MMSampleData *)sampleData {
     if (sampleData.statusFlag == MMSampleDataFlagEnd) {

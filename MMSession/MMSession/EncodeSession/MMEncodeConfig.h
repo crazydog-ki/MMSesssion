@@ -7,9 +7,9 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_OPTIONS(NSInteger, MMPixelFormatType) {
-    MMPixelFormatTypeFullRangeYUV,
-    MMPixelFormatTypeVideoRangeYUV,
-    MMPixelFormatTypeBGRA,
+    MMPixelFormatTypeFullRangeYUV  = 1 << 0,
+    MMPixelFormatTypeVideoRangeYUV = 1 << 1,
+    MMPixelFormatTypeBGRA          = 1 << 2,
 };
 
 @interface MMEncodeConfig : NSObject

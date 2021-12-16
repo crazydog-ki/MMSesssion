@@ -9,9 +9,9 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_OPTIONS(NSUInteger, MMYUVType) {
-    MMYUVType_Y = 0,
-    MMYUVType_U = 1,
-    MMYUVType_V = 2,
+    MMYUVType_Y = 1 << 0,
+    MMYUVType_U = 1 << 1,
+    MMYUVType_V = 1 << 2,
 };
 
 @interface MMFFDecoder : NSObject <MMSessionProcessProtocol>

@@ -5,8 +5,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_OPTIONS(NSUInteger, MMFFDecodeType) {
-    MMFFDecodeType_Video = 1,
-    MMFFDecodeType_Audio = 2
+    MMFFDecodeType_Video = 1 << 0,
+    MMFFDecodeType_Audio = 1 << 1
 };
 
 @interface MMDecodeConfig : NSObject

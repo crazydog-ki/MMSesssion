@@ -7,8 +7,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_OPTIONS(NSUInteger, MMFFParseType) {
-    MMFFParseType_Video = 1,
-    MMFFParseType_Audio = 2
+    MMFFParseType_Video = 1 << 0,
+    MMFFParseType_Audio = 1 << 1
 };
 
 @interface MMParseConfig : NSObject

@@ -5,25 +5,25 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_OPTIONS(NSUInteger, MMSampleDataType) {
-    MMSampleDataType_None_Video    = 1,
-    MMSampleDataType_None_Audio    = 2,
-    MMSampleDataType_Parsed_Video  = 3,
-    MMSampleDataType_Parsed_Audio  = 4,
-    MMSampleDataType_Decoded_Video = 5,
-    MMSampleDataType_Decoded_Audio = 6,
+    MMSampleDataType_None_Video    = 1 << 0,
+    MMSampleDataType_None_Audio    = 1 << 1,
+    MMSampleDataType_Parsed_Video  = 1 << 2,
+    MMSampleDataType_Parsed_Audio  = 1 << 3,
+    MMSampleDataType_Decoded_Video = 1 << 4,
+    MMSampleDataType_Decoded_Audio = 1 << 5,
 };
 
 typedef NS_OPTIONS(NSUInteger, MMSampleDataFlag) {
-    MMSampleDataFlagNone     = 1,
-    MMSampleDataFlagBegin    = 2,
-    MMSampleDataFlagProcess  = 3,
-    MMSampleDataFlagEnd      = 4,
-    MMSampleDataFlagCancel   = 5,
+    MMSampleDataFlagNone     = 1 << 0,
+    MMSampleDataFlagBegin    = 1 << 1,
+    MMSampleDataFlagProcess  = 1 << 2,
+    MMSampleDataFlagEnd      = 1 << 3,
+    MMSampleDataFlagCancel   = 1 << 4,
 };
 
 typedef NS_OPTIONS(NSUInteger, MMVideoFormat) {
-    MMVideoFormatH264 = 1,
-    MMVideoFormatH265 = 2
+    MMVideoFormatH264 = 1 << 0,
+    MMVideoFormatH265 = 1 << 1
 };
 
 @interface MMParsedVideoInfo : NSObject

@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef void(^RenderEndBlock)(void);
 @property (nonatomic, strong) RenderEndBlock renderEndBlk;
+
+- (void)processPixelBuffer:(CVPixelBufferRef)pixelBuffer;
 @end
 
 NS_ASSUME_NONNULL_END

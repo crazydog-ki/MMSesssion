@@ -10,6 +10,7 @@
 #import "MMAudioQueuePlayer.h"
 #import "MMEncodeWriter.h"
 #import "MMVTEncoder.h"
+#import "MMAudioRecorder.h"
 
 #include <iostream>
 #include <fstream>
@@ -49,6 +50,8 @@ using namespace std;
 @property (nonatomic, assign) BOOL needWritePcm;
 @property (nonatomic, strong) NSFileHandle *pcmFileHandle;
 @property (nonatomic, assign) BOOL needWriteYuv;
+
+@property (nonatomic, strong) MMAudioRecorder *audioRecorder;
 @end
 
 @implementation MMAVFFTBViewController
@@ -106,6 +109,12 @@ using namespace std;
     
     TTGTextTag *yuvTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"提取yuv"] style:style];
     [tagCollectionView addTag:yuvTag];
+    
+    TTGTextTag *recordTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"开始录音"] style:style];
+    [tagCollectionView addTag:recordTag];
+    
+    TTGTextTag *stopRecordTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"停止录音"] style:style];
+    [tagCollectionView addTag:stopRecordTag];
 }
 
 - (void)_setupParser {
@@ -400,6 +409,28 @@ using namespace std;
     self.needWriteYuv = YES;
 }
 
+- (void)_startRecordAudio {
+    if (!_audioRecorder) {
+        MMAudioRecorderConfig *audioRecordConfig = [[MMAudioRecorderConfig alloc] init];
+        audioRecordConfig.audioFormat = MMAudioFormatPCM;
+        audioRecordConfig.sampleRate = 44100;
+        audioRecordConfig.channelsCount = 1;
+        NSString *audioPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
+        NSString *outputPath = [audioPath stringByAppendingString:@"/yjx.caf"];
+        if ([[NSFileManager defaultManager] fileExistsAtPath:outputPath]) {
+            [[NSFileManager defaultManager] removeItemAtPath:outputPath error:nil];
+        }
+        audioRecordConfig.audioFilePath = outputPath;
+        _audioRecorder = [[MMAudioRecorder alloc] initWithConfig:audioRecordConfig];
+    }
+    
+    [_audioRecorder startRecord];
+}
+
+- (void)_stopRecordAudio {
+    [_audioRecorder stopRecord];
+}
+
 #pragma mark - TZImagePickerControllerDelegate
 - (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingPhotos:(NSArray<UIImage *> *)photos sourceAssets:(NSArray *)assets isSelectOriginalPhoto:(BOOL)isSelectOriginalPhoto infos:(NSArray<NSDictionary *> *)infos {
     
@@ -456,6 +487,10 @@ using namespace std;
         [self _extractPcm];
     } else if ([content.text isEqualToString:@"提取yuv"]) {
         [self _extractYuv];
+    } else if ([content.text isEqualToString:@"开始录音"]) {
+        [self _startRecordAudio];
+    } else if ([content.text isEqualToString:@"停止录音"]) {
+        [self _stopRecordAudio];
     }
     return;
 }

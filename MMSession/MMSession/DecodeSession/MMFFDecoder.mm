@@ -28,6 +28,8 @@ static const NSUInteger kAudioTimeScale  = 44100;
     AVBufferRef     *_hwDeviceCtx;
     SwrContext      *_swrCtx;
     AudioBufferList *_audioBufferList;
+    
+    CVPixelBufferPoolRef _pixelBufferPool;
 }
 @property (nonatomic, strong) dispatch_queue_t ffDecodeQueue;
 @property (nonatomic, strong) MMDecodeConfig *config;
@@ -120,15 +122,15 @@ static const NSUInteger kAudioTimeScale  = 44100;
                         self.yuvCallback((char *)(frame->data[2]+i*frame->linesize[2]), uvW, MMYUVType_V);
                     }
                 }
-                continue;
+                // continue;
                 
-                /**硬解码
-                 CVPixelBufferRef pixelBuffer = (CVPixelBufferRef)frame->data[3];
-                 */
+                /** 硬解码 */
+                CVPixelBufferRef pixelBuffer = (CVPixelBufferRef)frame->data[3];
                 
-                /// 软解码
-                CVPixelBufferRef pixelBuffer = nil;
-                /// AVFrame(YUV420P) -> CVPixelBufferRef(NV12)
+                /** 软解码 */
+                ///  AVFrame(YUV420P) -> CVPixelBufferRef(NV12)，效果异常
+                /// CVPixelBufferRef pixelBuffer = [self _getPixelBuffer:frame];
+                if (!pixelBuffer) continue;
                 CMSampleTimingInfo timingInfo;
                 timingInfo.duration              = kCMTimeInvalid;
                 timingInfo.decodeTimeStamp       = CMTimeMake(sampleData.videoInfo.dts*kVideoTimeScale, kVideoTimeScale);
@@ -252,21 +254,21 @@ static const NSUInteger kAudioTimeScale  = 44100;
     int ret = -1;
     MMFFDecodeType type = _config.decodeType;
     if (type == MMFFDecodeType_Video) {
-        /**硬解码
-         ret = av_find_best_stream(fmtCtx, AVMEDIA_TYPE_VIDEO, -1, -1, &codec, 0);
-         codecCtx = avcodec_alloc_context3(codec);
-         ret = avcodec_parameters_to_context(codecCtx, videoStream->codecpar);
-         
-         const char *codecName = av_hwdevice_get_type_name(AV_HWDEVICE_TYPE_VIDEOTOOLBOX);
-         enum AVHWDeviceType type = av_hwdevice_find_type_by_name(codecName);
-         ret = av_hwdevice_ctx_create(&_hwDeviceCtx, type, NULL, NULL, 0);
-         codecCtx->hw_device_ctx = av_buffer_ref(_hwDeviceCtx);
-         */
+        /** 硬解码 */
+        ret = av_find_best_stream(fmtCtx, AVMEDIA_TYPE_VIDEO, -1, -1, &codec, 0);
+        codecCtx = avcodec_alloc_context3(codec);
+        ret = avcodec_parameters_to_context(codecCtx, videoStream->codecpar);
         
-        /// 软解码，解码后格式为YUV420P
+        const char *codecName = av_hwdevice_get_type_name(AV_HWDEVICE_TYPE_VIDEOTOOLBOX);
+        enum AVHWDeviceType type = av_hwdevice_find_type_by_name(codecName);
+        ret = av_hwdevice_ctx_create(&_hwDeviceCtx, type, NULL, NULL, 0);
+        codecCtx->hw_device_ctx = av_buffer_ref(_hwDeviceCtx);
+        
+        /**软解码，解码后格式为YUV420P
         codec = avcodec_find_decoder(videoStream->codecpar->codec_id);
         codecCtx = avcodec_alloc_context3(codec);
         ret = avcodec_parameters_to_context(codecCtx, videoStream->codecpar);
+         */
     } else if (type == MMFFDecodeType_Audio) {
         codec = avcodec_find_decoder(audioStream->codecpar->codec_id);
         codecCtx = avcodec_alloc_context3(codec);
@@ -280,6 +282,59 @@ static const NSUInteger kAudioTimeScale  = 44100;
     _codecCtx = codecCtx;
     _videoIdx = videoIdx;
     _audioIdx = audioIdx;
+}
+
+- (CVPixelBufferRef)_getPixelBuffer:(AVFrame *)frame {
+    if(!frame || !frame->data[0]){
+        return NULL;
+    }
+ 
+    CVReturn error;
+    if (!_pixelBufferPool) {
+        NSMutableDictionary* attributes = [NSMutableDictionary dictionary];
+        [attributes setObject:[NSNumber numberWithInt:kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange] forKey:(NSString*)kCVPixelBufferPixelFormatTypeKey];
+        [attributes setObject:[NSNumber numberWithInt:frame->width] forKey: (NSString*)kCVPixelBufferWidthKey];
+        [attributes setObject:[NSNumber numberWithInt:frame->height] forKey: (NSString*)kCVPixelBufferHeightKey];
+        [attributes setObject:@(frame->linesize[0]) forKey:(NSString*)kCVPixelBufferBytesPerRowAlignmentKey];
+        [attributes setObject:[NSDictionary dictionary] forKey:(NSString*)kCVPixelBufferIOSurfacePropertiesKey];
+        error = CVPixelBufferPoolCreate(kCFAllocatorDefault, NULL, (__bridge CFDictionaryRef) attributes, &_pixelBufferPool);
+        if (error != kCVReturnSuccess) {
+            NSLog(@"[yjx] pixelbuffer pool create error: %d", error);
+        }
+    }
+    
+    CVPixelBufferRef pixelBuffer = NULL;
+    error = CVPixelBufferPoolCreatePixelBuffer(NULL, _pixelBufferPool, &pixelBuffer);
+    if (error != kCVReturnSuccess) {
+        NSLog(@"[yjx] pixelbuffer create error: %d", error);
+    }
+    
+    uint32_t size = frame->linesize[1]*frame->height;
+    uint8_t* dstData = new uint8_t[2*size];
+    for (int i = 0; i < 2*size; i++){
+        if (i%2 == 0){
+            dstData[i] = frame->data[1][i/2];
+        }else {
+            dstData[i] = frame->data[2][i/2];
+        }
+    }
+
+    CVPixelBufferLockBaseAddress(pixelBuffer, 0);
+    size_t bytePerRowY = CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer, 0);
+    void* base = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 0);
+    memcpy(base, frame->data[0], bytePerRowY*frame->height);
+    
+    size_t bytesPerRowUV = CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer, 1);
+    base = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 1);
+    memcpy(base, dstData, bytesPerRowUV*frame->height/2);
+    CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
+    
+    if (dstData) {
+        delete [] dstData;
+        dstData = nullptr;
+    }
+    
+    return pixelBuffer;
 }
 
 - (void)_freeAll {

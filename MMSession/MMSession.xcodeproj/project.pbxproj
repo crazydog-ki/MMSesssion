@@ -29,6 +29,27 @@
 		2B7B87D126A51A43006D5456 /* MMSampleData.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B7B87D026A51A43006D5456 /* MMSampleData.m */; };
 		2B7B87D526A52C60006D5456 /* MMAudioQueuePlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B7B87D426A52C60006D5456 /* MMAudioQueuePlayer.m */; };
 		2B7B8C6226A530E4006D5456 /* MMAudioQueuePlayerConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B7B8C6126A530E4006D5456 /* MMAudioQueuePlayerConfig.m */; };
+		2B9104D127BA675A0048D292 /* AvuBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B9104AF27BA675A0048D292 /* AvuBuffer.m */; };
+		2B9104D227BA675A0048D292 /* AvuUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B9104B027BA675A0048D292 /* AvuUtils.m */; };
+		2B9104D327BA675A0048D292 /* AvuAudioQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B9104B227BA675A0048D292 /* AvuAudioQueue.m */; };
+		2B9104D427BA675A0048D292 /* AvuEncodeUnit.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B9104B627BA675A0048D292 /* AvuEncodeUnit.m */; };
+		2B9104D527BA675A0048D292 /* AvuWriterEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B9104BA27BA675A0048D292 /* AvuWriterEncoder.m */; };
+		2B9104D627BA675A0048D292 /* AvuVTEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B9104BB27BA675A0048D292 /* AvuVTEncoder.m */; };
+		2B9104D727BA675A0048D292 /* AvuMultiDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B9104BD27BA675A0048D292 /* AvuMultiDecoder.m */; };
+		2B9104D827BA675A0048D292 /* AvuVTDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B9104C027BA675A0048D292 /* AvuVTDecoder.m */; };
+		2B9104D927BA675A0048D292 /* AvuAudioDecodeUnit.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B9104C127BA675A0048D292 /* AvuAudioDecodeUnit.m */; };
+		2B9104DA27BA675A0048D292 /* AvuVideoDecodeUnit.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B9104C327BA675A0048D292 /* AvuVideoDecodeUnit.m */; };
+		2B9104DB27BA675A0048D292 /* AvuFFmpegDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B9104C427BA675A0048D292 /* AvuFFmpegDecoder.m */; };
+		2B9104DC27BA675A0048D292 /* AvuBufferQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B9104C527BA675A0048D292 /* AvuBufferQueue.m */; };
+		2B9104DD27BA675A0048D292 /* AvuFFmpegParser.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B9104C727BA675A0048D292 /* AvuFFmpegParser.mm */; };
+		2B9104DE27BA675A0048D292 /* AvuConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B9104CD27BA675A0048D292 /* AvuConfig.m */; };
+		2B9104DF27BA675A0048D292 /* AvuTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B9104D027BA675A0048D292 /* AvuTestViewController.m */; };
+		2B9104E427BA687E0048D292 /* MMAudioRecorderConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B9104E127BA687E0048D292 /* MMAudioRecorderConfig.m */; };
+		2B9104E527BA687E0048D292 /* MMAudioRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B9104E327BA687E0048D292 /* MMAudioRecorder.m */; };
+		2B9104F727BA75C30048D292 /* beauty.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 2B9104F327BA75C20048D292 /* beauty.mp4 */; };
+		2B9104F827BA75C30048D292 /* dilireba.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 2B9104F427BA75C20048D292 /* dilireba.mp4 */; };
+		2B9104F927BA75C30048D292 /* basket.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 2B9104F527BA75C20048D292 /* basket.mp4 */; };
+		2B9104FA27BA75C30048D292 /* yangmi.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 2B9104F627BA75C30048D292 /* yangmi.mp4 */; };
 		2B9AC2AD2696E60000DC842D /* AVMutableComposition+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B9AC2AC2696E60000DC842D /* AVMutableComposition+Extension.m */; };
 		2B9AC2B72697E19500DC842D /* MMAVFDViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B9AC2B62697E19500DC842D /* MMAVFDViewController.m */; };
 		2B9AC2BC2697E36700DC842D /* MMMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B9AC2BB2697E36700DC842D /* MMMainViewController.m */; };
@@ -37,7 +58,6 @@
 		2B9D5E5526A031CF00F401D2 /* MMDecodeReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B9D5E5426A031CF00F401D2 /* MMDecodeReader.m */; };
 		2B9D5E5826A0321000F401D2 /* MMDecodeConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B9D5E5726A0321000F401D2 /* MMDecodeConfig.m */; };
 		2BE611DE26BA9C72006C2E32 /* MMVTEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BE611DD26BA9C72006C2E32 /* MMVTEncoder.m */; };
-		2BE611E726BAC273006C2E32 /* dilireba.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 2BE611E626BAC273006C2E32 /* dilireba.mp4 */; };
 		2BE611FF26BB94DC006C2E32 /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BE611FC26BB94CB006C2E32 /* libavcodec.a */; };
 		2BE6120026BB94DC006C2E32 /* libavdevice.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BE611FD26BB94CB006C2E32 /* libavdevice.a */; };
 		2BE6120126BB94DC006C2E32 /* libavfilter.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BE611F926BB94CB006C2E32 /* libavfilter.a */; };
@@ -105,6 +125,46 @@
 		2B7B87D426A52C60006D5456 /* MMAudioQueuePlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMAudioQueuePlayer.m; sourceTree = "<group>"; };
 		2B7B8C6026A530E4006D5456 /* MMAudioQueuePlayerConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMAudioQueuePlayerConfig.h; sourceTree = "<group>"; };
 		2B7B8C6126A530E4006D5456 /* MMAudioQueuePlayerConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMAudioQueuePlayerConfig.m; sourceTree = "<group>"; };
+		2B9104AD27BA675A0048D292 /* AvuConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AvuConfig.h; sourceTree = "<group>"; };
+		2B9104AE27BA675A0048D292 /* AvuBufferProcessProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AvuBufferProcessProtocol.h; sourceTree = "<group>"; };
+		2B9104AF27BA675A0048D292 /* AvuBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AvuBuffer.m; sourceTree = "<group>"; };
+		2B9104B027BA675A0048D292 /* AvuUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AvuUtils.m; sourceTree = "<group>"; };
+		2B9104B227BA675A0048D292 /* AvuAudioQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AvuAudioQueue.m; sourceTree = "<group>"; };
+		2B9104B327BA675A0048D292 /* AvuAudioQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AvuAudioQueue.h; sourceTree = "<group>"; };
+		2B9104B427BA675A0048D292 /* AvuTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AvuTestViewController.h; sourceTree = "<group>"; };
+		2B9104B627BA675A0048D292 /* AvuEncodeUnit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AvuEncodeUnit.m; sourceTree = "<group>"; };
+		2B9104B727BA675A0048D292 /* AvuVTEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AvuVTEncoder.h; sourceTree = "<group>"; };
+		2B9104B827BA675A0048D292 /* AvuWriterEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AvuWriterEncoder.h; sourceTree = "<group>"; };
+		2B9104B927BA675A0048D292 /* AvuEncodeUnit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AvuEncodeUnit.h; sourceTree = "<group>"; };
+		2B9104BA27BA675A0048D292 /* AvuWriterEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AvuWriterEncoder.m; sourceTree = "<group>"; };
+		2B9104BB27BA675A0048D292 /* AvuVTEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AvuVTEncoder.m; sourceTree = "<group>"; };
+		2B9104BD27BA675A0048D292 /* AvuMultiDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AvuMultiDecoder.m; sourceTree = "<group>"; };
+		2B9104BE27BA675A0048D292 /* AvuMultiDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AvuMultiDecoder.h; sourceTree = "<group>"; };
+		2B9104C027BA675A0048D292 /* AvuVTDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AvuVTDecoder.m; sourceTree = "<group>"; };
+		2B9104C127BA675A0048D292 /* AvuAudioDecodeUnit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AvuAudioDecodeUnit.m; sourceTree = "<group>"; };
+		2B9104C227BA675A0048D292 /* AvuDecodeUnitProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AvuDecodeUnitProtocol.h; sourceTree = "<group>"; };
+		2B9104C327BA675A0048D292 /* AvuVideoDecodeUnit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AvuVideoDecodeUnit.m; sourceTree = "<group>"; };
+		2B9104C427BA675A0048D292 /* AvuFFmpegDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AvuFFmpegDecoder.m; sourceTree = "<group>"; };
+		2B9104C527BA675A0048D292 /* AvuBufferQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AvuBufferQueue.m; sourceTree = "<group>"; };
+		2B9104C627BA675A0048D292 /* AvuAudioDecodeUnit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AvuAudioDecodeUnit.h; sourceTree = "<group>"; };
+		2B9104C727BA675A0048D292 /* AvuFFmpegParser.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AvuFFmpegParser.mm; sourceTree = "<group>"; };
+		2B9104C827BA675A0048D292 /* AvuVTDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AvuVTDecoder.h; sourceTree = "<group>"; };
+		2B9104C927BA675A0048D292 /* AvuFFmpegParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AvuFFmpegParser.h; sourceTree = "<group>"; };
+		2B9104CA27BA675A0048D292 /* AvuBufferQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AvuBufferQueue.h; sourceTree = "<group>"; };
+		2B9104CB27BA675A0048D292 /* AvuVideoDecodeUnit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AvuVideoDecodeUnit.h; sourceTree = "<group>"; };
+		2B9104CC27BA675A0048D292 /* AvuFFmpegDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AvuFFmpegDecoder.h; sourceTree = "<group>"; };
+		2B9104CD27BA675A0048D292 /* AvuConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AvuConfig.m; sourceTree = "<group>"; };
+		2B9104CE27BA675A0048D292 /* AvuBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AvuBuffer.h; sourceTree = "<group>"; };
+		2B9104CF27BA675A0048D292 /* AvuUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AvuUtils.h; sourceTree = "<group>"; };
+		2B9104D027BA675A0048D292 /* AvuTestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AvuTestViewController.m; sourceTree = "<group>"; };
+		2B9104E027BA687E0048D292 /* MMAudioRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMAudioRecorder.h; sourceTree = "<group>"; };
+		2B9104E127BA687E0048D292 /* MMAudioRecorderConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAudioRecorderConfig.m; sourceTree = "<group>"; };
+		2B9104E227BA687E0048D292 /* MMAudioRecorderConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMAudioRecorderConfig.h; sourceTree = "<group>"; };
+		2B9104E327BA687E0048D292 /* MMAudioRecorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAudioRecorder.m; sourceTree = "<group>"; };
+		2B9104F327BA75C20048D292 /* beauty.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = beauty.mp4; sourceTree = "<group>"; };
+		2B9104F427BA75C20048D292 /* dilireba.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = dilireba.mp4; sourceTree = "<group>"; };
+		2B9104F527BA75C20048D292 /* basket.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = basket.mp4; sourceTree = "<group>"; };
+		2B9104F627BA75C30048D292 /* yangmi.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = yangmi.mp4; sourceTree = "<group>"; };
 		2B9AC2AB2696E60000DC842D /* AVMutableComposition+Extension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AVMutableComposition+Extension.h"; sourceTree = "<group>"; };
 		2B9AC2AC2696E60000DC842D /* AVMutableComposition+Extension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "AVMutableComposition+Extension.m"; sourceTree = "<group>"; };
 		2B9AC2B52697E19500DC842D /* MMAVFDViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMAVFDViewController.h; sourceTree = "<group>"; };
@@ -120,7 +180,6 @@
 		2B9D5E5726A0321000F401D2 /* MMDecodeConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMDecodeConfig.m; sourceTree = "<group>"; };
 		2BE611DC26BA9C72006C2E32 /* MMVTEncoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMVTEncoder.h; sourceTree = "<group>"; };
 		2BE611DD26BA9C72006C2E32 /* MMVTEncoder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMVTEncoder.m; sourceTree = "<group>"; };
-		2BE611E626BAC273006C2E32 /* dilireba.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = dilireba.mp4; sourceTree = "<group>"; };
 		2BE611F826BB94CB006C2E32 /* libswresample.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libswresample.a; path = "MMSession/FFmpeg-iOS/lib/libswresample.a"; sourceTree = "<group>"; };
 		2BE611F926BB94CB006C2E32 /* libavfilter.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavfilter.a; path = "MMSession/FFmpeg-iOS/lib/libavfilter.a"; sourceTree = "<group>"; };
 		2BE611FA26BB94CB006C2E32 /* libavformat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavformat.a; path = "MMSession/FFmpeg-iOS/lib/libavformat.a"; sourceTree = "<group>"; };
@@ -335,8 +394,9 @@
 		1248442F268711C1003C27DF /* MMSession */ = {
 			isa = PBXGroup;
 			children = (
-				2BE6120626BB9506006C2E32 /* FFmpeg-iOS */,
 				2BE611E526BAC20F006C2E32 /* Resource */,
+				2B9104AC27BA675A0048D292 /* Avu */,
+				2BE6120626BB9506006C2E32 /* FFmpeg-iOS */,
 				2B508D06268F053200444623 /* Utils */,
 				2B508D01268DBE2F00444623 /* ViewControllers */,
 				1203870B2688C65C00D9EDCA /* CameraSession */,
@@ -438,8 +498,83 @@
 				2B7B87D426A52C60006D5456 /* MMAudioQueuePlayer.m */,
 				2B4C0DE826C52997004B1321 /* MMAudioQueue.h */,
 				2B4C0DE926C52997004B1321 /* MMAudioQueue.mm */,
+				2B9104E227BA687E0048D292 /* MMAudioRecorderConfig.h */,
+				2B9104E127BA687E0048D292 /* MMAudioRecorderConfig.m */,
+				2B9104E027BA687E0048D292 /* MMAudioRecorder.h */,
+				2B9104E327BA687E0048D292 /* MMAudioRecorder.m */,
 			);
 			path = AudioSession;
+			sourceTree = "<group>";
+		};
+		2B9104AC27BA675A0048D292 /* Avu */ = {
+			isa = PBXGroup;
+			children = (
+				2B9104AE27BA675A0048D292 /* AvuBufferProcessProtocol.h */,
+				2B9104CF27BA675A0048D292 /* AvuUtils.h */,
+				2B9104B027BA675A0048D292 /* AvuUtils.m */,
+				2B9104B427BA675A0048D292 /* AvuTestViewController.h */,
+				2B9104D027BA675A0048D292 /* AvuTestViewController.m */,
+				2B9104AD27BA675A0048D292 /* AvuConfig.h */,
+				2B9104CD27BA675A0048D292 /* AvuConfig.m */,
+				2B9104CE27BA675A0048D292 /* AvuBuffer.h */,
+				2B9104AF27BA675A0048D292 /* AvuBuffer.m */,
+				2B9104BF27BA675A0048D292 /* Decode */,
+				2B9104B127BA675A0048D292 /* Render */,
+				2B9104B527BA675A0048D292 /* Encode */,
+				2B9104BC27BA675A0048D292 /* MultiTrack */,
+			);
+			path = Avu;
+			sourceTree = "<group>";
+		};
+		2B9104B127BA675A0048D292 /* Render */ = {
+			isa = PBXGroup;
+			children = (
+				2B9104B327BA675A0048D292 /* AvuAudioQueue.h */,
+				2B9104B227BA675A0048D292 /* AvuAudioQueue.m */,
+			);
+			path = Render;
+			sourceTree = "<group>";
+		};
+		2B9104B527BA675A0048D292 /* Encode */ = {
+			isa = PBXGroup;
+			children = (
+				2B9104B927BA675A0048D292 /* AvuEncodeUnit.h */,
+				2B9104B627BA675A0048D292 /* AvuEncodeUnit.m */,
+				2B9104B727BA675A0048D292 /* AvuVTEncoder.h */,
+				2B9104BB27BA675A0048D292 /* AvuVTEncoder.m */,
+				2B9104B827BA675A0048D292 /* AvuWriterEncoder.h */,
+				2B9104BA27BA675A0048D292 /* AvuWriterEncoder.m */,
+			);
+			path = Encode;
+			sourceTree = "<group>";
+		};
+		2B9104BC27BA675A0048D292 /* MultiTrack */ = {
+			isa = PBXGroup;
+			children = (
+				2B9104BE27BA675A0048D292 /* AvuMultiDecoder.h */,
+				2B9104BD27BA675A0048D292 /* AvuMultiDecoder.m */,
+			);
+			path = MultiTrack;
+			sourceTree = "<group>";
+		};
+		2B9104BF27BA675A0048D292 /* Decode */ = {
+			isa = PBXGroup;
+			children = (
+				2B9104C227BA675A0048D292 /* AvuDecodeUnitProtocol.h */,
+				2B9104CB27BA675A0048D292 /* AvuVideoDecodeUnit.h */,
+				2B9104C327BA675A0048D292 /* AvuVideoDecodeUnit.m */,
+				2B9104C627BA675A0048D292 /* AvuAudioDecodeUnit.h */,
+				2B9104C127BA675A0048D292 /* AvuAudioDecodeUnit.m */,
+				2B9104C927BA675A0048D292 /* AvuFFmpegParser.h */,
+				2B9104C727BA675A0048D292 /* AvuFFmpegParser.mm */,
+				2B9104CC27BA675A0048D292 /* AvuFFmpegDecoder.h */,
+				2B9104C427BA675A0048D292 /* AvuFFmpegDecoder.m */,
+				2B9104C827BA675A0048D292 /* AvuVTDecoder.h */,
+				2B9104C027BA675A0048D292 /* AvuVTDecoder.m */,
+				2B9104CA27BA675A0048D292 /* AvuBufferQueue.h */,
+				2B9104C527BA675A0048D292 /* AvuBufferQueue.m */,
+			);
+			path = Decode;
 			sourceTree = "<group>";
 		};
 		2B9D5E5226A0311000F401D2 /* DecodeSession */ = {
@@ -458,7 +593,10 @@
 		2BE611E526BAC20F006C2E32 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
-				2BE611E626BAC273006C2E32 /* dilireba.mp4 */,
+				2B9104F527BA75C20048D292 /* basket.mp4 */,
+				2B9104F327BA75C20048D292 /* beauty.mp4 */,
+				2B9104F427BA75C20048D292 /* dilireba.mp4 */,
+				2B9104F627BA75C30048D292 /* yangmi.mp4 */,
 			);
 			path = Resource;
 			sourceTree = "<group>";
@@ -768,13 +906,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B9104F727BA75C30048D292 /* beauty.mp4 in Resources */,
 				12DA794726B6442900099142 /* README.md in Resources */,
-				2BE611E726BAC273006C2E32 /* dilireba.mp4 in Resources */,
 				2B0073992691511A006510A6 /* Shader.fsh in Resources */,
 				12484440268711C2003C27DF /* LaunchScreen.storyboard in Resources */,
 				2B9AC2BE2697F41000DC842D /* Podfile in Resources */,
+				2B9104F927BA75C30048D292 /* basket.mp4 in Resources */,
 				1248443D268711C2003C27DF /* Assets.xcassets in Resources */,
 				2B00739A2691511A006510A6 /* Shader.vsh in Resources */,
+				2B9104FA27BA75C30048D292 /* yangmi.mp4 in Resources */,
+				2B9104F827BA75C30048D292 /* dilireba.mp4 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -827,20 +968,29 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B9104D527BA675A0048D292 /* AvuWriterEncoder.m in Sources */,
 				2B00739D26915F01006510A6 /* MMVideoPreviewConfig.m in Sources */,
 				2BF08E1426BD467F0072B990 /* MMFFDecoder.mm in Sources */,
+				2B9104DB27BA675A0048D292 /* AvuFFmpegDecoder.m in Sources */,
 				124844552687121A003C27DF /* SceneDelegate.m in Sources */,
 				2B4C0DEA26C52997004B1321 /* MMAudioQueue.mm in Sources */,
+				2B9104E427BA687E0048D292 /* MMAudioRecorderConfig.m in Sources */,
+				2B9104D427BA675A0048D292 /* AvuEncodeUnit.m in Sources */,
 				2B9AC2BC2697E36700DC842D /* MMMainViewController.m in Sources */,
 				2BE6F06C26B8F446006C2E32 /* AVAsset+Extension.m in Sources */,
 				2B9D5E5826A0321000F401D2 /* MMDecodeConfig.m in Sources */,
+				2B9104DE27BA675A0048D292 /* AvuConfig.m in Sources */,
+				2B9104DD27BA675A0048D292 /* AvuFFmpegParser.mm in Sources */,
 				2B9C80F226CA4DDD00248E56 /* MMBufferUtils.m in Sources */,
 				124844572687121A003C27DF /* AppDelegate.m in Sources */,
 				1253B6AC26ABCF4600D7A22C /* UIControl+Extension.m in Sources */,
 				2BE619FD26BBC400006C2E32 /* MMParseConfig.m in Sources */,
 				124844562687121A003C27DF /* main.m in Sources */,
 				2BE611DE26BA9C72006C2E32 /* MMVTEncoder.m in Sources */,
+				2B9104D127BA675A0048D292 /* AvuBuffer.m in Sources */,
 				2B9AC2AD2696E60000DC842D /* AVMutableComposition+Extension.m in Sources */,
+				2B9104D827BA675A0048D292 /* AvuVTDecoder.m in Sources */,
+				2B9104D327BA675A0048D292 /* AvuAudioQueue.m in Sources */,
 				1203870E2688C67D00D9EDCA /* MMCameraSession.m in Sources */,
 				124844542687121A003C27DF /* MMCameraViewController.m in Sources */,
 				2B50795D268C732200444623 /* MMEncodeConfig.m in Sources */,
@@ -848,13 +998,21 @@
 				2B0F3C9D26F44EE4000F0422 /* MMAVFFTBViewController.mm in Sources */,
 				2B7B8C6226A530E4006D5456 /* MMAudioQueuePlayerConfig.m in Sources */,
 				2B7B87D126A51A43006D5456 /* MMSampleData.m in Sources */,
+				2B9104D927BA675A0048D292 /* AvuAudioDecodeUnit.m in Sources */,
 				2B9D5E5526A031CF00F401D2 /* MMDecodeReader.m in Sources */,
 				2B7B87D526A52C60006D5456 /* MMAudioQueuePlayer.m in Sources */,
+				2B9104E527BA687E0048D292 /* MMAudioRecorder.m in Sources */,
 				2BE619FA26BBC2B6006C2E32 /* MMFFParser.mm in Sources */,
 				2B9AC2B72697E19500DC842D /* MMAVFDViewController.m in Sources */,
 				2B508D04268EC21700444623 /* MMVideoGLPreview.m in Sources */,
+				2B9104DF27BA675A0048D292 /* AvuTestViewController.m in Sources */,
 				1284DB56268B7EB1008692B8 /* MMVideoLayerPreview.m in Sources */,
+				2B9104D727BA675A0048D292 /* AvuMultiDecoder.m in Sources */,
+				2B9104D227BA675A0048D292 /* AvuUtils.m in Sources */,
 				2B5072D0268C6D0C00444623 /* MMEncodeWriter.m in Sources */,
+				2B9104DA27BA675A0048D292 /* AvuVideoDecodeUnit.m in Sources */,
+				2B9104DC27BA675A0048D292 /* AvuBufferQueue.m in Sources */,
+				2B9104D627BA675A0048D292 /* AvuVTEncoder.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1017,7 +1175,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/MMSession/FFmpeg-iOS/lib",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = crazydog.MMSession;
+				PRODUCT_BUNDLE_IDENTIFIER = crazydog.mmsession;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1052,7 +1210,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/MMSession/FFmpeg-iOS/lib",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = crazydog.MMSession;
+				PRODUCT_BUNDLE_IDENTIFIER = crazydog.mmsession;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;

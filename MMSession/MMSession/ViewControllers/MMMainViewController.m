@@ -6,6 +6,7 @@
 #import "MMCameraViewController.h"
 #import "MMAVFDViewController.h"
 #import "MMAVFFTBViewController.h"
+#import "AvuTestViewController.h"
 
 @interface MMMainViewController () <UITableViewDataSource, UITableViewDelegate>
 @property (nonatomic, strong) NSArray<NSString *> *data;
@@ -20,7 +21,9 @@
                   @"AVFoundation",
                   @"FFmpeg & ToolBox",
                   @"音视频多轨",
-                  @"音视频特效"];
+                  @"音视频特效",
+                  @"AVU",
+    ];
     
     UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
     tableView.backgroundColor = UIColor.blackColor;
@@ -66,6 +69,8 @@
         [self.navigationController pushViewController:[[MMAVFDViewController alloc] init] animated:NO];
     } else if ([selectedTex isEqualToString:@"FFmpeg & ToolBox"]) {
         [self.navigationController pushViewController:[[MMAVFFTBViewController alloc] init] animated:NO];
+    } else if ([selectedTex isEqualToString:@"AVU"]) {
+        [self.navigationController pushViewController:[[AvuTestViewController alloc] init] animated:NO];
     }
 }
 

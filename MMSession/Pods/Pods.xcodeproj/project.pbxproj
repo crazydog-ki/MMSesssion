@@ -7,130 +7,129 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		020EDEB62A5EC5B21ADDE0BE8428A59C /* TZProgressView.h in Headers */ = {isa = PBXBuildFile; fileRef = E3AE56A781FC3DBD805F4A60BE9F612B /* TZProgressView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		02C00AC33DFDFBE69CF1CEEA4A4676AA /* TTGTagCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = E22CF11B731ECC0FF0ECB561709249FD /* TTGTagCollectionView.m */; };
-		05A040F35BF1C88F869404E1A940B493 /* NSArray+MASShorthandAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = C9946CD933C21D3CD976AA54F2E10572 /* NSArray+MASShorthandAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		05EA1447EEA0EB669F8DEE73964A7C60 /* NSArray+MASAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4368322270A2D39EDA2F4175AEF260B2 /* NSArray+MASAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		090763F27FE30508848A8EF2CAF23873 /* Pods-MMSession-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 83557CE8046DC69634D7F8A50DB2AEF3 /* Pods-MMSession-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		090B756C9A6BE1D79EF6F35E7B65B7B1 /* TTGTextTagStringContent.h in Headers */ = {isa = PBXBuildFile; fileRef = ED09E571FA81F40259CBD778CCA70CAF /* TTGTextTagStringContent.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0967598607D521318F69D7D39D517B20 /* ViewController+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 720C67B5881B5793A32F9CF42067ABF1 /* ViewController+MASAdditions.m */; };
-		098630ECDB64ED7B89F5F687C82B4AC3 /* NSArray+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 452DD5C3A990085F5DB81F0E2908C478 /* NSArray+MASAdditions.m */; };
-		0AF1AD35706D90B1A91F291B899EF8C0 /* NSLayoutConstraint+MASDebugAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B55BAE82F62AA5A1825815667565A41 /* NSLayoutConstraint+MASDebugAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		165F9CCB86EE1FCBEB84C06C5C196DC1 /* NSBundle+TZImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 071F94A8646E0BF9B0D07177E607D125 /* NSBundle+TZImagePicker.m */; };
-		16821772DB2C32EA814EA05C6886177C /* TTGTextTagAttributedStringContent.m in Sources */ = {isa = PBXBuildFile; fileRef = B9E0A717B3E4266CB65FB4AEE8B9A132 /* TTGTextTagAttributedStringContent.m */; };
-		1972E85F0FCD0F3EAF28ED7CD036286E /* Masonry-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = C4A3FDB7969978082A4EF8A846648C90 /* Masonry-dummy.m */; };
-		280D36330BAC5715615FF4A8B42D60D6 /* MASUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 50EBB43B2DA3793A86476E93408C0C4B /* MASUtilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		294389DB6F8548CA1F585FC917FD5F42 /* TZAssetCell.h in Headers */ = {isa = PBXBuildFile; fileRef = F9F4F81B8248FCE2C4D1483F8CF91843 /* TZAssetCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2955CD6C435E603B808EA5FA3F942489 /* TZPhotoPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = B7CCBCC885240478FC9B045CF02C2C80 /* TZPhotoPickerController.m */; };
-		297A3627CF2F032CBFDC61D1A3786E63 /* MASViewAttribute.m in Sources */ = {isa = PBXBuildFile; fileRef = C1AF68D7B81FBB839C25545138C3C3F7 /* MASViewAttribute.m */; };
-		346080C0D1CA23399ADD739D722D7CEF /* Masonry.h in Headers */ = {isa = PBXBuildFile; fileRef = D240899DA4C9DAB628BCBE99A26E757E /* Masonry.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		3A38500710E6D02349CFE4EE0963CB41 /* TZPhotoPreviewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D211AF7AC760877F1E1376045C1C785 /* TZPhotoPreviewCell.m */; };
-		3DA5F1D8E51CDD102A871C2F37770C7B /* MASViewAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 7046BAD3B1D8E2120CD16699F9EF5D30 /* MASViewAttribute.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		3E370875D1B667F05A2BB3E69767E464 /* TZVideoPlayerController.h in Headers */ = {isa = PBXBuildFile; fileRef = 1DEF995265B0433968BF4DF404CA3923 /* TZVideoPlayerController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		3F472D62048F9BEBE482D4BD23AAF881 /* TTGTextTagCollectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = 98643FF460CC229E8E2F0F0FEE12FA85 /* TTGTextTagCollectionView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		43FB0F73742C73F4CA02EA1B14E3EA50 /* TZAssetModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 4863A0AC54CB914D60547F722A79901A /* TZAssetModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		4B0981F9AC628CF5100C50FF4A163A4A /* View+MASAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = E6CF6516A025DAB690712E538979C75C /* View+MASAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		4EA5B8BE7E49D6CC1880BF482595BC5C /* TZVideoEditedPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B19C8D9F722A7AA0B210CF8653AE6DCF /* TZVideoEditedPreviewController.m */; };
-		50BA4ED48DDD76D7F0BD6129B76EDDE5 /* NSBundle+TZImagePicker.h in Headers */ = {isa = PBXBuildFile; fileRef = A199024950A1971E92EBC26D6FACD178 /* NSBundle+TZImagePicker.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		51BF826E15EE7DB1BC686A5BE55230FC /* TZLocationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 13AFD692C1EF145732A4DA8AB8765CF6 /* TZLocationManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		54C599392C75AFD04C9D3B02FDE30409 /* TTGTextTag.h in Headers */ = {isa = PBXBuildFile; fileRef = 398CCEE518A6C5EA669EE43E8E083BD2 /* TTGTextTag.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		56BBF8EE96BDA7140F9D024C3B2B6281 /* TZImagePickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13108831DBB0BFE3AE73A1FD1F87BC7D /* TZImagePickerController.m */; };
-		574404532412A7D86C72F486B002AD5E /* TZVideoPlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBA4E777E0F056A1E4FA092156BCC53F /* TZVideoPlayerController.m */; };
-		5D2B82D555036C464106F8695728A178 /* TZAssetCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6333DB4C131FF231CB371D3B099DD37C /* TZAssetCell.m */; };
-		5FD1AB57DB0721D4F6CF608901FEB103 /* TTGTextTagAttributedStringContent.h in Headers */ = {isa = PBXBuildFile; fileRef = F898C145852677099560CEE2BC720706 /* TTGTextTagAttributedStringContent.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		683A73BFA5AC1D804152FBD783B8AAF4 /* TZImageCropManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CE849283E58E6BCBB5F86AF3A0D67B3 /* TZImageCropManager.m */; };
-		6A6AD3A5BBDBFD0B4AF936BD518EC0B1 /* Masonry-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 43463E60AA478DB366EB19419DC48726 /* Masonry-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		6E316F27E0ECCBA79DBAD7D2131B3EB3 /* TZImageRequestOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1C1897D3FCE2BA10501BB19932FF75 /* TZImageRequestOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		6F27E1CFD040CAF62F42FE8B7AC3677D /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40D3CDC39D98E22F2A543100660462A0 /* Photos.framework */; };
-		73438F5405AB4ACE600FE17A6AB69A5F /* TZGifPhotoPreviewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E763B35EA59F0C8A4AF2A36827B0829 /* TZGifPhotoPreviewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		75DF60E3669B919DDB6FED671F144E69 /* TZImagePickerController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EAF273AD59DCBF0A0D119C67F0E9CA1 /* TZImagePickerController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		78B2727EE5D693F58D019DB098005101 /* MASConstraintMaker.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CA1AD174F6B315D0163EFA471F3EC16 /* MASConstraintMaker.m */; };
-		78CFD71965675BA0F8B849ECDCC2C649 /* TTGTextTagStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 41E0ED9AA7D42691AB0C275A3363F11C /* TTGTextTagStyle.m */; };
-		79F6E9F86FA5A71EC9896200EA9381BE /* Pods-MMSession-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 606BD48DB7B592442C171591186941B3 /* Pods-MMSession-dummy.m */; };
-		7BAD84C196647FC8B274F935C3E15782 /* TZLocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D999313A6FE52ECC56E3A13507559A3A /* TZLocationManager.m */; };
-		7BFF65958F014760B6AC4742824892EB /* MASCompositeConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = 16710C13ED8C3D5BD05212363C4FF642 /* MASCompositeConstraint.m */; };
-		7CC1DAF56E7D4F4EEE0F33462E1D6C38 /* TZPhotoPickerController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F8BE7A497F35F449E17677E4388FA58 /* TZPhotoPickerController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8539B851E01A58467BE49CA3FA77223C /* MASLayoutConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B19CAE5E5E29E4164357284EE9F513 /* MASLayoutConstraint.m */; };
-		8A471FF8B8214110E2481BFBBEEB703C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36E8017CD3DD67036B82DE3355DDA10C /* Foundation.framework */; };
-		8AD2AF14442D5E594D0183F9E7C0F881 /* TTGTextTag.m in Sources */ = {isa = PBXBuildFile; fileRef = D70BB38179B0E75D88F01DBE023D6041 /* TTGTextTag.m */; };
-		8B92011C9373001132C8148BFC8F50B3 /* ViewController+MASAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 15D4D67F6A6747E736A68148F3005B13 /* ViewController+MASAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8D4D1F6E4709EBB13974E95DC1059DDC /* MASLayoutConstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = C23810C4F0E46249DC11AC5DC5391329 /* MASLayoutConstraint.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8D65CE579E516BDD5FB36CAA21D693F6 /* MASCompositeConstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 6DBF6A9E6B98628E15798B561710E850 /* MASCompositeConstraint.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		941955A19C40899D275604E6E9C21A6D /* MASConstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 5BD50EBA29AE24317A8444CAF583FDB4 /* MASConstraint.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		957F80C27D29FF9BD213D3ED6FAFEF3C /* TZImagePickerController.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4A896CD3FE2920CAA9530DD226DC4A92 /* TZImagePickerController.bundle */; };
-		987F6C809D75C71E0160D6BEA9C8D5F4 /* TZAssetModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 50B4B5B0092FD507182ED48A1D56C897 /* TZAssetModel.m */; };
-		9D546E1168C04B0B2EAE005D9275D18B /* MASConstraint+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BFE70EC4A8693648093B042737CB434 /* MASConstraint+Private.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		A061B3B61755C9D3AEE52BC15A675443 /* TTGTagCollectionView-Bridging-Header.h in Headers */ = {isa = PBXBuildFile; fileRef = 96962BC5A40B7ED8EEA623F39734D03A /* TTGTagCollectionView-Bridging-Header.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		A35FBEEC7D088AEC05297E8292A32C77 /* View+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C05D9077ECE84655AE89F006C0D3D92 /* View+MASAdditions.m */; };
-		A756D56980E22619AC66B852192199A5 /* TZImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A30D940240C490DA9913A889EF6C854A /* TZImageManager.m */; };
-		A86E5E11B4BB67CA8F7FF4648799619E /* UIView+TZLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = CCE1A6AAC8439F8F44A6645489F10AE3 /* UIView+TZLayout.m */; };
-		ABE4F184BFFE00DB3A8C8A3E7832E6F3 /* TZProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53CAF7C0D2C10C906F7695CEE838529 /* TZProgressView.m */; };
-		AC8EAF17B238E2F0176F2D88388474A1 /* TTGTextTagStringContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 75BD5D194B825021FDFA0FDD649E1428 /* TTGTextTagStringContent.m */; };
-		ACE04A1F50CF766F1DEC0785C132D2F4 /* TZGifPhotoPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B983AD9467A5548D3EB1F7453AA59636 /* TZGifPhotoPreviewController.m */; };
-		AFC62994FC4E8BBDE0D3F3686A61084D /* TTGTagCollectionView-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = FBE417086CA672B601BC58413BD3A7C3 /* TTGTagCollectionView-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		B40D30B27415278ED54F6D9E1A3465F1 /* TZImageCropManager.h in Headers */ = {isa = PBXBuildFile; fileRef = E3A28F587EF05AF0DCC15A88C2702826 /* TZImageCropManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		B536466D89EB60D996E736AC5B105F3B /* UIView+TZLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E0A37BD07BC93526B97B70BB0B1F320 /* UIView+TZLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		B7D645EC004610E8A581E532D28771EC /* MASViewConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = FD860E8429849047037A34404D716C27 /* MASViewConstraint.m */; };
-		B7DED9131A9AF648078B695E3D84AE7C /* TTGTextTagContent.h in Headers */ = {isa = PBXBuildFile; fileRef = C99BDDFCF01B886B500C2DF56C0D0180 /* TTGTextTagContent.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		BBEFA4897B61B052F6FBA0AE3983F4C0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36E8017CD3DD67036B82DE3355DDA10C /* Foundation.framework */; };
-		C0861ADB4C5FA30F4F9E051F7638A264 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 98D61AEFA1B688EBB6AA137D46892C56 /* NSLayoutConstraint+MASDebugAdditions.m */; };
-		C2DE982FFE1BD6EF269B4A5E56D2AC69 /* TZImageManager.h in Headers */ = {isa = PBXBuildFile; fileRef = A77A9FDD1B30A8E6AC30041519DD315A /* TZImageManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C610BDF39E7A5EA5F6A5EFDDF93BDB21 /* TZPhotoPreviewController.h in Headers */ = {isa = PBXBuildFile; fileRef = D0FB4D16870EC25AE1BF9C168E63E95D /* TZPhotoPreviewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C6BA0B6B5BF93D01ED16F37921651954 /* TTGTextTagStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A6BFCB78337C8C3A805E2DADB3FC739 /* TTGTextTagStyle.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CBBAC8080AB6D30320C10E3603CD0E5C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36E8017CD3DD67036B82DE3355DDA10C /* Foundation.framework */; };
-		CE93C54413259B4AC3683B6EB874D466 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06467B2726119E36A2570D3EA159D619 /* UIKit.framework */; };
-		D02275005870AF7837AD6A7815329E03 /* TZImagePickerController-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 9210FD361045D2BB57E4BD42960FA140 /* TZImagePickerController-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D5127DA4E6641AE70605ED3EFB2D5AA1 /* TZVideoCropController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0D3C2B4C5A0B2EF7A12CAFFE19A4025C /* TZVideoCropController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		DED85CF88429EF7434356ECB4CB9FD53 /* TZImagePickerController-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 33120ECE2466C409F819BD9D95B1ADEC /* TZImagePickerController-dummy.m */; };
-		DF8907F59BEF751015DBF1D0A47E6234 /* TTGTextTagContent.m in Sources */ = {isa = PBXBuildFile; fileRef = AEBCBE6B295C15E6520F88FC381417C3 /* TTGTextTagContent.m */; };
-		E244C3D33433DBD6F4F9E73F4F76D83C /* TTGTagCollectionView-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DEA21B67CDB92E21AD377C44E79B69A /* TTGTagCollectionView-dummy.m */; };
-		E2E8C33EC11E74E51D2CB44C4A5FAEAE /* TZPhotoPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2114DA4ADD8CE83B4283BCC30747BA90 /* TZPhotoPreviewController.m */; };
-		E51F496BDC6ACADE04FDA059C6CB2342 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36E8017CD3DD67036B82DE3355DDA10C /* Foundation.framework */; };
-		E7CA20228B3583F41927813EE904CAD3 /* View+MASShorthandAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = D9BA17E56E1212D471AEAA5DC3F68322 /* View+MASShorthandAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E81860603410CC4D7299AC59E4C2BC3F /* TZVideoCropController.m in Sources */ = {isa = PBXBuildFile; fileRef = F54B0147FA4AA2936D84694068DAB2B7 /* TZVideoCropController.m */; };
-		E8DD5D1D406150E1C80AD015271B6848 /* MASConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = 00FC71B8AC21B77F41B8AD66757E7128 /* MASConstraint.m */; };
-		EAE8B0895956885A752B173683A0D889 /* MASViewConstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 1964077F5114BD50E37E3CF3217F7C81 /* MASViewConstraint.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		F00804B11FA23B93F9A0EB84CB0E480C /* TZPhotoPreviewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E3841E5C14C42E5772FBF98A6E109A7 /* TZPhotoPreviewCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		F094B006A4EF3D1E65D4BFAF14B40B07 /* TTGTagCollectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7C4028EDC045EDCB5F60FE3C73DC4604 /* TTGTagCollectionView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		FAFBFA90F7BC3E7CF50F8A5CF0A8B264 /* MASConstraintMaker.h in Headers */ = {isa = PBXBuildFile; fileRef = 548FA202064EF845D058B5E54729D474 /* MASConstraintMaker.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		FD13F3D6FD1858E34C8DCD000F8E4E35 /* TZVideoEditedPreviewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 659E3A4B4CE0D9AE8A8945A7BA6ED01E /* TZVideoEditedPreviewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		FD34FC80002D4E0E9B0D7131BA6C937F /* TZImageRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EAFCF4366C2AFBB5E01026CE885A889E /* TZImageRequestOperation.m */; };
-		FFDBD99B1FAAA03625E23ED33A87E951 /* TTGTextTagCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9290D19F61C88F65454551CB6D375653 /* TTGTextTagCollectionView.m */; };
+		0254A0B1BDFF50D9EB4A33CFB26632BF /* TZImageCropManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CE849283E58E6BCBB5F86AF3A0D67B3 /* TZImageCropManager.m */; };
+		0279A049176856546A8429B488A1759F /* TZImagePickerController.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4A896CD3FE2920CAA9530DD226DC4A92 /* TZImagePickerController.bundle */; };
+		0288CFF97F1E0C14FD2780A6D971F622 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B49BCB1D38A18ED623C86ABC1D02681 /* Photos.framework */; };
+		0816FEB68D041E568A9B5066CFC22181 /* TTGTagCollectionView-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = FBE417086CA672B601BC58413BD3A7C3 /* TTGTagCollectionView-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0832E6E2FAFE65ED21D4D5B05D3D3E1E /* TZImageRequestOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1C1897D3FCE2BA10501BB19932FF75 /* TZImageRequestOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0E2C6CFD8D743F20FAA9BAF2B2BCD0B1 /* TZImageManager.h in Headers */ = {isa = PBXBuildFile; fileRef = A77A9FDD1B30A8E6AC30041519DD315A /* TZImageManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0E8CCAE597756C61B2D7B60EEF4A29E4 /* MASUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 50EBB43B2DA3793A86476E93408C0C4B /* MASUtilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1155EE8CFAA52F7FDBEFE171A88ED4B4 /* TZProgressView.h in Headers */ = {isa = PBXBuildFile; fileRef = E3AE56A781FC3DBD805F4A60BE9F612B /* TZProgressView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1469CD187DC125505350B0DCDCA4569E /* TTGTextTagCollectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = 98643FF460CC229E8E2F0F0FEE12FA85 /* TTGTextTagCollectionView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		189EEC9F437E6D8576D85C90916F7B81 /* TZAssetCell.h in Headers */ = {isa = PBXBuildFile; fileRef = F9F4F81B8248FCE2C4D1483F8CF91843 /* TZAssetCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		19300CF68F5718C6F9C3476F1A98C1DC /* MASCompositeConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = 16710C13ED8C3D5BD05212363C4FF642 /* MASCompositeConstraint.m */; };
+		1B433A1BF92BBD5811F61A000E4771C2 /* MASConstraintMaker.h in Headers */ = {isa = PBXBuildFile; fileRef = 548FA202064EF845D058B5E54729D474 /* MASConstraintMaker.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1F578C0C0000BC1B9CD3EAF3DADFA5C9 /* Pods-MMSession-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 606BD48DB7B592442C171591186941B3 /* Pods-MMSession-dummy.m */; };
+		2839E3707C14798138E8A0C72ACE4C25 /* MASLayoutConstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = C23810C4F0E46249DC11AC5DC5391329 /* MASLayoutConstraint.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2CC790440F7C07C01D884F7892A6DA5E /* NSBundle+TZImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 071F94A8646E0BF9B0D07177E607D125 /* NSBundle+TZImagePicker.m */; };
+		31F7C35C8863FA25A741A884E21BE7D0 /* Masonry.h in Headers */ = {isa = PBXBuildFile; fileRef = D240899DA4C9DAB628BCBE99A26E757E /* Masonry.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		346B8559E06EACCAC4BC8AF162D13BF8 /* TTGTextTag.m in Sources */ = {isa = PBXBuildFile; fileRef = D70BB38179B0E75D88F01DBE023D6041 /* TTGTextTag.m */; };
+		3D0EFFE30E3193932A034220E3C4C0FA /* View+MASAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = E6CF6516A025DAB690712E538979C75C /* View+MASAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4547C9DF97C334A65FB6D7D9815ED009 /* TZPhotoPreviewController.h in Headers */ = {isa = PBXBuildFile; fileRef = D0FB4D16870EC25AE1BF9C168E63E95D /* TZPhotoPreviewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4A4CC0EFAFEF029E0125357C2815D6AB /* TTGTextTagStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A6BFCB78337C8C3A805E2DADB3FC739 /* TTGTextTagStyle.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4CC9B43AD90714A316815FAA71DC89A2 /* MASConstraintMaker.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CA1AD174F6B315D0163EFA471F3EC16 /* MASConstraintMaker.m */; };
+		5249AFD7B0046BF72621CA25E7FAF8DF /* TZImagePickerController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EAF273AD59DCBF0A0D119C67F0E9CA1 /* TZImagePickerController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		53305278F1654F968B4E02DF71B098BE /* MASViewAttribute.m in Sources */ = {isa = PBXBuildFile; fileRef = C1AF68D7B81FBB839C25545138C3C3F7 /* MASViewAttribute.m */; };
+		53FB72DEC931306CE935D5FA68D17DB6 /* TZPhotoPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = B7CCBCC885240478FC9B045CF02C2C80 /* TZPhotoPickerController.m */; };
+		54BEFE9F75005D327641073B838C6776 /* MASLayoutConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B19CAE5E5E29E4164357284EE9F513 /* MASLayoutConstraint.m */; };
+		567ABE0681AA82748435E32386DE12D7 /* ViewController+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 720C67B5881B5793A32F9CF42067ABF1 /* ViewController+MASAdditions.m */; };
+		56E65DC3EFB69DD6D1657B26D3347593 /* TZVideoCropController.m in Sources */ = {isa = PBXBuildFile; fileRef = F54B0147FA4AA2936D84694068DAB2B7 /* TZVideoCropController.m */; };
+		58FEF108D182B6A2152EDC5B31A620A9 /* TZAssetCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6333DB4C131FF231CB371D3B099DD37C /* TZAssetCell.m */; };
+		61225B0B9AEC591476E30C9A575013B3 /* View+MASShorthandAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = D9BA17E56E1212D471AEAA5DC3F68322 /* View+MASShorthandAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		659249183F0F97FD9D9FF24021067244 /* TZVideoCropController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0D3C2B4C5A0B2EF7A12CAFFE19A4025C /* TZVideoCropController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6E4327DD09F502955E68F62D5BC31734 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4AD502712F0FBAC4A2C9B5E8423889DF /* Foundation.framework */; };
+		6F9166A36F9B95936D9EF251698D9D65 /* TZLocationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 13AFD692C1EF145732A4DA8AB8765CF6 /* TZLocationManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		715AB2C777F6FCAB5EE0C667A909B698 /* MASViewAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 7046BAD3B1D8E2120CD16699F9EF5D30 /* MASViewAttribute.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7246A283679C42B59A95265D6612DAF5 /* TTGTextTagCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9290D19F61C88F65454551CB6D375653 /* TTGTextTagCollectionView.m */; };
+		78251F42EB680FB72F040A1986279CD2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4AD502712F0FBAC4A2C9B5E8423889DF /* Foundation.framework */; };
+		7B05A8DE072977F90AA84A0E98E23167 /* MASConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = 00FC71B8AC21B77F41B8AD66757E7128 /* MASConstraint.m */; };
+		8171D105E2C5CD3C1357D544942B4446 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 74AC80FDE0AF6C533FD2D6A49EF8C4C9 /* UIKit.framework */; };
+		84A4A536139EBAD6518A98FFB34E04CC /* TZVideoPlayerController.h in Headers */ = {isa = PBXBuildFile; fileRef = 1DEF995265B0433968BF4DF404CA3923 /* TZVideoPlayerController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		84BBED65BCCD0E0F04A1E13680389487 /* TZGifPhotoPreviewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E763B35EA59F0C8A4AF2A36827B0829 /* TZGifPhotoPreviewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8AE868BC3E2E6FC92F4717835180C47D /* NSArray+MASAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4368322270A2D39EDA2F4175AEF260B2 /* NSArray+MASAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8E4642DE4DB304FB66028A899A378F66 /* TZVideoEditedPreviewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 659E3A4B4CE0D9AE8A8945A7BA6ED01E /* TZVideoEditedPreviewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		907C45F9E66E1858A5F6CA4C3414523B /* TZProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53CAF7C0D2C10C906F7695CEE838529 /* TZProgressView.m */; };
+		93C089FBD80F0BBDEC7D4E67EB936890 /* TTGTagCollectionView-Bridging-Header.h in Headers */ = {isa = PBXBuildFile; fileRef = 96962BC5A40B7ED8EEA623F39734D03A /* TTGTagCollectionView-Bridging-Header.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		98449296F0650376097596C7611EC442 /* TTGTextTagContent.m in Sources */ = {isa = PBXBuildFile; fileRef = AEBCBE6B295C15E6520F88FC381417C3 /* TTGTextTagContent.m */; };
+		9C11A044D48278F340711CF9846F521A /* TZPhotoPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2114DA4ADD8CE83B4283BCC30747BA90 /* TZPhotoPreviewController.m */; };
+		9EA97C651FADB332662540783E4C27B6 /* TTGTextTagStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 41E0ED9AA7D42691AB0C275A3363F11C /* TTGTextTagStyle.m */; };
+		A00BB31D7853DC05C2995717C408E5F5 /* TZPhotoPreviewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D211AF7AC760877F1E1376045C1C785 /* TZPhotoPreviewCell.m */; };
+		A1336977ADAAD492D6CFD089A8C6E358 /* View+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C05D9077ECE84655AE89F006C0D3D92 /* View+MASAdditions.m */; };
+		A47348ECBE31E495DB55D61D05A09E24 /* TTGTextTag.h in Headers */ = {isa = PBXBuildFile; fileRef = 398CCEE518A6C5EA669EE43E8E083BD2 /* TTGTextTag.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A5ABF96C97F9AF97F974FB9821B70945 /* TZAssetModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 4863A0AC54CB914D60547F722A79901A /* TZAssetModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A66D3C43006910493549EC625525AEF9 /* TZImageRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EAFCF4366C2AFBB5E01026CE885A889E /* TZImageRequestOperation.m */; };
+		A735F92CF919D96F02E3CD7392794B36 /* TZVideoEditedPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B19C8D9F722A7AA0B210CF8653AE6DCF /* TZVideoEditedPreviewController.m */; };
+		A7AB49BD4EB5F2521D91D7001272A0CF /* TTGTagCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = E22CF11B731ECC0FF0ECB561709249FD /* TTGTagCollectionView.m */; };
+		A83A6757F6C0003332D57B41FE24BEEA /* MASConstraint+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BFE70EC4A8693648093B042737CB434 /* MASConstraint+Private.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AAB090AD1FD1728FC84792F0AACDEE75 /* NSBundle+TZImagePicker.h in Headers */ = {isa = PBXBuildFile; fileRef = A199024950A1971E92EBC26D6FACD178 /* NSBundle+TZImagePicker.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AF61F4D74023CA2A5813755F3CFFF431 /* TZLocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D999313A6FE52ECC56E3A13507559A3A /* TZLocationManager.m */; };
+		B10646B6AF73D470221EF25A5DEEEB6F /* ViewController+MASAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 15D4D67F6A6747E736A68148F3005B13 /* ViewController+MASAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B1FEAE05B9719F946E0C8C5D200A5946 /* TZPhotoPickerController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F8BE7A497F35F449E17677E4388FA58 /* TZPhotoPickerController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B3D0611AA8C8396216B7647FE6F7A939 /* TZImageCropManager.h in Headers */ = {isa = PBXBuildFile; fileRef = E3A28F587EF05AF0DCC15A88C2702826 /* TZImageCropManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B4BE7728D87333785F811FED48CF134E /* MASCompositeConstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 6DBF6A9E6B98628E15798B561710E850 /* MASCompositeConstraint.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B61AA5459C2B345AD6D84D8A5111C9CE /* Masonry-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 43463E60AA478DB366EB19419DC48726 /* Masonry-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B918E38592AE034FE54DDDAD4E6F74CB /* TZImagePickerController-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 33120ECE2466C409F819BD9D95B1ADEC /* TZImagePickerController-dummy.m */; };
+		BA908DB5BDC0A34F479A1ADCC7B36C70 /* Pods-MMSession-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 83557CE8046DC69634D7F8A50DB2AEF3 /* Pods-MMSession-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BE050DABC9BF806B3379AFD2367F4194 /* NSLayoutConstraint+MASDebugAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B55BAE82F62AA5A1825815667565A41 /* NSLayoutConstraint+MASDebugAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BEA99A49E5F8DA685E33DABA606041FF /* MASConstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 5BD50EBA29AE24317A8444CAF583FDB4 /* MASConstraint.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C3502DAEECDEFA3DF98360C0A4176E09 /* TZVideoPlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBA4E777E0F056A1E4FA092156BCC53F /* TZVideoPlayerController.m */; };
+		C7D83D99D755676EF8A09CC77845BAF4 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 98D61AEFA1B688EBB6AA137D46892C56 /* NSLayoutConstraint+MASDebugAdditions.m */; };
+		C9375F078B54A9030D4B9C2E73222A5D /* NSArray+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 452DD5C3A990085F5DB81F0E2908C478 /* NSArray+MASAdditions.m */; };
+		C9A34B3D79991E0611C28DF1A6F5FD7A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4AD502712F0FBAC4A2C9B5E8423889DF /* Foundation.framework */; };
+		CA842066278CE847041400F76F0B41E9 /* TZPhotoPreviewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E3841E5C14C42E5772FBF98A6E109A7 /* TZPhotoPreviewCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CC6CC7978D55255B8DC829755B4317B6 /* TTGTextTagStringContent.h in Headers */ = {isa = PBXBuildFile; fileRef = ED09E571FA81F40259CBD778CCA70CAF /* TTGTextTagStringContent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CC7D54A1966C69FA9DB1622A87BEA66F /* TTGTextTagStringContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 75BD5D194B825021FDFA0FDD649E1428 /* TTGTextTagStringContent.m */; };
+		CECDB459AFB5AD0040AF86378F2DBF97 /* Masonry-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = C4A3FDB7969978082A4EF8A846648C90 /* Masonry-dummy.m */; };
+		CEE7BDCC3F3073CBBF7A76BC6CF3E519 /* MASViewConstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 1964077F5114BD50E37E3CF3217F7C81 /* MASViewConstraint.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D15AD98A7A08292B0B23612343CA7513 /* TTGTagCollectionView-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DEA21B67CDB92E21AD377C44E79B69A /* TTGTagCollectionView-dummy.m */; };
+		D4C1569A8E5F9AF3EB429486F4F96E6F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4AD502712F0FBAC4A2C9B5E8423889DF /* Foundation.framework */; };
+		D91FED4DCFFF03E5D33ED8BE1B0A53D1 /* TZImagePickerController-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 9210FD361045D2BB57E4BD42960FA140 /* TZImagePickerController-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DBBC78EA73A44A4967F1059BE3F8D855 /* TZImagePickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13108831DBB0BFE3AE73A1FD1F87BC7D /* TZImagePickerController.m */; };
+		DF3A8361F07BCC3CB5C508B6EDB4BF5E /* TZAssetModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 50B4B5B0092FD507182ED48A1D56C897 /* TZAssetModel.m */; };
+		E3AB7F40EFA1C951A6537C8BE2875A5C /* UIView+TZLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = CCE1A6AAC8439F8F44A6645489F10AE3 /* UIView+TZLayout.m */; };
+		E53FCD0CD1526B53074ED4EEF00131E9 /* NSArray+MASShorthandAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = C9946CD933C21D3CD976AA54F2E10572 /* NSArray+MASShorthandAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E66AA9C3A5D5A28B5D8981E1DCBDADFA /* TTGTextTagContent.h in Headers */ = {isa = PBXBuildFile; fileRef = C99BDDFCF01B886B500C2DF56C0D0180 /* TTGTextTagContent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E6FB269534400D40C1CE67D18EDD8A9A /* MASViewConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = FD860E8429849047037A34404D716C27 /* MASViewConstraint.m */; };
+		E7A5EF684E988CBF80917A07215D298B /* TTGTextTagAttributedStringContent.h in Headers */ = {isa = PBXBuildFile; fileRef = F898C145852677099560CEE2BC720706 /* TTGTextTagAttributedStringContent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E84814E1E45FB9119471F69FE4B11748 /* TTGTextTagAttributedStringContent.m in Sources */ = {isa = PBXBuildFile; fileRef = B9E0A717B3E4266CB65FB4AEE8B9A132 /* TTGTextTagAttributedStringContent.m */; };
+		EAB8287BCFE45ACECEB457880A93CDF5 /* TTGTagCollectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7C4028EDC045EDCB5F60FE3C73DC4604 /* TTGTagCollectionView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F89B182A80A4F5B8291181B6AF2885EE /* UIView+TZLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E0A37BD07BC93526B97B70BB0B1F320 /* UIView+TZLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FBC79BB133ADB34C0C2C3EB2C887CF5B /* TZImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A30D940240C490DA9913A889EF6C854A /* TZImageManager.m */; };
+		FEE586C6FD7D9B2CAF8741DC67C9D814 /* TZGifPhotoPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B983AD9467A5548D3EB1F7453AA59636 /* TZGifPhotoPreviewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		5939E4D18E651EA1C4ED1CC932533410 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 55AF53E6C77A10ED4985E04D74A8878E;
-			remoteInfo = Masonry;
-		};
-		8B4BF416830348A7640E2C7A047C72E6 /* PBXContainerItemProxy */ = {
+		1963EF692E2D065C34D1B73FBC57589D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = A96BBB982D62BB807B5BD10774BE2D07;
 			remoteInfo = TZImagePickerController;
 		};
-		B2DB7F32357B066644B5506CEB5B13DB /* PBXContainerItemProxy */ = {
+		489C638EE0EA0F69264F45B239D13B5D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = F4949B35B65C78C4D7DCBEEA66EC61D4;
 			remoteInfo = TTGTagCollectionView;
 		};
+		D1BA55C23E0A5B403B77C9EF4E505412 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 55AF53E6C77A10ED4985E04D74A8878E;
+			remoteInfo = Masonry;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		00FC71B8AC21B77F41B8AD66757E7128 /* MASConstraint.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MASConstraint.m; path = Masonry/MASConstraint.m; sourceTree = "<group>"; };
-		06467B2726119E36A2570D3EA159D619 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		06B49EB22A6108EB60A918F9D0454811 /* Masonry.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Masonry.debug.xcconfig; sourceTree = "<group>"; };
 		071F94A8646E0BF9B0D07177E607D125 /* NSBundle+TZImagePicker.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSBundle+TZImagePicker.m"; path = "TZImagePickerController/TZImagePickerController/NSBundle+TZImagePicker.m"; sourceTree = "<group>"; };
 		0D3C2B4C5A0B2EF7A12CAFFE19A4025C /* TZVideoCropController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TZVideoCropController.h; path = TZImagePickerController/TZImagePickerController/TZVideoCropController.h; sourceTree = "<group>"; };
 		0E3841E5C14C42E5772FBF98A6E109A7 /* TZPhotoPreviewCell.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TZPhotoPreviewCell.h; path = TZImagePickerController/TZImagePickerController/TZPhotoPreviewCell.h; sourceTree = "<group>"; };
 		0E763B35EA59F0C8A4AF2A36827B0829 /* TZGifPhotoPreviewController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TZGifPhotoPreviewController.h; path = TZImagePickerController/TZImagePickerController/TZGifPhotoPreviewController.h; sourceTree = "<group>"; };
-		1069E5A821682A4391ED5E65B3AE0017 /* Pods_MMSession.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_MMSession.framework; path = "Pods-MMSession.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1069E5A821682A4391ED5E65B3AE0017 /* Pods-MMSession */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "Pods-MMSession"; path = Pods_MMSession.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1071F6ED31B18730E3286C0BC5DE40F6 /* Pods-MMSession-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-MMSession-frameworks.sh"; sourceTree = "<group>"; };
 		13108831DBB0BFE3AE73A1FD1F87BC7D /* TZImagePickerController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = TZImagePickerController.m; path = TZImagePickerController/TZImagePickerController/TZImagePickerController.m; sourceTree = "<group>"; };
 		13AFD692C1EF145732A4DA8AB8765CF6 /* TZLocationManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TZLocationManager.h; path = TZImagePickerController/TZImagePickerController/TZLocationManager.h; sourceTree = "<group>"; };
@@ -138,21 +137,20 @@
 		16710C13ED8C3D5BD05212363C4FF642 /* MASCompositeConstraint.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MASCompositeConstraint.m; path = Masonry/MASCompositeConstraint.m; sourceTree = "<group>"; };
 		1964077F5114BD50E37E3CF3217F7C81 /* MASViewConstraint.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MASViewConstraint.h; path = Masonry/MASViewConstraint.h; sourceTree = "<group>"; };
 		1DEF995265B0433968BF4DF404CA3923 /* TZVideoPlayerController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TZVideoPlayerController.h; path = TZImagePickerController/TZImagePickerController/TZVideoPlayerController.h; sourceTree = "<group>"; };
-		1FFED36A657123030ABB700256D73F15 /* Masonry.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Masonry.framework; path = Masonry.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1FFED36A657123030ABB700256D73F15 /* Masonry */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Masonry; path = Masonry.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2114DA4ADD8CE83B4283BCC30747BA90 /* TZPhotoPreviewController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = TZPhotoPreviewController.m; path = TZImagePickerController/TZImagePickerController/TZPhotoPreviewController.m; sourceTree = "<group>"; };
 		25B19CAE5E5E29E4164357284EE9F513 /* MASLayoutConstraint.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MASLayoutConstraint.m; path = Masonry/MASLayoutConstraint.m; sourceTree = "<group>"; };
 		2919AE08666803E1DC2A7092C3174D26 /* Pods-MMSession-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-MMSession-acknowledgements.markdown"; sourceTree = "<group>"; };
 		2E0A37BD07BC93526B97B70BB0B1F320 /* UIView+TZLayout.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIView+TZLayout.h"; path = "TZImagePickerController/TZImagePickerController/UIView+TZLayout.h"; sourceTree = "<group>"; };
 		2EAF273AD59DCBF0A0D119C67F0E9CA1 /* TZImagePickerController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TZImagePickerController.h; path = TZImagePickerController/TZImagePickerController/TZImagePickerController.h; sourceTree = "<group>"; };
 		33120ECE2466C409F819BD9D95B1ADEC /* TZImagePickerController-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "TZImagePickerController-dummy.m"; sourceTree = "<group>"; };
-		36C6F0DD9B00CD62109C2D53724C22F7 /* TTGTagCollectionView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = TTGTagCollectionView.framework; path = TTGTagCollectionView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		36E8017CD3DD67036B82DE3355DDA10C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		36C6F0DD9B00CD62109C2D53724C22F7 /* TTGTagCollectionView */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = TTGTagCollectionView; path = TTGTagCollectionView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		398CCEE518A6C5EA669EE43E8E083BD2 /* TTGTextTag.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TTGTextTag.h; path = Sources/TextTag/Tag/TTGTextTag.h; sourceTree = "<group>"; };
 		3A6BFCB78337C8C3A805E2DADB3FC739 /* TTGTextTagStyle.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TTGTextTagStyle.h; path = Sources/TextTag/Tag/Style/TTGTextTagStyle.h; sourceTree = "<group>"; };
+		3B49BCB1D38A18ED623C86ABC1D02681 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Photos.framework; sourceTree = DEVELOPER_DIR; };
 		3C05D9077ECE84655AE89F006C0D3D92 /* View+MASAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "View+MASAdditions.m"; path = "Masonry/View+MASAdditions.m"; sourceTree = "<group>"; };
 		3DEA21B67CDB92E21AD377C44E79B69A /* TTGTagCollectionView-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "TTGTagCollectionView-dummy.m"; sourceTree = "<group>"; };
 		3EDC1465C3CC2CE8E742013E1E982CF3 /* TZImagePickerController.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = TZImagePickerController.debug.xcconfig; sourceTree = "<group>"; };
-		40D3CDC39D98E22F2A543100660462A0 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/Photos.framework; sourceTree = DEVELOPER_DIR; };
 		41E0ED9AA7D42691AB0C275A3363F11C /* TTGTextTagStyle.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = TTGTextTagStyle.m; path = Sources/TextTag/Tag/Style/TTGTextTagStyle.m; sourceTree = "<group>"; };
 		42A6059358A6FF7B9AF05F03EDD5E5EF /* Masonry.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Masonry.release.xcconfig; sourceTree = "<group>"; };
 		43463E60AA478DB366EB19419DC48726 /* Masonry-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Masonry-umbrella.h"; sourceTree = "<group>"; };
@@ -161,6 +159,7 @@
 		47C7FC978DFDBF3FE3E58C6300EE9F68 /* TZImagePickerController.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = TZImagePickerController.release.xcconfig; sourceTree = "<group>"; };
 		4863A0AC54CB914D60547F722A79901A /* TZAssetModel.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TZAssetModel.h; path = TZImagePickerController/TZImagePickerController/TZAssetModel.h; sourceTree = "<group>"; };
 		4A896CD3FE2920CAA9530DD226DC4A92 /* TZImagePickerController.bundle */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "wrapper.plug-in"; name = TZImagePickerController.bundle; path = TZImagePickerController/TZImagePickerController/TZImagePickerController.bundle; sourceTree = "<group>"; };
+		4AD502712F0FBAC4A2C9B5E8423889DF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		4B8FD97DFFBA2ED91F372F11E22097D7 /* Masonry-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Masonry-prefix.pch"; sourceTree = "<group>"; };
 		50B4B5B0092FD507182ED48A1D56C897 /* TZAssetModel.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = TZAssetModel.m; path = TZImagePickerController/TZImagePickerController/TZAssetModel.m; sourceTree = "<group>"; };
 		50EBB43B2DA3793A86476E93408C0C4B /* MASUtilities.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MASUtilities.h; path = Masonry/MASUtilities.h; sourceTree = "<group>"; };
@@ -177,6 +176,7 @@
 		7046BAD3B1D8E2120CD16699F9EF5D30 /* MASViewAttribute.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MASViewAttribute.h; path = Masonry/MASViewAttribute.h; sourceTree = "<group>"; };
 		71969726E55B3271391861230500FC0A /* TZImagePickerController-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "TZImagePickerController-Info.plist"; sourceTree = "<group>"; };
 		720C67B5881B5793A32F9CF42067ABF1 /* ViewController+MASAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "ViewController+MASAdditions.m"; path = "Masonry/ViewController+MASAdditions.m"; sourceTree = "<group>"; };
+		74AC80FDE0AF6C533FD2D6A49EF8C4C9 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		75BD5D194B825021FDFA0FDD649E1428 /* TTGTextTagStringContent.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = TTGTextTagStringContent.m; path = Sources/TextTag/Tag/Content/TTGTextTagStringContent.m; sourceTree = "<group>"; };
 		77FE3BD08C499AAAA4BB822570BE0FA6 /* Pods-MMSession-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-MMSession-Info.plist"; sourceTree = "<group>"; };
 		7970E45AFA6E3A2583673733D498A9E3 /* Pods-MMSession.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-MMSession.release.xcconfig"; sourceTree = "<group>"; };
@@ -186,7 +186,7 @@
 		7CCE91B6E420F04ADBAF9C9C214FCC6E /* TTGTagCollectionView.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = TTGTagCollectionView.modulemap; sourceTree = "<group>"; };
 		7F8BE7A497F35F449E17677E4388FA58 /* TZPhotoPickerController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TZPhotoPickerController.h; path = TZImagePickerController/TZImagePickerController/TZPhotoPickerController.h; sourceTree = "<group>"; };
 		83557CE8046DC69634D7F8A50DB2AEF3 /* Pods-MMSession-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-MMSession-umbrella.h"; sourceTree = "<group>"; };
-		8E1D5C0FCA0D872C3F21E87F25420681 /* TZImagePickerController.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = TZImagePickerController.framework; path = TZImagePickerController.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8E1D5C0FCA0D872C3F21E87F25420681 /* TZImagePickerController */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = TZImagePickerController; path = TZImagePickerController.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9210FD361045D2BB57E4BD42960FA140 /* TZImagePickerController-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "TZImagePickerController-umbrella.h"; sourceTree = "<group>"; };
 		9290D19F61C88F65454551CB6D375653 /* TTGTextTagCollectionView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = TTGTextTagCollectionView.m; path = Sources/TextTag/TTGTextTagCollectionView.m; sourceTree = "<group>"; };
 		92EB1E675654E5891A3D66425BD9DF3B /* TZImagePickerController.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = TZImagePickerController.modulemap; sourceTree = "<group>"; };
@@ -239,37 +239,37 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		0A683C4B334C5309D7D6CFC876552FA1 /* Frameworks */ = {
+		86DE86DFD54A8E14AFF400497FF3706E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CBBAC8080AB6D30320C10E3603CD0E5C /* Foundation.framework in Frameworks */,
+				6E4327DD09F502955E68F62D5BC31734 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		5E047F76604659BF1B2099B2C412AC93 /* Frameworks */ = {
+		CCB6E60691DB58C9D2C0F26733F25C2E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E51F496BDC6ACADE04FDA059C6CB2342 /* Foundation.framework in Frameworks */,
-				CE93C54413259B4AC3683B6EB874D466 /* UIKit.framework in Frameworks */,
+				78251F42EB680FB72F040A1986279CD2 /* Foundation.framework in Frameworks */,
+				8171D105E2C5CD3C1357D544942B4446 /* UIKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		BDB15B804DBE06448E7F5CEE810765D0 /* Frameworks */ = {
+		E415631339E88169B0A9982E2905D272 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BBEFA4897B61B052F6FBA0AE3983F4C0 /* Foundation.framework in Frameworks */,
+				D4C1569A8E5F9AF3EB429486F4F96E6F /* Foundation.framework in Frameworks */,
+				0288CFF97F1E0C14FD2780A6D971F622 /* Photos.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		BE867872E8DA37D1CAAD1906E860DA7E /* Frameworks */ = {
+		ED6A46C4877D1AA2F056F7A82C936B3B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8A471FF8B8214110E2481BFBBEEB703C /* Foundation.framework in Frameworks */,
-				6F27E1CFD040CAF62F42FE8B7AC3677D /* Photos.framework in Frameworks */,
+				C9A34B3D79991E0611C28DF1A6F5FD7A /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -279,7 +279,7 @@
 		03C5C200A0787E300053CFA8F53CA094 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				CD78C73F15C9719369B2967870B1C6D3 /* iOS */,
+				B150021228946CA98D133BC1FF236B7D /* iOS */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -363,17 +363,6 @@
 			path = TTGTagCollectionView;
 			sourceTree = "<group>";
 		};
-		A76B8D79DBFC7AC5C454564D0AF5980E /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				1FFED36A657123030ABB700256D73F15 /* Masonry.framework */,
-				1069E5A821682A4391ED5E65B3AE0017 /* Pods_MMSession.framework */,
-				36C6F0DD9B00CD62109C2D53724C22F7 /* TTGTagCollectionView.framework */,
-				8E1D5C0FCA0D872C3F21E87F25420681 /* TZImagePickerController.framework */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		ACB3B58481EAB0B5231F939B4A8F2233 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -384,6 +373,16 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		B150021228946CA98D133BC1FF236B7D /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				4AD502712F0FBAC4A2C9B5E8423889DF /* Foundation.framework */,
+				3B49BCB1D38A18ED623C86ABC1D02681 /* Photos.framework */,
+				74AC80FDE0AF6C533FD2D6A49EF8C4C9 /* UIKit.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
 		BB4701500326D4B1CC9E062C6F1AAA18 /* Targets Support Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -392,23 +391,13 @@
 			name = "Targets Support Files";
 			sourceTree = "<group>";
 		};
-		CD78C73F15C9719369B2967870B1C6D3 /* iOS */ = {
-			isa = PBXGroup;
-			children = (
-				36E8017CD3DD67036B82DE3355DDA10C /* Foundation.framework */,
-				40D3CDC39D98E22F2A543100660462A0 /* Photos.framework */,
-				06467B2726119E36A2570D3EA159D619 /* UIKit.framework */,
-			);
-			name = iOS;
-			sourceTree = "<group>";
-		};
 		CF1408CF629C7361332E53B88F7BD30C = {
 			isa = PBXGroup;
 			children = (
 				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
 				03C5C200A0787E300053CFA8F53CA094 /* Frameworks */,
 				ACB3B58481EAB0B5231F939B4A8F2233 /* Pods */,
-				A76B8D79DBFC7AC5C454564D0AF5980E /* Products */,
+				FF4D57745E6ECBE6D476C104351AF2FE /* Products */,
 				BB4701500326D4B1CC9E062C6F1AAA18 /* Targets Support Files */,
 			);
 			sourceTree = "<group>";
@@ -506,78 +495,89 @@
 			path = TZImagePickerController;
 			sourceTree = "<group>";
 		};
+		FF4D57745E6ECBE6D476C104351AF2FE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1FFED36A657123030ABB700256D73F15 /* Masonry */,
+				1069E5A821682A4391ED5E65B3AE0017 /* Pods-MMSession */,
+				36C6F0DD9B00CD62109C2D53724C22F7 /* TTGTagCollectionView */,
+				8E1D5C0FCA0D872C3F21E87F25420681 /* TZImagePickerController */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		05AFA9683854A122F01484CC7110CB3C /* Headers */ = {
+		22078E34BAF4DA23AAC263BB09392B43 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A061B3B61755C9D3AEE52BC15A675443 /* TTGTagCollectionView-Bridging-Header.h in Headers */,
-				AFC62994FC4E8BBDE0D3F3686A61084D /* TTGTagCollectionView-umbrella.h in Headers */,
-				F094B006A4EF3D1E65D4BFAF14B40B07 /* TTGTagCollectionView.h in Headers */,
-				54C599392C75AFD04C9D3B02FDE30409 /* TTGTextTag.h in Headers */,
-				5FD1AB57DB0721D4F6CF608901FEB103 /* TTGTextTagAttributedStringContent.h in Headers */,
-				3F472D62048F9BEBE482D4BD23AAF881 /* TTGTextTagCollectionView.h in Headers */,
-				B7DED9131A9AF648078B695E3D84AE7C /* TTGTextTagContent.h in Headers */,
-				090B756C9A6BE1D79EF6F35E7B65B7B1 /* TTGTextTagStringContent.h in Headers */,
-				C6BA0B6B5BF93D01ED16F37921651954 /* TTGTextTagStyle.h in Headers */,
+				EAB8287BCFE45ACECEB457880A93CDF5 /* TTGTagCollectionView.h in Headers */,
+				93C089FBD80F0BBDEC7D4E67EB936890 /* TTGTagCollectionView-Bridging-Header.h in Headers */,
+				0816FEB68D041E568A9B5066CFC22181 /* TTGTagCollectionView-umbrella.h in Headers */,
+				A47348ECBE31E495DB55D61D05A09E24 /* TTGTextTag.h in Headers */,
+				E7A5EF684E988CBF80917A07215D298B /* TTGTextTagAttributedStringContent.h in Headers */,
+				1469CD187DC125505350B0DCDCA4569E /* TTGTextTagCollectionView.h in Headers */,
+				E66AA9C3A5D5A28B5D8981E1DCBDADFA /* TTGTextTagContent.h in Headers */,
+				CC6CC7978D55255B8DC829755B4317B6 /* TTGTextTagStringContent.h in Headers */,
+				4A4CC0EFAFEF029E0125357C2815D6AB /* TTGTextTagStyle.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		7B04ACBA4522760CA66A5D4AFA498F81 /* Headers */ = {
+		6BA095BC185C925EC4BB65647262A53B /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8D65CE579E516BDD5FB36CAA21D693F6 /* MASCompositeConstraint.h in Headers */,
-				9D546E1168C04B0B2EAE005D9275D18B /* MASConstraint+Private.h in Headers */,
-				941955A19C40899D275604E6E9C21A6D /* MASConstraint.h in Headers */,
-				FAFBFA90F7BC3E7CF50F8A5CF0A8B264 /* MASConstraintMaker.h in Headers */,
-				8D4D1F6E4709EBB13974E95DC1059DDC /* MASLayoutConstraint.h in Headers */,
-				6A6AD3A5BBDBFD0B4AF936BD518EC0B1 /* Masonry-umbrella.h in Headers */,
-				346080C0D1CA23399ADD739D722D7CEF /* Masonry.h in Headers */,
-				280D36330BAC5715615FF4A8B42D60D6 /* MASUtilities.h in Headers */,
-				3DA5F1D8E51CDD102A871C2F37770C7B /* MASViewAttribute.h in Headers */,
-				EAE8B0895956885A752B173683A0D889 /* MASViewConstraint.h in Headers */,
-				05EA1447EEA0EB669F8DEE73964A7C60 /* NSArray+MASAdditions.h in Headers */,
-				05A040F35BF1C88F869404E1A940B493 /* NSArray+MASShorthandAdditions.h in Headers */,
-				0AF1AD35706D90B1A91F291B899EF8C0 /* NSLayoutConstraint+MASDebugAdditions.h in Headers */,
-				4B0981F9AC628CF5100C50FF4A163A4A /* View+MASAdditions.h in Headers */,
-				E7CA20228B3583F41927813EE904CAD3 /* View+MASShorthandAdditions.h in Headers */,
-				8B92011C9373001132C8148BFC8F50B3 /* ViewController+MASAdditions.h in Headers */,
+				BA908DB5BDC0A34F479A1ADCC7B36C70 /* Pods-MMSession-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		BD15DF1B16BBAA2FEE6C92496AF57064 /* Headers */ = {
+		6BE19D3AA8EB78CDFF6694C1A967BFD0 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				090763F27FE30508848A8EF2CAF23873 /* Pods-MMSession-umbrella.h in Headers */,
+				AAB090AD1FD1728FC84792F0AACDEE75 /* NSBundle+TZImagePicker.h in Headers */,
+				189EEC9F437E6D8576D85C90916F7B81 /* TZAssetCell.h in Headers */,
+				A5ABF96C97F9AF97F974FB9821B70945 /* TZAssetModel.h in Headers */,
+				84BBED65BCCD0E0F04A1E13680389487 /* TZGifPhotoPreviewController.h in Headers */,
+				B3D0611AA8C8396216B7647FE6F7A939 /* TZImageCropManager.h in Headers */,
+				0E2C6CFD8D743F20FAA9BAF2B2BCD0B1 /* TZImageManager.h in Headers */,
+				5249AFD7B0046BF72621CA25E7FAF8DF /* TZImagePickerController.h in Headers */,
+				D91FED4DCFFF03E5D33ED8BE1B0A53D1 /* TZImagePickerController-umbrella.h in Headers */,
+				0832E6E2FAFE65ED21D4D5B05D3D3E1E /* TZImageRequestOperation.h in Headers */,
+				6F9166A36F9B95936D9EF251698D9D65 /* TZLocationManager.h in Headers */,
+				B1FEAE05B9719F946E0C8C5D200A5946 /* TZPhotoPickerController.h in Headers */,
+				CA842066278CE847041400F76F0B41E9 /* TZPhotoPreviewCell.h in Headers */,
+				4547C9DF97C334A65FB6D7D9815ED009 /* TZPhotoPreviewController.h in Headers */,
+				1155EE8CFAA52F7FDBEFE171A88ED4B4 /* TZProgressView.h in Headers */,
+				659249183F0F97FD9D9FF24021067244 /* TZVideoCropController.h in Headers */,
+				8E4642DE4DB304FB66028A899A378F66 /* TZVideoEditedPreviewController.h in Headers */,
+				84A4A536139EBAD6518A98FFB34E04CC /* TZVideoPlayerController.h in Headers */,
+				F89B182A80A4F5B8291181B6AF2885EE /* UIView+TZLayout.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C24519C1126F59C90EE8E72C6B44E635 /* Headers */ = {
+		99A8659D86DFD4C224D177332D003EDC /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				50BA4ED48DDD76D7F0BD6129B76EDDE5 /* NSBundle+TZImagePicker.h in Headers */,
-				294389DB6F8548CA1F585FC917FD5F42 /* TZAssetCell.h in Headers */,
-				43FB0F73742C73F4CA02EA1B14E3EA50 /* TZAssetModel.h in Headers */,
-				73438F5405AB4ACE600FE17A6AB69A5F /* TZGifPhotoPreviewController.h in Headers */,
-				B40D30B27415278ED54F6D9E1A3465F1 /* TZImageCropManager.h in Headers */,
-				C2DE982FFE1BD6EF269B4A5E56D2AC69 /* TZImageManager.h in Headers */,
-				D02275005870AF7837AD6A7815329E03 /* TZImagePickerController-umbrella.h in Headers */,
-				75DF60E3669B919DDB6FED671F144E69 /* TZImagePickerController.h in Headers */,
-				6E316F27E0ECCBA79DBAD7D2131B3EB3 /* TZImageRequestOperation.h in Headers */,
-				51BF826E15EE7DB1BC686A5BE55230FC /* TZLocationManager.h in Headers */,
-				7CC1DAF56E7D4F4EEE0F33462E1D6C38 /* TZPhotoPickerController.h in Headers */,
-				F00804B11FA23B93F9A0EB84CB0E480C /* TZPhotoPreviewCell.h in Headers */,
-				C610BDF39E7A5EA5F6A5EFDDF93BDB21 /* TZPhotoPreviewController.h in Headers */,
-				020EDEB62A5EC5B21ADDE0BE8428A59C /* TZProgressView.h in Headers */,
-				D5127DA4E6641AE70605ED3EFB2D5AA1 /* TZVideoCropController.h in Headers */,
-				FD13F3D6FD1858E34C8DCD000F8E4E35 /* TZVideoEditedPreviewController.h in Headers */,
-				3E370875D1B667F05A2BB3E69767E464 /* TZVideoPlayerController.h in Headers */,
-				B536466D89EB60D996E736AC5B105F3B /* UIView+TZLayout.h in Headers */,
+				B4BE7728D87333785F811FED48CF134E /* MASCompositeConstraint.h in Headers */,
+				BEA99A49E5F8DA685E33DABA606041FF /* MASConstraint.h in Headers */,
+				A83A6757F6C0003332D57B41FE24BEEA /* MASConstraint+Private.h in Headers */,
+				1B433A1BF92BBD5811F61A000E4771C2 /* MASConstraintMaker.h in Headers */,
+				2839E3707C14798138E8A0C72ACE4C25 /* MASLayoutConstraint.h in Headers */,
+				31F7C35C8863FA25A741A884E21BE7D0 /* Masonry.h in Headers */,
+				B61AA5459C2B345AD6D84D8A5111C9CE /* Masonry-umbrella.h in Headers */,
+				0E8CCAE597756C61B2D7B60EEF4A29E4 /* MASUtilities.h in Headers */,
+				715AB2C777F6FCAB5EE0C667A909B698 /* MASViewAttribute.h in Headers */,
+				CEE7BDCC3F3073CBBF7A76BC6CF3E519 /* MASViewConstraint.h in Headers */,
+				8AE868BC3E2E6FC92F4717835180C47D /* NSArray+MASAdditions.h in Headers */,
+				E53FCD0CD1526B53074ED4EEF00131E9 /* NSArray+MASShorthandAdditions.h in Headers */,
+				BE050DABC9BF806B3379AFD2367F4194 /* NSLayoutConstraint+MASDebugAdditions.h in Headers */,
+				3D0EFFE30E3193932A034220E3C4C0FA /* View+MASAdditions.h in Headers */,
+				61225B0B9AEC591476E30C9A575013B3 /* View+MASShorthandAdditions.h in Headers */,
+				B10646B6AF73D470221EF25A5DEEEB6F /* ViewController+MASAdditions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -586,12 +586,12 @@
 /* Begin PBXNativeTarget section */
 		55AF53E6C77A10ED4985E04D74A8878E /* Masonry */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 87FD40BD683E3BD044AA4D1B5CA58652 /* Build configuration list for PBXNativeTarget "Masonry" */;
+			buildConfigurationList = 104EC9250BF4EDE104280490293C13C3 /* Build configuration list for PBXNativeTarget "Masonry" */;
 			buildPhases = (
-				7B04ACBA4522760CA66A5D4AFA498F81 /* Headers */,
-				038B428AD06C5A47FAF2BEFE16C6DC16 /* Sources */,
-				5E047F76604659BF1B2099B2C412AC93 /* Frameworks */,
-				895ED1B8779C1D82DF681CBFF67AC570 /* Resources */,
+				99A8659D86DFD4C224D177332D003EDC /* Headers */,
+				3003736003A11F9793D9EA6DC169AED7 /* Sources */,
+				CCB6E60691DB58C9D2C0F26733F25C2E /* Frameworks */,
+				4522D50300D635138BEDBF5E60D39B53 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -599,38 +599,38 @@
 			);
 			name = Masonry;
 			productName = Masonry;
-			productReference = 1FFED36A657123030ABB700256D73F15 /* Masonry.framework */;
+			productReference = 1FFED36A657123030ABB700256D73F15 /* Masonry */;
 			productType = "com.apple.product-type.framework";
 		};
 		A7B66CF8A43A42F5C8592ECA70A05F6A /* Pods-MMSession */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 62157E98A2311AD961CB8368D59EBC60 /* Build configuration list for PBXNativeTarget "Pods-MMSession" */;
+			buildConfigurationList = 76301D4FDAE9621CA3B348B332DB0D23 /* Build configuration list for PBXNativeTarget "Pods-MMSession" */;
 			buildPhases = (
-				BD15DF1B16BBAA2FEE6C92496AF57064 /* Headers */,
-				D96CE52B44A1B8284A94CC02E3FEE341 /* Sources */,
-				BDB15B804DBE06448E7F5CEE810765D0 /* Frameworks */,
-				337EBA7F4A14C1177FC2DE9CC7FE7868 /* Resources */,
+				6BA095BC185C925EC4BB65647262A53B /* Headers */,
+				147478E5F0AF0FE0984216B342EFB80B /* Sources */,
+				86DE86DFD54A8E14AFF400497FF3706E /* Frameworks */,
+				308583CC384999367C94FD2946AA8803 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				BA61EBF9320814B085234F83D9C53FFC /* PBXTargetDependency */,
-				751E7ECF44E3F6E29125B0C7D5DBB764 /* PBXTargetDependency */,
-				0EF6E7434A3BF957B22DF0094CB26F81 /* PBXTargetDependency */,
+				0A4FA853170B1A3697E22865F55863D4 /* PBXTargetDependency */,
+				E2B48D3B5E38F94A284975EE97735E96 /* PBXTargetDependency */,
+				3F5E36E3015741E44B2CB65E8704126C /* PBXTargetDependency */,
 			);
 			name = "Pods-MMSession";
-			productName = "Pods-MMSession";
-			productReference = 1069E5A821682A4391ED5E65B3AE0017 /* Pods_MMSession.framework */;
+			productName = Pods_MMSession;
+			productReference = 1069E5A821682A4391ED5E65B3AE0017 /* Pods-MMSession */;
 			productType = "com.apple.product-type.framework";
 		};
 		A96BBB982D62BB807B5BD10774BE2D07 /* TZImagePickerController */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 89DEA41355A4B2D71FAE89FE7599FD48 /* Build configuration list for PBXNativeTarget "TZImagePickerController" */;
+			buildConfigurationList = F2F1CB01D46EA76BA9DF6547605CD05F /* Build configuration list for PBXNativeTarget "TZImagePickerController" */;
 			buildPhases = (
-				C24519C1126F59C90EE8E72C6B44E635 /* Headers */,
-				E675A6669D3B83C757FD168AF314DCA0 /* Sources */,
-				BE867872E8DA37D1CAAD1906E860DA7E /* Frameworks */,
-				B89D7E1ABBEADD1C072F206CED92AE40 /* Resources */,
+				6BE19D3AA8EB78CDFF6694C1A967BFD0 /* Headers */,
+				EE32828A4C86940CF2C7235B05EB5125 /* Sources */,
+				E415631339E88169B0A9982E2905D272 /* Frameworks */,
+				36A6C9B861FFCEB5DBBE30A7D8E2CF53 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -638,17 +638,17 @@
 			);
 			name = TZImagePickerController;
 			productName = TZImagePickerController;
-			productReference = 8E1D5C0FCA0D872C3F21E87F25420681 /* TZImagePickerController.framework */;
+			productReference = 8E1D5C0FCA0D872C3F21E87F25420681 /* TZImagePickerController */;
 			productType = "com.apple.product-type.framework";
 		};
 		F4949B35B65C78C4D7DCBEEA66EC61D4 /* TTGTagCollectionView */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D9EA604270F8BD2940D600F294FB2645 /* Build configuration list for PBXNativeTarget "TTGTagCollectionView" */;
+			buildConfigurationList = FACCE11F502B8D7422F1D58882A52C2E /* Build configuration list for PBXNativeTarget "TTGTagCollectionView" */;
 			buildPhases = (
-				05AFA9683854A122F01484CC7110CB3C /* Headers */,
-				D0B8422F0898EB3E1C17965BD27C8E85 /* Sources */,
-				0A683C4B334C5309D7D6CFC876552FA1 /* Frameworks */,
-				FD9B8545206A7DCF525BF4C3EBF3301A /* Resources */,
+				22078E34BAF4DA23AAC263BB09392B43 /* Headers */,
+				4D6CD0D8900D096C532AA3B5BF645CE8 /* Sources */,
+				ED6A46C4877D1AA2F056F7A82C936B3B /* Frameworks */,
+				7E5E15919FD97B605B7FD39B00F8DA30 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -656,7 +656,7 @@
 			);
 			name = TTGTagCollectionView;
 			productName = TTGTagCollectionView;
-			productReference = 36C6F0DD9B00CD62109C2D53724C22F7 /* TTGTagCollectionView.framework */;
+			productReference = 36C6F0DD9B00CD62109C2D53724C22F7 /* TTGTagCollectionView */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -665,19 +665,19 @@
 		BFDFE7DC352907FC980B868725387E98 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1100;
-				LastUpgradeCheck = 1100;
+				LastSwiftUpdateCheck = 1240;
+				LastUpgradeCheck = 1240;
 			};
 			buildConfigurationList = 4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */;
 			compatibilityVersion = "Xcode 10.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				en,
 				Base,
+				en,
 			);
 			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
-			productRefGroup = A76B8D79DBFC7AC5C454564D0AF5980E /* Products */;
+			productRefGroup = FF4D57745E6ECBE6D476C104351AF2FE /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -690,29 +690,29 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		337EBA7F4A14C1177FC2DE9CC7FE7868 /* Resources */ = {
+		308583CC384999367C94FD2946AA8803 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		895ED1B8779C1D82DF681CBFF67AC570 /* Resources */ = {
+		36A6C9B861FFCEB5DBBE30A7D8E2CF53 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0279A049176856546A8429B488A1759F /* TZImagePickerController.bundle in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4522D50300D635138BEDBF5E60D39B53 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B89D7E1ABBEADD1C072F206CED92AE40 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				957F80C27D29FF9BD213D3ED6FAFEF3C /* TZImagePickerController.bundle in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		FD9B8545206A7DCF525BF4C3EBF3301A /* Resources */ = {
+		7E5E15919FD97B605B7FD39B00F8DA30 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -722,103 +722,102 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		038B428AD06C5A47FAF2BEFE16C6DC16 /* Sources */ = {
+		147478E5F0AF0FE0984216B342EFB80B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7BFF65958F014760B6AC4742824892EB /* MASCompositeConstraint.m in Sources */,
-				E8DD5D1D406150E1C80AD015271B6848 /* MASConstraint.m in Sources */,
-				78B2727EE5D693F58D019DB098005101 /* MASConstraintMaker.m in Sources */,
-				8539B851E01A58467BE49CA3FA77223C /* MASLayoutConstraint.m in Sources */,
-				1972E85F0FCD0F3EAF28ED7CD036286E /* Masonry-dummy.m in Sources */,
-				297A3627CF2F032CBFDC61D1A3786E63 /* MASViewAttribute.m in Sources */,
-				B7D645EC004610E8A581E532D28771EC /* MASViewConstraint.m in Sources */,
-				098630ECDB64ED7B89F5F687C82B4AC3 /* NSArray+MASAdditions.m in Sources */,
-				C0861ADB4C5FA30F4F9E051F7638A264 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */,
-				A35FBEEC7D088AEC05297E8292A32C77 /* View+MASAdditions.m in Sources */,
-				0967598607D521318F69D7D39D517B20 /* ViewController+MASAdditions.m in Sources */,
+				1F578C0C0000BC1B9CD3EAF3DADFA5C9 /* Pods-MMSession-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D0B8422F0898EB3E1C17965BD27C8E85 /* Sources */ = {
+		3003736003A11F9793D9EA6DC169AED7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E244C3D33433DBD6F4F9E73F4F76D83C /* TTGTagCollectionView-dummy.m in Sources */,
-				02C00AC33DFDFBE69CF1CEEA4A4676AA /* TTGTagCollectionView.m in Sources */,
-				8AD2AF14442D5E594D0183F9E7C0F881 /* TTGTextTag.m in Sources */,
-				16821772DB2C32EA814EA05C6886177C /* TTGTextTagAttributedStringContent.m in Sources */,
-				FFDBD99B1FAAA03625E23ED33A87E951 /* TTGTextTagCollectionView.m in Sources */,
-				DF8907F59BEF751015DBF1D0A47E6234 /* TTGTextTagContent.m in Sources */,
-				AC8EAF17B238E2F0176F2D88388474A1 /* TTGTextTagStringContent.m in Sources */,
-				78CFD71965675BA0F8B849ECDCC2C649 /* TTGTextTagStyle.m in Sources */,
+				19300CF68F5718C6F9C3476F1A98C1DC /* MASCompositeConstraint.m in Sources */,
+				7B05A8DE072977F90AA84A0E98E23167 /* MASConstraint.m in Sources */,
+				4CC9B43AD90714A316815FAA71DC89A2 /* MASConstraintMaker.m in Sources */,
+				54BEFE9F75005D327641073B838C6776 /* MASLayoutConstraint.m in Sources */,
+				CECDB459AFB5AD0040AF86378F2DBF97 /* Masonry-dummy.m in Sources */,
+				53305278F1654F968B4E02DF71B098BE /* MASViewAttribute.m in Sources */,
+				E6FB269534400D40C1CE67D18EDD8A9A /* MASViewConstraint.m in Sources */,
+				C9375F078B54A9030D4B9C2E73222A5D /* NSArray+MASAdditions.m in Sources */,
+				C7D83D99D755676EF8A09CC77845BAF4 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */,
+				A1336977ADAAD492D6CFD089A8C6E358 /* View+MASAdditions.m in Sources */,
+				567ABE0681AA82748435E32386DE12D7 /* ViewController+MASAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D96CE52B44A1B8284A94CC02E3FEE341 /* Sources */ = {
+		4D6CD0D8900D096C532AA3B5BF645CE8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				79F6E9F86FA5A71EC9896200EA9381BE /* Pods-MMSession-dummy.m in Sources */,
+				A7AB49BD4EB5F2521D91D7001272A0CF /* TTGTagCollectionView.m in Sources */,
+				D15AD98A7A08292B0B23612343CA7513 /* TTGTagCollectionView-dummy.m in Sources */,
+				346B8559E06EACCAC4BC8AF162D13BF8 /* TTGTextTag.m in Sources */,
+				E84814E1E45FB9119471F69FE4B11748 /* TTGTextTagAttributedStringContent.m in Sources */,
+				7246A283679C42B59A95265D6612DAF5 /* TTGTextTagCollectionView.m in Sources */,
+				98449296F0650376097596C7611EC442 /* TTGTextTagContent.m in Sources */,
+				CC7D54A1966C69FA9DB1622A87BEA66F /* TTGTextTagStringContent.m in Sources */,
+				9EA97C651FADB332662540783E4C27B6 /* TTGTextTagStyle.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E675A6669D3B83C757FD168AF314DCA0 /* Sources */ = {
+		EE32828A4C86940CF2C7235B05EB5125 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				165F9CCB86EE1FCBEB84C06C5C196DC1 /* NSBundle+TZImagePicker.m in Sources */,
-				5D2B82D555036C464106F8695728A178 /* TZAssetCell.m in Sources */,
-				987F6C809D75C71E0160D6BEA9C8D5F4 /* TZAssetModel.m in Sources */,
-				ACE04A1F50CF766F1DEC0785C132D2F4 /* TZGifPhotoPreviewController.m in Sources */,
-				683A73BFA5AC1D804152FBD783B8AAF4 /* TZImageCropManager.m in Sources */,
-				A756D56980E22619AC66B852192199A5 /* TZImageManager.m in Sources */,
-				DED85CF88429EF7434356ECB4CB9FD53 /* TZImagePickerController-dummy.m in Sources */,
-				56BBF8EE96BDA7140F9D024C3B2B6281 /* TZImagePickerController.m in Sources */,
-				FD34FC80002D4E0E9B0D7131BA6C937F /* TZImageRequestOperation.m in Sources */,
-				7BAD84C196647FC8B274F935C3E15782 /* TZLocationManager.m in Sources */,
-				2955CD6C435E603B808EA5FA3F942489 /* TZPhotoPickerController.m in Sources */,
-				3A38500710E6D02349CFE4EE0963CB41 /* TZPhotoPreviewCell.m in Sources */,
-				E2E8C33EC11E74E51D2CB44C4A5FAEAE /* TZPhotoPreviewController.m in Sources */,
-				ABE4F184BFFE00DB3A8C8A3E7832E6F3 /* TZProgressView.m in Sources */,
-				E81860603410CC4D7299AC59E4C2BC3F /* TZVideoCropController.m in Sources */,
-				4EA5B8BE7E49D6CC1880BF482595BC5C /* TZVideoEditedPreviewController.m in Sources */,
-				574404532412A7D86C72F486B002AD5E /* TZVideoPlayerController.m in Sources */,
-				A86E5E11B4BB67CA8F7FF4648799619E /* UIView+TZLayout.m in Sources */,
+				2CC790440F7C07C01D884F7892A6DA5E /* NSBundle+TZImagePicker.m in Sources */,
+				58FEF108D182B6A2152EDC5B31A620A9 /* TZAssetCell.m in Sources */,
+				DF3A8361F07BCC3CB5C508B6EDB4BF5E /* TZAssetModel.m in Sources */,
+				FEE586C6FD7D9B2CAF8741DC67C9D814 /* TZGifPhotoPreviewController.m in Sources */,
+				0254A0B1BDFF50D9EB4A33CFB26632BF /* TZImageCropManager.m in Sources */,
+				FBC79BB133ADB34C0C2C3EB2C887CF5B /* TZImageManager.m in Sources */,
+				DBBC78EA73A44A4967F1059BE3F8D855 /* TZImagePickerController.m in Sources */,
+				B918E38592AE034FE54DDDAD4E6F74CB /* TZImagePickerController-dummy.m in Sources */,
+				A66D3C43006910493549EC625525AEF9 /* TZImageRequestOperation.m in Sources */,
+				AF61F4D74023CA2A5813755F3CFFF431 /* TZLocationManager.m in Sources */,
+				53FB72DEC931306CE935D5FA68D17DB6 /* TZPhotoPickerController.m in Sources */,
+				A00BB31D7853DC05C2995717C408E5F5 /* TZPhotoPreviewCell.m in Sources */,
+				9C11A044D48278F340711CF9846F521A /* TZPhotoPreviewController.m in Sources */,
+				907C45F9E66E1858A5F6CA4C3414523B /* TZProgressView.m in Sources */,
+				56E65DC3EFB69DD6D1657B26D3347593 /* TZVideoCropController.m in Sources */,
+				A735F92CF919D96F02E3CD7392794B36 /* TZVideoEditedPreviewController.m in Sources */,
+				C3502DAEECDEFA3DF98360C0A4176E09 /* TZVideoPlayerController.m in Sources */,
+				E3AB7F40EFA1C951A6537C8BE2875A5C /* UIView+TZLayout.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		0EF6E7434A3BF957B22DF0094CB26F81 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = TZImagePickerController;
-			target = A96BBB982D62BB807B5BD10774BE2D07 /* TZImagePickerController */;
-			targetProxy = 8B4BF416830348A7640E2C7A047C72E6 /* PBXContainerItemProxy */;
-		};
-		751E7ECF44E3F6E29125B0C7D5DBB764 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = TTGTagCollectionView;
-			target = F4949B35B65C78C4D7DCBEEA66EC61D4 /* TTGTagCollectionView */;
-			targetProxy = B2DB7F32357B066644B5506CEB5B13DB /* PBXContainerItemProxy */;
-		};
-		BA61EBF9320814B085234F83D9C53FFC /* PBXTargetDependency */ = {
+		0A4FA853170B1A3697E22865F55863D4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Masonry;
 			target = 55AF53E6C77A10ED4985E04D74A8878E /* Masonry */;
-			targetProxy = 5939E4D18E651EA1C4ED1CC932533410 /* PBXContainerItemProxy */;
+			targetProxy = D1BA55C23E0A5B403B77C9EF4E505412 /* PBXContainerItemProxy */;
+		};
+		3F5E36E3015741E44B2CB65E8704126C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = TZImagePickerController;
+			target = A96BBB982D62BB807B5BD10774BE2D07 /* TZImagePickerController */;
+			targetProxy = 1963EF692E2D065C34D1B73FBC57589D /* PBXContainerItemProxy */;
+		};
+		E2B48D3B5E38F94A284975EE97735E96 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = TTGTagCollectionView;
+			target = F4949B35B65C78C4D7DCBEEA66EC61D4 /* TTGTagCollectionView */;
+			targetProxy = 489C638EE0EA0F69264F45B239D13B5D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		0379BA1B1742CFCC24C27B83C5E69133 /* Debug */ = {
+		22FF096E8F343210C991A3B42AD572D5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D0F718F9ABCB5D584788DAD1F61A04FB /* Pods-MMSession.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
@@ -850,71 +849,10 @@
 			};
 			name = Debug;
 		};
-		1422B121EAEAEA11307496903FA623C6 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"POD_CONFIGURATION_RELEASE=1",
-					"$(inherited)",
-				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRIP_INSTALLED_PRODUCT = NO;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 5.0;
-				SYMROOT = "${SRCROOT}/../build";
-			};
-			name = Release;
-		};
-		167F28049B93929634A95AC8DD85D851 /* Release */ = {
+		2A491FC88DC67084E2F7FEDED597C216 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A73CBF0FF34C3C578EDC47F43EEDB680 /* TTGTagCollectionView.release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
@@ -946,81 +884,10 @@
 			};
 			name = Release;
 		};
-		7DCE749D8A23914AF2F755C906770741 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 47C7FC978DFDBF3FE3E58C6300EE9F68 /* TZImagePickerController.release.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/TZImagePickerController/TZImagePickerController-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/TZImagePickerController/TZImagePickerController-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MODULEMAP_FILE = "Target Support Files/TZImagePickerController/TZImagePickerController.modulemap";
-				PRODUCT_MODULE_NAME = TZImagePickerController;
-				PRODUCT_NAME = TZImagePickerController;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		8111BE73765C9981E61E591BB438B7DA /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 94BCB3BD76BE835847BC756CCFE60485 /* TTGTagCollectionView.debug.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/TTGTagCollectionView/TTGTagCollectionView-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/TTGTagCollectionView/TTGTagCollectionView-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MODULEMAP_FILE = "Target Support Files/TTGTagCollectionView/TTGTagCollectionView.modulemap";
-				PRODUCT_MODULE_NAME = TTGTagCollectionView;
-				PRODUCT_NAME = TTGTagCollectionView;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 5.3;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		933C252AC1697174177192BE69B419F9 /* Debug */ = {
+		574336E93FEE5E80463961C3B5210418 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 06B49EB22A6108EB60A918F9D0454811 /* Masonry.debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
@@ -1050,45 +917,10 @@
 			};
 			name = Debug;
 		};
-		B050ABFE715078C723AC19F81E648FDE /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3EDC1465C3CC2CE8E742013E1E982CF3 /* TZImagePickerController.debug.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/TZImagePickerController/TZImagePickerController-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/TZImagePickerController/TZImagePickerController-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MODULEMAP_FILE = "Target Support Files/TZImagePickerController/TZImagePickerController.modulemap";
-				PRODUCT_MODULE_NAME = TZImagePickerController;
-				PRODUCT_NAME = TZImagePickerController;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		D1F20CA5AF74551DBEC539096B44760B /* Release */ = {
+		83A1CD5A0D744E6C5C16EB552F459A6A /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 42A6059358A6FF7B9AF05F03EDD5E5EF /* Masonry.release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
@@ -1119,10 +951,11 @@
 			};
 			name = Release;
 		};
-		ED7888FA6713EABBF66D26A8003AD1CA /* Debug */ = {
+		8DE5143C03248BB6CD542DE3963D6F3A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -1145,6 +978,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1183,13 +1017,175 @@
 			};
 			name = Debug;
 		};
-		EDABA6AB11018E9BF8E7CD2E3A116279 /* Release */ = {
+		9E406C6AAF85E580207CD97B0044DEAB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_RELEASE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Release;
+		};
+		A028EE9799DD2C574F8025B57C4A5754 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 94BCB3BD76BE835847BC756CCFE60485 /* TTGTagCollectionView.debug.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/TTGTagCollectionView/TTGTagCollectionView-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/TTGTagCollectionView/TTGTagCollectionView-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/TTGTagCollectionView/TTGTagCollectionView.modulemap";
+				PRODUCT_MODULE_NAME = TTGTagCollectionView;
+				PRODUCT_NAME = TTGTagCollectionView;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.3;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		B688325F30AD4509BEBB6592F12D58FE /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 47C7FC978DFDBF3FE3E58C6300EE9F68 /* TZImagePickerController.release.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/TZImagePickerController/TZImagePickerController-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/TZImagePickerController/TZImagePickerController-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/TZImagePickerController/TZImagePickerController.modulemap";
+				PRODUCT_MODULE_NAME = TZImagePickerController;
+				PRODUCT_NAME = TZImagePickerController;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		C005C41E28F72A8E0506892CC6DF9BFC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3EDC1465C3CC2CE8E742013E1E982CF3 /* TZImagePickerController.debug.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/TZImagePickerController/TZImagePickerController-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/TZImagePickerController/TZImagePickerController-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/TZImagePickerController/TZImagePickerController.modulemap";
+				PRODUCT_MODULE_NAME = TZImagePickerController;
+				PRODUCT_NAME = TZImagePickerController;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		EF3D302D2DDD22ADFEA8E27761F7B249 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7970E45AFA6E3A2583673733D498A9E3 /* Pods-MMSession.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
@@ -1225,47 +1221,47 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		104EC9250BF4EDE104280490293C13C3 /* Build configuration list for PBXNativeTarget "Masonry" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				574336E93FEE5E80463961C3B5210418 /* Debug */,
+				83A1CD5A0D744E6C5C16EB552F459A6A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				ED7888FA6713EABBF66D26A8003AD1CA /* Debug */,
-				1422B121EAEAEA11307496903FA623C6 /* Release */,
+				8DE5143C03248BB6CD542DE3963D6F3A /* Debug */,
+				9E406C6AAF85E580207CD97B0044DEAB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		62157E98A2311AD961CB8368D59EBC60 /* Build configuration list for PBXNativeTarget "Pods-MMSession" */ = {
+		76301D4FDAE9621CA3B348B332DB0D23 /* Build configuration list for PBXNativeTarget "Pods-MMSession" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				0379BA1B1742CFCC24C27B83C5E69133 /* Debug */,
-				EDABA6AB11018E9BF8E7CD2E3A116279 /* Release */,
+				22FF096E8F343210C991A3B42AD572D5 /* Debug */,
+				EF3D302D2DDD22ADFEA8E27761F7B249 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		87FD40BD683E3BD044AA4D1B5CA58652 /* Build configuration list for PBXNativeTarget "Masonry" */ = {
+		F2F1CB01D46EA76BA9DF6547605CD05F /* Build configuration list for PBXNativeTarget "TZImagePickerController" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				933C252AC1697174177192BE69B419F9 /* Debug */,
-				D1F20CA5AF74551DBEC539096B44760B /* Release */,
+				C005C41E28F72A8E0506892CC6DF9BFC /* Debug */,
+				B688325F30AD4509BEBB6592F12D58FE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		89DEA41355A4B2D71FAE89FE7599FD48 /* Build configuration list for PBXNativeTarget "TZImagePickerController" */ = {
+		FACCE11F502B8D7422F1D58882A52C2E /* Build configuration list for PBXNativeTarget "TTGTagCollectionView" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				B050ABFE715078C723AC19F81E648FDE /* Debug */,
-				7DCE749D8A23914AF2F755C906770741 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		D9EA604270F8BD2940D600F294FB2645 /* Build configuration list for PBXNativeTarget "TTGTagCollectionView" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				8111BE73765C9981E61E591BB438B7DA /* Debug */,
-				167F28049B93929634A95AC8DD85D851 /* Release */,
+				A028EE9799DD2C574F8025B57C4A5754 /* Debug */,
+				2A491FC88DC67084E2F7FEDED597C216 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

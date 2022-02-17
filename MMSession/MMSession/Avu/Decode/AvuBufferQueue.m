@@ -29,7 +29,7 @@
         return;
     }
     
-    if (endTime-1 < buffer.pts) {
+    if (endTime < buffer.pts) {
         if (self.bufferEndCallback) {
             self.bufferEndCallback();
         }
@@ -93,7 +93,9 @@
             if (obj.pts < minTime) minTime = obj.pts;
             if (maxTime < obj.pts) maxTime = obj.pts;
         }
-        if (time < minTime) return;
+        if (time < minTime && 0.1<fabs(time-minTime)) {
+            return;
+        }
         if (maxTime < time) {
             [self.bufferQueue removeAllObjects];
             return;

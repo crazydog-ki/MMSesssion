@@ -66,8 +66,9 @@ typedef NS_OPTIONS(NSUInteger, AvuDecodeStatus) {
 @property (nonatomic, assign) BOOL needPullData;
 
 /***************************MultiTrack***********************************************/
-@property (nonatomic, strong) NSMutableArray<AVAsset *> *videoAssets;
-@property (nonatomic, strong) NSMutableDictionary<AVAsset *, AvuClipRange *> *clipRanges;
+@property (nonatomic, strong) NSMutableArray<NSString *> *audioPaths;
+@property (nonatomic, strong) NSMutableArray<NSString *> *videoPaths;
+@property (nonatomic, strong) NSMutableDictionary<NSString *, AvuClipRange *> *clipRanges;
 @end
 
 NS_ASSUME_NONNULL_END

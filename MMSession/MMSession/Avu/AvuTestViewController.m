@@ -6,6 +6,7 @@
 #import "MMAudioQueuePlayer.h"
 #import "AvuEncodeUnit.h"
 #import "AvuAudioQueue.h"
+#import "AvuMultiAudioUnit.h"
 
 @interface AvuTestViewController () <TZImagePickerControllerDelegate, TTGTextTagCollectionViewDelegate>
 @property (nonatomic, strong) TTGTextTagCollectionView *collectionView;
@@ -30,6 +31,8 @@
 @property (nonatomic, assign) double audioPts;
 
 @property (nonatomic, strong) AvuEncodeUnit *encodeUnit;
+
+@property (nonatomic, strong) AvuMultiAudioUnit *multiAudioUnit;
 @end
 
 @implementation AvuTestViewController
@@ -79,6 +82,9 @@
     
     TTGTextTag *seekTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"seek"] style:style];
     [tagCollectionView addTag:seekTag];
+    
+    TTGTextTag *multiAudioTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"音频多轨"] style:style];
+    [tagCollectionView addTag:multiAudioTag];
 }
 
 - (void)_setupPreview {
@@ -293,6 +299,32 @@
     self.videoPts = self.audioPts = 5;
 }
 
+- (void)_multiAudio {
+    NSString *path1 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/basket.mp4"];
+    NSString *path2 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/beauty.mp4"];
+    NSString *path3 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/dilireba.mp4"];
+    NSString *path4 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/yangmi.mp4"];
+    
+    AvuClipRange *range1 = [AvuClipRange clipRangeAttach:0 start:0 end:10];
+    AvuClipRange *range2 = [AvuClipRange clipRangeAttach:0 start:0 end:10];
+    AvuClipRange *range3 = [AvuClipRange clipRangeAttach:0 start:0 end:10];
+    AvuClipRange *range4 = [AvuClipRange clipRangeAttach:0 start:0 end:10];
+    
+    AvuConfig *config = [[AvuConfig alloc] init];
+    [config.audioPaths addObject:path1];
+    [config.audioPaths addObject:path2];
+    [config.audioPaths addObject:path3];
+    [config.audioPaths addObject:path4];
+    
+    config.clipRanges[path1] = range1;
+    config.clipRanges[path2] = range2;
+    config.clipRanges[path3] = range3;
+    config.clipRanges[path4] = range4;
+
+    self.multiAudioUnit = [[AvuMultiAudioUnit alloc] initWithConfig:config];
+    [self.multiAudioUnit start];
+}
+
 #pragma mark - TZImagePickerControllerDelegate
 - (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingPhotos:(NSArray<UIImage *> *)photos sourceAssets:(NSArray *)assets isSelectOriginalPhoto:(BOOL)isSelectOriginalPhoto infos:(NSArray<NSDictionary *> *)infos {
     
@@ -345,6 +377,8 @@
         [self _stop];
     } else if ([content.text isEqualToString:@"seek"]) {
         [self _seek];
+    } else if ([content.text isEqualToString:@"音频多轨"]) {
+        [self _multiAudio];
     }
     return;
 }

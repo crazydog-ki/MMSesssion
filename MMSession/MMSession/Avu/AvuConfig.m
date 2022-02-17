@@ -18,4 +18,12 @@
 @end
 
 @implementation AvuConfig
+- (instancetype)init {
+    if (self = [super init]) {
+        _audioPaths = [NSMutableArray array];
+        _videoPaths = [NSMutableArray array];
+        _clipRanges = [NSMutableDictionary dictionary];
+    }
+    return self;
+}
 @end

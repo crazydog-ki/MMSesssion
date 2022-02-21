@@ -15,6 +15,11 @@
     clipRange.endTime = end;
     return clipRange;
 }
+
++ (BOOL)isClipRange:(AvuClipRange *)clipRange containsTime:(double)time {
+    return (clipRange.attachTime<=time) &&
+           (time<=clipRange.attachTime+clipRange.endTime-clipRange.startTime);
+}
 @end
 
 @implementation AvuConfig

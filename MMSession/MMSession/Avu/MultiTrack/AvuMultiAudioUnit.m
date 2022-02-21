@@ -4,6 +4,8 @@
 #import "AvuUtils.h"
 
 static const NSUInteger kMaxSamplesCount = 8192;
+static const NSUInteger kSamplesCount = 1024;
+static const NSUInteger kAudioTimescale = 44100;
 
 @interface AvuMultiAudioUnit()
 {
@@ -35,6 +37,17 @@ static const NSUInteger kMaxSamplesCount = 8192;
 }
 
 - (void)start {
+    [self.audioPlayer play];
+}
+
+- (void)seekToTime:(double)time {
+    [self.audioPlayer pause];
+    self.audioPlayTime = time;
+    for (int i = 0; i < self.audioClips.count; i++) {
+        NSString *audioClip = self.audioClips[i];
+        AvuAudioDecodeUnit *audioDecoder = self.decoderMap[audioClip];
+        [audioDecoder seekToTime:time];
+    }
     [self.audioPlayer play];
 }
 
@@ -84,20 +97,20 @@ static const NSUInteger kMaxSamplesCount = 8192;
     weakify(self);
     audioPlayer.pullDataBlk = ^(AudioBufferBlock  _Nonnull block) {
         strongify(self);
-        NSLog(@"[avu] pull audio buffer");
         /// 1. 重置音频buffer
         [AvuUtils resetAudioBufferList:self->_bufferList];
         /// 2. 获取音频buffer
-        UInt32 samples = 0;
         for (int i = 0; i < self.audioClips.count; i++) {
             NSString *audioClip = self.audioClips[i];
             AvuAudioDecodeUnit *audioDecoder = self.decoderMap[audioClip];
+            AvuClipRange *clipRange = self.clipRangeMap[audioClip];
+            if (![AvuClipRange isClipRange:clipRange containsTime:self.audioPlayTime]) continue;
             AvuBuffer *buffer = [audioDecoder requestBufferAtTime:self.audioPlayTime];
             if (!buffer) continue;
             CMSampleBufferRef sampleBuffer = buffer.audioBuffer;
             if (sampleBuffer) {
                 /// sampleBuffer -> bufferList
-                samples = (UInt32)CMSampleBufferGetNumSamples(sampleBuffer);
+                int samples = (int)CMSampleBufferGetNumSamples(sampleBuffer);
                 self->_bufferList->mBuffers[0].mDataByteSize = samples * AvuUtils.asbd.mBytesPerFrame;
                 
                 self->_mixBufferList->mBuffers[0].mDataByteSize = samples * AvuUtils.asbd.mBytesPerFrame;
@@ -112,7 +125,7 @@ static const NSUInteger kMaxSamplesCount = 8192;
         /// 4. block回调
         block(self->_bufferList);
         /// 5. 更改playTime
-        self.audioPlayTime += CMTimeGetSeconds(CMTimeMake(samples, 44100));
+        self.audioPlayTime += CMTimeGetSeconds(CMTimeMake(kSamplesCount, kAudioTimescale));
     };
     self.audioPlayer = audioPlayer;
 }

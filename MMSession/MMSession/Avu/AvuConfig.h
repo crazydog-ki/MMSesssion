@@ -25,6 +25,7 @@ typedef NS_OPTIONS(NSUInteger, AvuDecodeStatus) {
 @property (nonatomic, assign) double endTime;
 + (instancetype)clipRangeStart:(double)start end:(double)end;
 + (instancetype)clipRangeAttach:(double)attach start:(double)start end:(double)end;
++ (BOOL)isClipRange:(AvuClipRange *)clipRange containsTime:(double)time;
 @end
 
 @interface AvuConfig : NSObject

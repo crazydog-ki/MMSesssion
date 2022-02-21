@@ -29,7 +29,13 @@
 }
 
 - (void)seekToTime:(double)time {
-    self.seekTime = time;
+    AvuClipRange *clipRange = self.config.clipRange;
+    BOOL isContain = [AvuClipRange isClipRange:clipRange containsTime:time];
+    if (isContain) {
+        self.seekTime = time-clipRange.attachTime+clipRange.startTime;
+    } else {
+        self.seekTime = clipRange.startTime;
+    }
 }
 
 - (AvuBuffer *)dequeue {
@@ -38,7 +44,9 @@
 }
 
 - (AvuBuffer *)requestBufferAtTime:(double)time {
-    AvuBuffer *buffer = [self.audioQueue requestBufferAtTime:time];
+    AvuClipRange *clipRange = self.config.clipRange;
+    double reqTime = time-clipRange.attachTime+clipRange.startTime;
+    AvuBuffer *buffer = [self.audioQueue requestBufferAtTime:reqTime];
     return buffer;
 }
 

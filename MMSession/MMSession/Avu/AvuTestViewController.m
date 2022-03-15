@@ -29,7 +29,7 @@
 @property (nonatomic, strong) AvuMultiAudioUnit *multiAudioUnit;
 @property (nonatomic, strong) AvuMultiVideoUnit *multiVideoUnit;
 @property (nonatomic, assign) double startTime;
-@property (nonatomic, assign) double seekTime;
+@property (nonatomic, assign) BOOL debugDragSeek;
 @end
 
 @implementation AvuTestViewController
@@ -37,6 +37,8 @@
     [super viewDidLoad];
     self.navigationItem.title = @"AVU Module";
     self.view.backgroundColor = UIColor.blackColor;
+    self.debugDragSeek = NO;
+    
     [self _setupCollectionView];
     [self _setupSlider];
 }
@@ -78,7 +80,6 @@
     slider.maximumValue = 1.0f;
     [self.view addSubview:slider];
     self.slider = slider;
-    self.seekTime = 0.0f;
 }
 
 
@@ -268,10 +269,12 @@
         [self _setupMultiVideoUnit];
     }
     
-    if (!self.videoLink) {
-        self.videoLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(_playVideo)];
-        self.videoLink.preferredFramesPerSecond = 30;
-        [self.videoLink addToRunLoop:NSRunLoop.mainRunLoop forMode:NSRunLoopCommonModes];
+    if (!self.debugDragSeek) {
+        if (!self.videoLink) {
+            self.videoLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(_playVideo)];
+            self.videoLink.preferredFramesPerSecond = 30;
+            [self.videoLink addToRunLoop:NSRunLoop.mainRunLoop forMode:NSRunLoopCommonModes];
+        }
     }
 }
 
@@ -284,7 +287,18 @@
 }
 
 - (void)_sliderValueChange {
-    float time = _slider.value * 10;
+    if (!self.debugDragSeek) return;
+    
+    double reqTime = _slider.value * 10;
+    [self.multiVideoUnit seekToTime:reqTime];
+    NSArray<NSDictionary<NSString *, AvuBuffer *> *> *buffers = [self.multiVideoUnit requestVideoBuffersAt:reqTime];
+    for (int i = 0; i < buffers.count; i++) {
+        AvuBuffer *buffer = buffers[i].allValues[0];
+        if (buffer.pixelBuffer) {
+            NSLog(@"[yjx] render index: %d, reqTime: %lf, buffer pts: %lf", i, reqTime, buffer.pts);
+            [self.glPreviews[i] processPixelBuffer:buffer.pixelBuffer];
+        }
+    }
 }
 
 #pragma mark - TTGTextTagCollectionViewDelegate

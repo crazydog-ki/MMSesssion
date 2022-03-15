@@ -38,13 +38,13 @@
 
 - (void)seekToTime:(double)time isForce:(BOOL)isForce {
     dispatch_async(self.decodeQueue2, ^{
-        if (isForce || 0.1 < fabs(time-self.lastSeekTime)) {
-            // 100ms seek一次，防止太频繁
-            AvuClipRange *clipRange = self.config.clipRange;
-            self.seekTime = time-clipRange.attachTime+clipRange.startTime;
+        AvuClipRange *clipRange = self.config.clipRange;
+        double seekTime = time-clipRange.attachTime+clipRange.startTime;
+        AvuSeekType seekType = [self.videoQueue getSeekTypeAt:seekTime];
+        if (isForce || (0.1 < fabs(time-self.lastSeekTime) && seekType==AvuSeekType_Back)) {
+            // 暂时处理仅逆向seek，100ms seek一次，防止太频繁
+            self.seekTime = seekTime;
             self.needSeek = YES;
-        } else {
-            NSLog(@"[yjx] seek指令不被执行, force: %d, seek间隔: %lf", isForce, fabs(time-self.lastSeekTime));
         }
     });
 }

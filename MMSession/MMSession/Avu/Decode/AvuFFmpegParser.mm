@@ -72,8 +72,9 @@ extern "C" {
                 buffer.pts = packet->pts * av_q2d(videoStream->time_base);
                 buffer.dts = packet->dts * av_q2d(videoStream->time_base);
                 buffer.duration = packet->duration * av_q2d(videoStream->time_base);
-                NSLog(@"[avu] video buffer pts: %lf, dts: %lf, duration: %lf", buffer.pts, buffer.dts, buffer.duration);
-                
+                BOOL isKeyFrame = packet->flags==AV_PKT_FLAG_KEY;
+//                NSLog(@"[avu] video buffer pts: %lf, dts: %lf, duration: %lf, isKeyFrame: %d", buffer.pts, buffer.dts, buffer.duration, isKeyFrame);
+//                
                 CMSampleBufferRef sampleBuffer = [self _generateSampleBuffer:packet];
                 buffer.sampleBuffer = sampleBuffer;
                 for (id<AvuBufferProcessProtocol> node in self.nextNodes) {
@@ -88,7 +89,7 @@ extern "C" {
                 buffer.pts         = packet->pts * av_q2d(audioStream->time_base);
                 buffer.dts         = packet->dts * av_q2d(audioStream->time_base);
                 buffer.duration    = packet->duration * av_q2d(audioStream->time_base);
-                NSLog(@"[avu] audio buffer pts: %lf, dts: %lf, duration: %lf", buffer.pts, buffer.dts, buffer.duration);
+//                NSLog(@"[avu] audio buffer pts: %lf, dts: %lf, duration: %lf", buffer.pts, buffer.dts, buffer.duration);
             
                 buffer.channel     = audioStream->codecpar->channels;
                 buffer.sampleRate  = audioStream->codecpar->sample_rate;
@@ -164,6 +165,8 @@ extern "C" {
 
 #pragma mark - Private
 - (void)_initFFParser {
+    _videoIdx = -1;
+    _audioIdx = -1;
     int ret = -1;
     AVInputFormat *ifmt = NULL;
     AVDictionary *opts = NULL;

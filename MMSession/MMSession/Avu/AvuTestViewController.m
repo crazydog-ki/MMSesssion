@@ -1,38 +1,35 @@
 #import "AvuTestViewController.h"
-#import "AvuVideoDecodeUnit.h"
-#import "AvuAudioDecodeUnit.h"
 #import "MMVideoGLPreview.h"
 #import "AVAsset+Extension.h"
 #import "MMAudioQueuePlayer.h"
 #import "AvuEncodeUnit.h"
-#import "AvuAudioQueue.h"
 #import "AvuMultiAudioUnit.h"
+#import "AvuMultiVideoUnit.h"
 
-@interface AvuTestViewController () <TZImagePickerControllerDelegate, TTGTextTagCollectionViewDelegate>
+@interface AvuTestViewController () <TTGTextTagCollectionViewDelegate>
 @property (nonatomic, strong) TTGTextTagCollectionView *collectionView;
+@property (nonatomic, strong) UISlider *slider;
 
 @property (nonatomic, strong) NSMutableArray<AVAsset *> *videoAssets;
 @property (nonatomic, strong) NSMutableArray<NSData *> *imageDatas;
-
 @property (nonatomic, strong) AVAsset *composition;
 @property (nonatomic, strong) NSString *videoPath;
 @property (nonatomic, assign) CGFloat videoRatio;
+@property (nonatomic, assign) CGFloat videoDuration;
 
-@property (nonatomic, strong) AvuVideoDecodeUnit *videoDecodeUnit;
-@property (nonatomic, strong) AvuAudioDecodeUnit *audioDecodeUnit;
-@property (nonatomic, strong) MMVideoGLPreview *glPreview;
-@property (nonatomic, strong) AvuAudioQueue *audioPlayer;
-
-@property (nonatomic, strong) NSThread *videoThread;
 @property (nonatomic, strong) CADisplayLink *videoLink;
-@property (nonatomic, strong) NSThread *audioThread;
 
-@property (nonatomic, assign) double videoPts;
-@property (nonatomic, assign) double audioPts;
-
+@property (nonatomic, strong) MMVideoGLPreview *glPreview1;
+@property (nonatomic, strong) MMVideoGLPreview *glPreview2;
+@property (nonatomic, strong) MMVideoGLPreview *glPreview3;
+@property (nonatomic, strong) MMVideoGLPreview *glPreview4;
+@property (nonatomic, strong) NSMutableArray<MMVideoGLPreview *> *glPreviews;
 @property (nonatomic, strong) AvuEncodeUnit *encodeUnit;
 
 @property (nonatomic, strong) AvuMultiAudioUnit *multiAudioUnit;
+@property (nonatomic, strong) AvuMultiVideoUnit *multiVideoUnit;
+@property (nonatomic, assign) double startTime;
+@property (nonatomic, assign) double seekTime;
 @end
 
 @implementation AvuTestViewController
@@ -40,16 +37,8 @@
     [super viewDidLoad];
     self.navigationItem.title = @"AVU Module";
     self.view.backgroundColor = UIColor.blackColor;
-    
     [self _setupCollectionView];
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    [self _stop];
-    self.videoDecodeUnit = nil;
-    self.audioDecodeUnit = nil;
-    [self _stopThread];
+    [self _setupSlider];
 }
 
 #pragma mark - Priavte
@@ -61,7 +50,7 @@
     [tagCollectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.equalTo(self.view);
         make.top.equalTo(self.view).offset(kStatusBarH+kNavBarH);
-        make.bottom.equalTo(self.view);
+        make.height.equalTo(@150); /// 4排
     }];
     
     TTGTextTagStyle *style = [TTGTextTagStyle new];
@@ -71,303 +60,231 @@
     style.cornerRadius = 0.0f;
     style.borderWidth = 0.0f;
     
-    TTGTextTag *pickTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"视频导入"] style:style];
-    [tagCollectionView addTag:pickTag];
-    
     TTGTextTag *playTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"播放"] style:style];
     [tagCollectionView addTag:playTag];
     
-    TTGTextTag *stopTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"停止播放"] style:style];
+    TTGTextTag *stopTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"暂停"] style:style];
     [tagCollectionView addTag:stopTag];
     
-    TTGTextTag *seekTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"seek"] style:style];
+    TTGTextTag *seekTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"Seek"] style:style];
     [tagCollectionView addTag:seekTag];
-    
-    TTGTextTag *multiAudioTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"MultiAudio"] style:style];
-    [tagCollectionView addTag:multiAudioTag];
-    
-    TTGTextTag *multiAudioSeekTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"MA Seek"] style:style];
-    [tagCollectionView addTag:multiAudioSeekTag];
 }
 
-- (void)_setupPreview {
-    if (self.glPreview) return;
+- (void)_setupSlider {
+    CGRect frame = CGRectMake(100, kScreenH-60, kScreenW-200, 40);
+    UISlider *slider = [[UISlider alloc] initWithFrame:frame];
+    [slider addTarget:self action:@selector(_sliderValueChange) forControlEvents:UIControlEventValueChanged];
+    slider.minimumValue = 0.0f;
+    slider.maximumValue = 1.0f;
+    [self.view addSubview:slider];
+    self.slider = slider;
+    self.seekTime = 0.0f;
+}
+
+
+- (void)_setupPreviews {
+    if (!self.glPreviews) {
+        self.glPreviews = [NSMutableArray array];
+    }
+    if (self.glPreview1) return;
     
-    CGFloat w = self.view.bounds.size.width;
-    MMVideoGLPreview *glPreview = [[MMVideoGLPreview alloc] initWithFrame:CGRectMake(0, kStatusBarH+kNavBarH, w, w*self.videoRatio)];
-    glPreview.backgroundColor = UIColor.blackColor;
-    [self.view insertSubview:glPreview atIndex:0];
-    self.glPreview = glPreview;
+    CGFloat w = self.view.bounds.size.width/4;
+    MMVideoGLPreview *glPreview1 = [[MMVideoGLPreview alloc] initWithFrame:CGRectMake(0, kStatusBarH+kNavBarH, w, w*16/9)];
+    glPreview1.backgroundColor = UIColor.blackColor;
+    [self.view insertSubview:glPreview1 atIndex:0];
+    self.glPreview1 = glPreview1;
     
     MMVideoPreviewConfig *config = [[MMVideoPreviewConfig alloc] init];
     config.renderYUV = YES;
-    config.presentRect = CGRectMake(0, 0, w, w*self.videoRatio);
+    config.presentRect = CGRectMake(0, 0, w, w*16/9);
     config.rotation = -self.composition.rotation;
-    self.glPreview.config = config;
-    [self.glPreview setupGLEnv];
+    self.glPreview1.config = config;
+    [self.glPreview1 setupGLEnv];
+    
+    if (self.glPreview2) return;
+    MMVideoGLPreview *glPreview2 = [[MMVideoGLPreview alloc] initWithFrame:CGRectMake(w, kStatusBarH+kNavBarH, w, w*16/9)];
+    glPreview2.backgroundColor = UIColor.blackColor;
+    [self.view insertSubview:glPreview2 atIndex:0];
+    self.glPreview2 = glPreview2;
+    self.glPreview2.config = config;
+    [self.glPreview2 setupGLEnv];
+    
+    if (self.glPreview3) return;
+    MMVideoGLPreview *glPreview3 = [[MMVideoGLPreview alloc] initWithFrame:CGRectMake(2*w, kStatusBarH+kNavBarH, w, w*16/9)];
+    glPreview3.backgroundColor = UIColor.blackColor;
+    [self.view insertSubview:glPreview3 atIndex:0];
+    self.glPreview3 = glPreview3;
+    self.glPreview3.config = config;
+    [self.glPreview3 setupGLEnv];
+    
+    if (self.glPreview4) return;
+    MMVideoGLPreview *glPreview4 = [[MMVideoGLPreview alloc] initWithFrame:CGRectMake(3*w, kStatusBarH+kNavBarH, w, w*16/9)];
+    glPreview4.backgroundColor = UIColor.blackColor;
+    [self.view insertSubview:glPreview4 atIndex:0];
+    self.glPreview4 = glPreview4;
+    self.glPreview4.config = config;
+    [self.glPreview4 setupGLEnv];
+    
+    [self.glPreviews addObject:glPreview1];
+    [self.glPreviews addObject:glPreview2];
+    [self.glPreviews addObject:glPreview3];
+    [self.glPreviews addObject:glPreview4];
 }
 
-
-- (void)_setupAudioPlayer {
-    if (self.audioPlayer) return;
+- (void)_setupEncodeUnit {
+    if (self.encodeUnit) return;
+    /// vt相关
+    AvuConfig *config = [[AvuConfig alloc] init];
+    config.pixelFormat = AvuPixelFormatType_YUV;
+    config.videoSize = CGSizeMake(720, 1280);
+    config.keyframeInterval = 1.0f;
+    config.allowBFrame = NO;
+    config.allowRealtime = NO;
+    config.bitrate = 2560000;
     
-    AvuConfig *playerConfig = [[AvuConfig alloc] init];
-    playerConfig.needPullData = NO;
-    AvuAudioQueue *audioPlayer = [[AvuAudioQueue alloc] initWithConfig:playerConfig];
-    self.audioPlayer = audioPlayer;
+    /// writer相关
+    NSString *docPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
+    NSString *outputPath = [docPath stringByAppendingString:@"/yjx.mov"];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:outputPath]) {
+        [[NSFileManager defaultManager] removeItemAtPath:outputPath error:nil];
+    }
+    
+    CGSize outputSize = CGSizeMake(720, 1280);
+    config.onlyMux = YES;
+    config.outputUrl = [NSURL fileURLWithPath:outputPath];
+    config.videoSetttings = @{
+        AVVideoCodecKey : AVVideoCodecTypeH264,
+        AVVideoWidthKey : @(outputSize.width),
+        AVVideoHeightKey: @(outputSize.height)
+    };
+    config.pixelBufferAttributes = @{
+        (__bridge NSString *)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_32BGRA),
+        (__bridge NSString *)kCVPixelBufferWidthKey: @(outputSize.width),
+        (__bridge NSString *)kCVPixelBufferHeightKey: @(outputSize.height)
+    };
+    config.audioSetttings = @{
+        AVFormatIDKey: @(kAudioFormatMPEG4AAC),
+        AVSampleRateKey: @(44100),
+        AVNumberOfChannelsKey: @(2)
+    };
+    
+    self.encodeUnit = [[AvuEncodeUnit alloc] initWithConfig:config];
 }
 
-- (void)_startThread {
-    self.videoPts = 0.0f;
-    self.audioPts = 0.0f;
+- (void)_setupMultiAudioUnit {
+    NSString *path1 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/basket.mp4"];
+    NSString *path2 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/beauty.mp4"];
+    NSString *path3 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/dilireba.mp4"];
+    NSString *path4 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/yangmi.mp4"];
+    // NSString *path5 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/GXFC-LDH.mp3"];
     
-//    if (!self.videoThread) {
-//        self.videoThread = [[NSThread alloc] initWithTarget:self selector:@selector(_playVideo) object:nil];
-//        [self.videoThread start];
-//    }
-    if (!self.audioThread) {
-        self.audioThread = [[NSThread alloc] initWithTarget:self selector:@selector(_playAudio) object:nil];
-        [self.audioThread start];
+    AvuClipRange *range1 = [AvuClipRange clipRangeAttach:0 start:0 end:10];
+    AvuClipRange *range2 = [AvuClipRange clipRangeAttach:0 start:0 end:10];
+    AvuClipRange *range3 = [AvuClipRange clipRangeAttach:0 start:0 end:10];
+    AvuClipRange *range4 = [AvuClipRange clipRangeAttach:0 start:0 end:10];
+    // AvuClipRange *range5 = [AvuClipRange clipRangeAttach:5 start:0 end:30];
+
+    AvuConfig *config = [[AvuConfig alloc] init];
+    [config.audioPaths addObject:path1];
+    [config.audioPaths addObject:path2];
+    [config.audioPaths addObject:path3];
+    [config.audioPaths addObject:path4];
+    // [config.audioPaths addObject:path5];
+    
+    config.clipRanges[path1] = range1;
+    config.clipRanges[path2] = range2;
+    config.clipRanges[path3] = range3;
+    config.clipRanges[path4] = range4;
+    // config.clipRanges[path5] = range5;
+
+    self.multiAudioUnit = [[AvuMultiAudioUnit alloc] initWithConfig:config];
+}
+
+- (void)_setupMultiVideoUnit {
+    NSString *path1 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/basket.mp4"];
+    NSString *path2 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/beauty.mp4"];
+    NSString *path3 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/dilireba.mp4"];
+    NSString *path4 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/yangmi.mp4"];
+    
+    AvuClipRange *range1 = [AvuClipRange clipRangeAttach:0 start:0 end:10];
+    AvuClipRange *range2 = [AvuClipRange clipRangeAttach:0 start:0 end:10];
+    AvuClipRange *range3 = [AvuClipRange clipRangeAttach:0 start:0 end:10];
+    AvuClipRange *range4 = [AvuClipRange clipRangeAttach:0 start:0 end:10];
+    
+    AvuConfig *config = [[AvuConfig alloc] init];
+    [config.videoPaths addObject:path1];
+    [config.videoPaths addObject:path2];
+    [config.videoPaths addObject:path3];
+    [config.videoPaths addObject:path4];
+
+    config.clipRanges[path1] = range1;
+    config.clipRanges[path2] = range2;
+    config.clipRanges[path3] = range3;
+    config.clipRanges[path4] = range4;
+    self.multiVideoUnit = [[AvuMultiVideoUnit alloc] initWithConfig:config];
+}
+
+- (void)_playVideo {
+    if (self.startTime == 0.0f) {
+        self.startTime = CFAbsoluteTimeGetCurrent();
+        [self.multiAudioUnit start];
+    }
+    
+    double reqTime = CFAbsoluteTimeGetCurrent()-self.startTime;
+    if (0.1 < fabs(reqTime-self.multiAudioUnit.getAudioPts)) {
+        NSLog(@"[yjx] audio modify video, video time: %lf, audio time: %lf", reqTime, self.multiAudioUnit.getAudioPts);
+        reqTime = self.multiAudioUnit.getAudioPts;
+    }
+    
+    NSArray<NSDictionary<NSString *, AvuBuffer *> *> *buffers = [self.multiVideoUnit requestVideoBuffersAt:reqTime];
+    for (int i = 0; i < buffers.count; i++) {
+        AvuBuffer *buffer = buffers[i].allValues[0];
+        if (buffer.pixelBuffer) {
+            NSLog(@"[yjx] render index: %d, reqTime: %lf, buffer pts: %lf", i, reqTime, buffer.pts);
+            [self.glPreviews[i] processPixelBuffer:buffer.pixelBuffer];
+        }
+    }
+    // NSLog(@"[yjx] request video buffer time: %lf", CFAbsoluteTimeGetCurrent()-self.startTime);
+    // NSLog(@"[yjx] audio time: %lf", [self.multiAudioUnit getAudioPts]);
+}
+
+#pragma mark - Action
+- (void)_play {
+    self.startTime = 0.0f;
+    
+    if (!self.glPreviews) {
+        [self _setupPreviews];
+    }
+    
+    if (!self.encodeUnit) {
+        [self _setupEncodeUnit];
+    }
+    
+    if (!self.multiAudioUnit) {
+        [self _setupMultiAudioUnit];
+    }
+    
+    if (!self.multiVideoUnit) {
+        [self _setupMultiVideoUnit];
     }
     
     if (!self.videoLink) {
         self.videoLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(_playVideo)];
-        self.videoLink.preferredFramesPerSecond = 60;
+        self.videoLink.preferredFramesPerSecond = 30;
         [self.videoLink addToRunLoop:NSRunLoop.mainRunLoop forMode:NSRunLoopCommonModes];
     }
 }
 
-- (void)_playVideo {
-    while (self.videoDecodeUnit && self.glPreview) {
-        NSLog(@"[yjx] displayLink time: %lf", CFAbsoluteTimeGetCurrent());
-        while (self.audioPts <= self.videoPts) {
-            [NSThread sleepForTimeInterval:0.0001];
-        }
-        
-
-        if (!self.videoDecodeUnit.isValid || !self.audioDecodeUnit.isValid) {
-            // NSLog(@"[avu] video unit / audio unit not valid-1");
-        } else {
-            AvuBuffer *buffer = [self.videoDecodeUnit dequeue];
-            if (buffer) {
-                if (self.encodeUnit) {
-                    [self.encodeUnit encode:buffer];
-                }
-                
-                [self.glPreview processPixelBuffer:buffer.pixelBuffer];
-                self.videoPts = buffer.pts;
-            }
-        }
-    }
-}
-
-- (void)_playAudio {
-    while (self.audioDecodeUnit && self.audioPlayer) {
-        NSLog(@"[yjx] displayLink time: %lf", CFAbsoluteTimeGetCurrent());
-        if (!self.videoDecodeUnit.isValid || !self.audioDecodeUnit.isValid) {
-            // NSLog(@"[avu] video unit / audio unit not valid-2");
-        } else {
-            AvuBuffer *buffer = [self.audioDecodeUnit dequeue];
-            if (buffer) {
-                if (self.encodeUnit) {
-                    [self.encodeUnit encode:buffer];
-                }
-                
-                [self.audioPlayer processSampleBuffer:buffer.audioBuffer];
-                self.audioPts = buffer.pts;
-            }
-        }
-    }
-}
-
-- (void)_stopThread {
-    self.videoPts = 0.0f;
-    self.audioPts = 0.0f;
-    
-    if (self.videoThread) {
-        [self.videoThread cancel];
-        self.videoThread = nil;
-    }
-    
-    if (self.audioThread) {
-        [self.audioThread cancel];
-        self.audioThread = nil;
-    }
-}
-
-#pragma mark - Action
-- (void)_startPick {
-    TZImagePickerController *imagePickerVc = [[TZImagePickerController alloc] initWithMaxImagesCount:9 delegate:self];
-    imagePickerVc.allowPickingMultipleVideo = YES;
-    imagePickerVc.isSelectOriginalPhoto = YES;
-    [self presentViewController:imagePickerVc animated:YES completion:nil];
-}
-
-- (void)_play {
-    if (!self.videoDecodeUnit) {
-        AvuConfig *config = [[AvuConfig alloc] init];
-        config.videoPath = self.videoPath;
-        config.type = AvuType_Video;
-        // config.clipRange = [AvuClipRange clipRangeStart:5 end:8];
-        self.videoDecodeUnit = [[AvuVideoDecodeUnit alloc] initWithConfig:config];
-        
-        weakify(self);
-        [self.videoDecodeUnit setDecodeEndCallback:^{
-            strongify(self);
-            [self.videoDecodeUnit pause];
-        }];
-    }
-    
-    if (!self.audioDecodeUnit) {
-        AvuConfig *config = [[AvuConfig alloc] init];
-        config.audioPath = self.videoPath;
-        config.type = AvuType_Audio;
-        // config.clipRange = [AvuClipRange clipRangeStart:5 end:8];
-        self.audioDecodeUnit = [[AvuAudioDecodeUnit alloc] initWithConfig:config];
-        
-        weakify(self);
-        [self.audioDecodeUnit setDecodeEndCallback:^{
-            strongify(self);
-            [self.audioDecodeUnit pause];
-        }];
-    }
-    
-    if (!self.encodeUnit) {
-        /// vt相关
-        AvuConfig *config = [[AvuConfig alloc] init];
-        config.pixelFormat = AvuPixelFormatType_YUV;
-        config.videoSize = CGSizeMake(720, 1280);
-        config.keyframeInterval = 1.0f;
-        config.allowBFrame = NO;
-        config.allowRealtime = NO;
-        config.bitrate = 2560000;
-        
-        /// writer相关
-        NSString *docPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
-        NSString *outputPath = [docPath stringByAppendingString:@"/yjx.mov"];
-        if ([[NSFileManager defaultManager] fileExistsAtPath:outputPath]) {
-            [[NSFileManager defaultManager] removeItemAtPath:outputPath error:nil];
-        }
-        
-        CGSize outputSize = CGSizeMake(720, 1280);
-        config.onlyMux = YES;
-        config.outputUrl = [NSURL fileURLWithPath:outputPath];
-        config.videoSetttings = @{
-            AVVideoCodecKey : AVVideoCodecTypeH264,
-            AVVideoWidthKey : @(outputSize.width),
-            AVVideoHeightKey: @(outputSize.height)
-        };
-        config.pixelBufferAttributes = @{
-            (__bridge NSString *)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_32BGRA),
-                      (__bridge NSString *)kCVPixelBufferWidthKey: @(outputSize.width),
-                     (__bridge NSString *)kCVPixelBufferHeightKey: @(outputSize.height)
-        };
-        config.audioSetttings = @{
-                    AVFormatIDKey: @(kAudioFormatMPEG4AAC),
-                  AVSampleRateKey: @(44100),
-            AVNumberOfChannelsKey: @(2)
-        };
-        
-        self.encodeUnit = [[AvuEncodeUnit alloc] initWithConfig:config];
-    }
-    
-//    [self.videoDecodeUnit seekToTime:5.0];
-//    [self.audioDecodeUnit seekToTime:5.0];
-//    self.videoPts = self.audioPts = 5.0f;
-    
-    if (!self.glPreview) {
-        [self _setupPreview];
-    }
-    
-    if (!self.audioPlayer) {
-        [self _setupAudioPlayer];
-    }
-    
-    [self.audioPlayer play];
-    [self _startThread];
-}
-
-- (void)_stop {
-    [self.videoDecodeUnit stop];
-    [self.audioDecodeUnit stop];
-    
-    [self.encodeUnit stopEncode:^(NSURL * _Nullable fileUrl, NSError * _Nullable error) {
-        NSLog(@"[avu] encode file path: %@, error: %@", fileUrl.path, error);
-    }];
-}
-
 - (void)_seek {
-    [self.audioDecodeUnit seekToTime:5];
-    [self.videoDecodeUnit seekToTime:5];
-    self.videoPts = self.audioPts = 5;
+    [self.multiVideoUnit seekToTime:0 isForce:YES];
+    [self.multiAudioUnit seekToTime:0];
 }
 
-- (void)_multiAudio {
-    NSString *path1 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/basket.mp4"];
-//    NSString *path2 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/beauty.mp4"];
-//    NSString *path3 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/dilireba.mp4"];
-    NSString *path4 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/yangmi.mp4"];
-    
-    AvuClipRange *range1 = [AvuClipRange clipRangeAttach:0 start:0 end:10];
-//    AvuClipRange *range2 = [AvuClipRange clipRangeAttach:0 start:0 end:10];
-//    AvuClipRange *range3 = [AvuClipRange clipRangeAttach:0 start:0 end:10];
-    AvuClipRange *range4 = [AvuClipRange clipRangeAttach:10 start:5 end:15];
-    
-    AvuConfig *config = [[AvuConfig alloc] init];
-    [config.audioPaths addObject:path1];
-//    [config.audioPaths addObject:path2];
-//    [config.audioPaths addObject:path3];
-    [config.audioPaths addObject:path4];
-    
-    config.clipRanges[path1] = range1;
-//    config.clipRanges[path2] = range2;
-//    config.clipRanges[path3] = range3;
-    config.clipRanges[path4] = range4;
-
-    self.multiAudioUnit = [[AvuMultiAudioUnit alloc] initWithConfig:config];
-    [self.multiAudioUnit start];
+- (void)_pause {
 }
 
-- (void)_multiAudioSeek {
-    [self.multiAudioUnit seekToTime:11.0f];
-}
-#pragma mark - TZImagePickerControllerDelegate
-- (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingPhotos:(NSArray<UIImage *> *)photos sourceAssets:(NSArray *)assets isSelectOriginalPhoto:(BOOL)isSelectOriginalPhoto infos:(NSArray<NSDictionary *> *)infos {
-    
-    /// 图片
-    PHImageRequestOptions *imageOptions = [[PHImageRequestOptions alloc] init];
-    imageOptions.version = PHImageRequestOptionsVersionOriginal;
-    
-    /// 视频
-    PHVideoRequestOptions *videoOptions = [[PHVideoRequestOptions alloc] init];
-    videoOptions.version = PHVideoRequestOptionsVersionOriginal;
-    
-    for (PHAsset *asset in assets) {
-        [[PHImageManager defaultManager] requestImageDataAndOrientationForAsset:asset options:imageOptions resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, CGImagePropertyOrientation orientation, NSDictionary * _Nullable info) {
-            [self.imageDatas addObject:imageData];
-            NSLog(@"[avu] picked image from album data: %@", imageData);
-        }];
-        
-        [[PHImageManager defaultManager] requestAVAssetForVideo:asset options:videoOptions resultHandler:^(AVAsset *asset, AVAudioMix *audioMix, NSDictionary *info) {
-            if ([asset isKindOfClass:[AVURLAsset class]]) {
-                AVURLAsset *urlAsset = (AVURLAsset *)asset;
-                self.composition = urlAsset;
-                self.videoPath = urlAsset.URL.path;
-                double rotation = self.composition.rotation;
-                if (rotation) {
-                    NSLog(@"[avu] import video with rotation msg: %lf", rotation);
-                }
-                AVAssetTrack *track = [urlAsset tracksWithMediaType:AVMediaTypeVideo].firstObject;
-                if (track) {
-                    CGFloat w = track.naturalSize.width;
-                    CGFloat h = track.naturalSize.height;
-                    self.videoRatio = h/w;
-                }
-                [self.videoAssets addObject:urlAsset];
-                NSLog(@"[avu] picked video from album URL: %@", urlAsset.URL.path);
-            }
-        }];
-    }
+- (void)_sliderValueChange {
+    float time = _slider.value * 10;
 }
 
 #pragma mark - TTGTextTagCollectionViewDelegate
@@ -375,18 +292,12 @@
                     didTapTag:(TTGTextTag *)tag
                       atIndex:(NSUInteger)index {
     TTGTextTagStringContent *content = (TTGTextTagStringContent *)tag.content;
-    if ([content.text isEqualToString:@"视频导入"]) {
-        [self _startPick];
-    } else if ([content.text isEqualToString:@"播放"]) {
+    if ([content.text isEqualToString:@"播放"]) {
         [self _play];
-    } else if ([content.text isEqualToString:@"停止播放"]) {
-        [self _stop];
-    } else if ([content.text isEqualToString:@"seek"]) {
+    } else if ([content.text isEqualToString:@"暂停"]) {
+        [self _pause];
+    } else if ([content.text isEqualToString:@"Seek"]) {
         [self _seek];
-    } else if ([content.text isEqualToString:@"MultiAudio"]) {
-        [self _multiAudio];
-    } else if ([content.text isEqualToString:@"MA Seek"]) {
-        [self _multiAudioSeek];
     }
     return;
 }

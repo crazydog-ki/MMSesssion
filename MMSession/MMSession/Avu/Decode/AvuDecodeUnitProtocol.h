@@ -7,13 +7,13 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol AvuDecodeUnitProtocol <NSObject>
 - (instancetype)initWithConfig:(AvuConfig *)config;
 - (BOOL)isValid;
-- (void)seekToTime:(double)time;
-- (AvuBuffer *)dequeue;
-- (AvuBuffer *)requestBufferAtTime:(double)time;
-- (void)pause;
 - (void)start;
+- (void)pause;
 - (void)stop;
+- (void)seekToTime:(double)time isForce:(BOOL)isForce;
+- (void)seekToTime:(double)time;
 
+- (AvuBuffer *)requestBufferAtTime:(double)time;
 - (void)updateConfig:(AvuConfig *)config;
 @end
 

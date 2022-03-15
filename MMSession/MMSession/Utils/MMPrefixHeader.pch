@@ -16,6 +16,10 @@
 /// 获取导航栏的高度
 #define kNavBarH self.navigationController.navigationBar.frame.size.height
 
+/// 屏幕宽高
+#define kScreenW UIScreen.mainScreen.bounds.size.width
+#define kScreenH UIScreen.mainScreen.bounds.size.height
+
 #define kColor(r, g, b, a) [UIColor colorWithRed:(r)/255.0f green:(g)/255.0f blue:(b)/255.0f alpha:(a)]
 #define kMMColor kColor(255.0f, 215.0f, 0.0f, 1.0f)
 

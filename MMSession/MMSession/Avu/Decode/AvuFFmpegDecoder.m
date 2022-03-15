@@ -102,26 +102,27 @@ static const NSUInteger kAudioTimeScale  = 44100;
                 [AvuUtils resetAudioBufferList:bufferList];
                 memcpy(bufferList->mBuffers[0].mData, outBuffer, outBufferSize);
                 self->_audioBufferList->mBuffers[0].mDataByteSize = outBufferSize;
+                buffer.bufferList = self->_audioBufferList;
                 
                 /// bufferList -> CMSampleBufferRef
-                CMSampleTimingInfo timingInfo;
-                timingInfo.duration              = CMTimeMake(1, kAudioTimeScale);
-                timingInfo.presentationTimeStamp = CMTimeMake(buffer.dts*kAudioTimeScale, kAudioTimeScale);
-                timingInfo.decodeTimeStamp       = CMTimeMake(buffer.dts*kAudioTimeScale, kAudioTimeScale);
-                 CMSampleBufferRef sampleBuffer = [AvuUtils produceAudioBuffer:bufferList
-                                                                    timingInfo:timingInfo
-                                                                     frameNums:samplesNum];
-                buffer.audioBuffer = sampleBuffer;
+//                CMSampleTimingInfo timingInfo;
+//                timingInfo.duration              = CMTimeMake(1, kAudioTimeScale);
+//                timingInfo.presentationTimeStamp = CMTimeMake(buffer.dts*kAudioTimeScale, kAudioTimeScale);
+//                timingInfo.decodeTimeStamp       = CMTimeMake(buffer.dts*kAudioTimeScale, kAudioTimeScale);
+//                 CMSampleBufferRef sampleBuffer = [AvuUtils produceAudioBuffer:bufferList
+//                                                                    timingInfo:timingInfo
+//                                                                     frameNums:samplesNum];
+//                buffer.audioBuffer = sampleBuffer;
                 if (self.nextNodes) {
                     for (id<AvuBufferProcessProtocol> node in self.nextNodes) {
                         [node processBuffer:buffer];
                     }
                 }
 
-                if (sampleBuffer) {
-                    CFRelease(sampleBuffer);
-                    sampleBuffer = NULL;
-                }
+//                if (sampleBuffer) {
+//                    CFRelease(sampleBuffer);
+//                    sampleBuffer = NULL;
+//                }
                 av_free(outBuffer);
             }
         }

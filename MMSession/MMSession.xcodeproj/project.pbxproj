@@ -79,6 +79,7 @@
 		2BE6F06C26B8F446006C2E32 /* AVAsset+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BE6F06B26B8F446006C2E32 /* AVAsset+Extension.m */; };
 		2BF08E1426BD467F0072B990 /* MMFFDecoder.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2BF08E1326BD467F0072B990 /* MMFFDecoder.mm */; };
 		4257EEE83CA9A998BAADECCD /* Pods_MMSession.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F065112A3C063051A029E7D1 /* Pods_MMSession.framework */; };
+		7E20463B27D38EE000D299FB /* GXFC-LDH.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7E20463A27D38EE000D299FB /* GXFC-LDH.mp3 */; };
 		7EA8AD2327BCE980006451CF /* AvuMultiAudioUnit.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EA8AD2227BCE980006451CF /* AvuMultiAudioUnit.m */; };
 		7EA8AD2627BCE99D006451CF /* AvuMultiVideoUnit.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EA8AD2527BCE99D006451CF /* AvuMultiVideoUnit.m */; };
 /* End PBXBuildFile section */
@@ -328,6 +329,7 @@
 		2BF08E1226BD467F0072B990 /* MMFFDecoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMFFDecoder.h; sourceTree = "<group>"; };
 		2BF08E1326BD467F0072B990 /* MMFFDecoder.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MMFFDecoder.mm; sourceTree = "<group>"; };
 		50FCC0F64CCC23C2867F1373 /* Pods-MMSession.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MMSession.debug.xcconfig"; path = "Target Support Files/Pods-MMSession/Pods-MMSession.debug.xcconfig"; sourceTree = "<group>"; };
+		7E20463A27D38EE000D299FB /* GXFC-LDH.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "GXFC-LDH.mp3"; sourceTree = "<group>"; };
 		7EA8AD2127BCE980006451CF /* AvuMultiAudioUnit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AvuMultiAudioUnit.h; sourceTree = "<group>"; };
 		7EA8AD2227BCE980006451CF /* AvuMultiAudioUnit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AvuMultiAudioUnit.m; sourceTree = "<group>"; };
 		7EA8AD2427BCE99D006451CF /* AvuMultiVideoUnit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AvuMultiVideoUnit.h; sourceTree = "<group>"; };
@@ -602,6 +604,7 @@
 				2B9104F327BA75C20048D292 /* beauty.mp4 */,
 				2B9104F427BA75C20048D292 /* dilireba.mp4 */,
 				2B9104F627BA75C30048D292 /* yangmi.mp4 */,
+				7E20463A27D38EE000D299FB /* GXFC-LDH.mp3 */,
 			);
 			path = Resource;
 			sourceTree = "<group>";
@@ -915,6 +918,7 @@
 				12DA794726B6442900099142 /* README.md in Resources */,
 				2B0073992691511A006510A6 /* Shader.fsh in Resources */,
 				12484440268711C2003C27DF /* LaunchScreen.storyboard in Resources */,
+				7E20463B27D38EE000D299FB /* GXFC-LDH.mp3 in Resources */,
 				2B9AC2BE2697F41000DC842D /* Podfile in Resources */,
 				2B9104F927BA75C30048D292 /* basket.mp4 in Resources */,
 				1248443D268711C2003C27DF /* Assets.xcassets in Resources */,

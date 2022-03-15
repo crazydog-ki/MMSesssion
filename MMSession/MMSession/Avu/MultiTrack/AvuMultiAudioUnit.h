@@ -6,6 +6,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithConfig:(AvuConfig *)config;
 - (void)start;
 - (void)seekToTime:(double)time; /// 针对主时间线
+- (double)getAudioPts;
 @end
 
 NS_ASSUME_NONNULL_END

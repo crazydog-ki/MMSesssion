@@ -30,24 +30,18 @@
 
 - (void)seekToTime:(double)time {
     AvuClipRange *clipRange = self.config.clipRange;
-    BOOL isContain = [AvuClipRange isClipRange:clipRange containsTime:time];
-    if (isContain) {
-        self.seekTime = time-clipRange.attachTime+clipRange.startTime;
-    } else {
-        self.seekTime = clipRange.startTime;
-    }
-}
-
-- (AvuBuffer *)dequeue {
-    AvuBuffer *buffer = self.audioQueue.dequeue;
-    return buffer;
+    self.seekTime = time-clipRange.attachTime+clipRange.startTime;
 }
 
 - (AvuBuffer *)requestBufferAtTime:(double)time {
     AvuClipRange *clipRange = self.config.clipRange;
     double reqTime = time-clipRange.attachTime+clipRange.startTime;
-    AvuBuffer *buffer = [self.audioQueue requestBufferAtTime:reqTime];
+    AvuBuffer *buffer = [self.audioQueue requestAudioBufferAtTime:reqTime];
     return buffer;
+}
+
+- (void)getAudioData:(UInt8 *)data offset:(UInt32)offset size:(UInt32)size {
+    [self.audioQueue pop:data offset:offset size:size];
 }
 
 - (void)start {
@@ -111,8 +105,8 @@
         config.clipRange = [AvuClipRange clipRangeStart:0.0f end:CMTimeGetSeconds(audioAsset.duration)];
     }
     
-    [self seekToTime:clipRange.startTime];
     self.ffmpegParser = [[AvuFFmpegParser alloc] initWithConfig:config];
+    [self.ffmpegParser seekToTime:clipRange.startTime];
     
     config.fmtCtx = self.ffmpegParser.getFmtCtx;
     self.ffmpegDecoder = [[AvuFFmpegDecoder alloc] initWithConfig:config];

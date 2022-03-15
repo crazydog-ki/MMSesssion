@@ -26,6 +26,7 @@ typedef NS_OPTIONS(NSUInteger, AvuBufferType) {
 
 /// 音频帧
 @property (nonatomic, assign) CMSampleBufferRef audioBuffer;  // 未压缩帧
+@property (nonatomic, assign) AudioBufferList *bufferList;
 @end
 
 NS_ASSUME_NONNULL_END

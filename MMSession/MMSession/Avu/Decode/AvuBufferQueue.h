@@ -3,14 +3,26 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface AvuBufferQueue : NSObject <AvuBufferProcessProtocol>
-- (BOOL)exceedMax;
-- (int)size;
-- (void)flush;
-- (AvuBuffer *)dequeue;
-- (AvuBuffer *)requestBufferAtTime:(double)time;
+typedef NS_OPTIONS(NSUInteger, AvuSeekType) {
+    AvuSeekType_No      = 1 << 0,
+    AvuSeekType_Back    = 1 << 1,
+    AvuSeekType_Forward = 1 << 2,
+};
 
+@interface AvuBufferQueue : NSObject <AvuBufferProcessProtocol>
+- (int)size;
+- (BOOL)exceedMax;
 - (void)configSeekTime:(double)seekTime;
+- (void)flush;
+- (BOOL)isHitCacheAt:(double)time;
+- (AvuSeekType)getSeekTypeAt:(double)time;
+
+- (AvuBuffer *)requestAudioBufferAtTime:(double)time;
+- (AvuBuffer *)requestVideoBufferAtTime:(double)time;
+
+/// 音频pcm数据存储
+- (void)push:(UInt8 *)data size:(UInt32)size;
+- (void)pop:(UInt8 *)data offset:(UInt32)offset size:(UInt32)size;
 
 typedef void(^AvuBufferEndCallback)(void);
 @property (nonatomic, strong) AvuBufferEndCallback bufferEndCallback;

@@ -51,6 +51,10 @@ static const NSUInteger kAudioTimescale = 44100;
     [self.audioPlayer play];
 }
 
+- (double)getAudioPts {
+    return self.audioPlayTime;
+}
+
 - (void)dealloc {
     if (_bufferList) {
         [AvuUtils freeAudioBufferList:_bufferList];
@@ -100,29 +104,37 @@ static const NSUInteger kAudioTimescale = 44100;
         /// 1. 重置音频buffer
         [AvuUtils resetAudioBufferList:self->_bufferList];
         /// 2. 获取音频buffer
+        UInt32 getSize = kSamplesCount * AvuUtils.asbd.mBytesPerFrame;
         for (int i = 0; i < self.audioClips.count; i++) {
             NSString *audioClip = self.audioClips[i];
-            AvuAudioDecodeUnit *audioDecoder = self.decoderMap[audioClip];
             AvuClipRange *clipRange = self.clipRangeMap[audioClip];
             if (![AvuClipRange isClipRange:clipRange containsTime:self.audioPlayTime]) continue;
-            AvuBuffer *buffer = [audioDecoder requestBufferAtTime:self.audioPlayTime];
-            if (!buffer) continue;
-            CMSampleBufferRef sampleBuffer = buffer.audioBuffer;
-            if (sampleBuffer) {
-                /// sampleBuffer -> bufferList
-                int samples = (int)CMSampleBufferGetNumSamples(sampleBuffer);
-                self->_bufferList->mBuffers[0].mDataByteSize = samples * AvuUtils.asbd.mBytesPerFrame;
-                
-                self->_mixBufferList->mBuffers[0].mDataByteSize = samples * AvuUtils.asbd.mBytesPerFrame;
-                CMSampleBufferCopyPCMDataIntoAudioBufferList(sampleBuffer, 0, samples, self->_mixBufferList);
-                CFRelease(sampleBuffer);
-                sampleBuffer = nil;
-                /// 3. Mix音频
-                [self _mixAudioBufferList:self->_mixBufferList to:self->_bufferList];
-                [AvuUtils resetAudioBufferList:self->_mixBufferList]; /// 重置
-            }
+            AvuAudioDecodeUnit *audioDecoder = self.decoderMap[audioClip];
+//            AvuBuffer *buffer = [audioDecoder requestBufferAtTime:self.audioPlayTime];
+//            if (!buffer) continue;
+//            CMSampleBufferRef sampleBuffer = buffer.audioBuffer;
+//            if (sampleBuffer) {
+//                /// sampleBuffer -> bufferList
+//                int samples = (int)CMSampleBufferGetNumSamples(sampleBuffer);
+//                self->_bufferList->mBuffers[0].mDataByteSize = samples * AvuUtils.asbd.mBytesPerFrame;
+//
+//                self->_mixBufferList->mBuffers[0].mDataByteSize = samples * AvuUtils.asbd.mBytesPerFrame;
+//                CMSampleBufferCopyPCMDataIntoAudioBufferList(sampleBuffer, 0, samples, self->_mixBufferList);
+//                CFRelease(sampleBuffer);
+//                sampleBuffer = nil;
+//                /// 3. Mix音频
+//                [self _mixAudioBufferList:self->_mixBufferList to:self->_bufferList];
+//                [AvuUtils resetAudioBufferList:self->_mixBufferList]; /// 重置
+//            }
+            [AvuUtils resetAudioBufferList:self->_mixBufferList]; /// 重置
+            self->_mixBufferList->mBuffers[0].mDataByteSize = getSize;
+            UInt8 *data = self->_mixBufferList->mBuffers[0].mData;
+            // 取固定1024个
+            [audioDecoder getAudioData:data offset:0 size:getSize];
+            [self _mixAudioBufferList:self->_mixBufferList to:self->_bufferList];
         }
         /// 4. block回调
+        self->_bufferList->mBuffers[0].mDataByteSize = getSize;
         block(self->_bufferList);
         /// 5. 更改playTime
         self.audioPlayTime += CMTimeGetSeconds(CMTimeMake(kSamplesCount, kAudioTimescale));

@@ -14,6 +14,7 @@
 3. 基于AssetReader实现音视频解封装/解码，并利用OpenGL ES实现视频帧上屏、利用Audio Queue实现音频帧播放，以音频时间戳为基准，实现音视频同步；
 4. 基于FFmpeg实现音视频的解封装/解码，并利用OpenGL ES实现视频帧上屏、利用Audio Queue实现音频帧播放，以音频时间戳为基准，实现音视频同步；实现seek功能；实现编码写文件等等；
 5. 基于FFmpeg实现音视频的解封装，利用VideoToolBox实现视频解码、FFmpeg实现音频解码，并利用OpenGL ES实现视频帧上屏、Audio Queue实现音频帧播放，以音频时间戳为基准，实现音视频同步；实现seek功能；实现编码写文件等等。打通音视频流进阶处理链路，细节处待完善：
+6. 支持音视频多轨、画中画上屏（待优化）；
 ```
 视频处理链路
 * 渲染方案1：Demux(FFmpeg) -> Decode(FFmpeg) -> Render(OpenGL ES)
@@ -28,19 +29,3 @@
 * 渲染：Demux(FFmpeg) -> Decode(FFmpeg) -> Render(AudioQueueRef)
 * 合成：Demux(FFmpeg) -> Decode(FFmpeg) -> Encode & Mux(AVAssetWriter)
 ```
-                              
-后续会对Demo进行详细全面的归纳总结
-
-# 理论储备
-
-## 音频
-### PCM
-### AAC
-### 音频编解码
-### 音频播放
-
-## 视频
-### YUV
-### H264 & H265
-### 视频编解码
-### 视频渲染

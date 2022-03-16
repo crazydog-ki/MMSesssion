@@ -37,7 +37,7 @@
     [super viewDidLoad];
     self.navigationItem.title = @"AVU Module";
     self.view.backgroundColor = UIColor.blackColor;
-    self.debugDragSeek = NO;
+    self.debugDragSeek = YES;
     
     [self _setupCollectionView];
     [self _setupSlider];

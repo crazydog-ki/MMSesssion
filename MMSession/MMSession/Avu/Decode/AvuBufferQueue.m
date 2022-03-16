@@ -67,6 +67,10 @@ static const NSInteger kPcmCacheSize = 8192 * sizeof(float) * 2;
         if (5 < count) {
             AvuBuffer *firstBuffer = self.convertBufferQueue.firstObject;
             [self.bufferQueue addObject:firstBuffer];
+            // 排序
+            [self.bufferQueue sortUsingComparator:^NSComparisonResult(AvuBuffer *  _Nonnull obj1, AvuBuffer *  _Nonnull obj2) {
+                return obj1.pts > obj2.pts;
+            }];
             [self.convertBufferQueue removeObjectAtIndex:0];
         }
     });
@@ -162,7 +166,7 @@ static const NSInteger kPcmCacheSize = 8192 * sizeof(float) * 2;
             _seekType = AvuSeekType_Back;
             // 只保留第一帧
             int count = (int)self.bufferQueue.count-1;
-            while (--count) {
+            while (--count && 0<count) {
                 [self.bufferQueue removeLastObject];
             }
             return;
@@ -184,6 +188,7 @@ static const NSInteger kPcmCacheSize = 8192 * sizeof(float) * 2;
         /// 2. 在缓存范围内
         int index = 0;
         for (AvuBuffer *tmp in self.bufferQueue) {
+            // 精准命中
             if (tmp.pts<=time && time<=tmp.pts+tmp.duration) {
                 buffer = tmp;
 //                NSLog(@"[yjx] hit time: %lf", tmp.pts);
@@ -193,6 +198,7 @@ static const NSInteger kPcmCacheSize = 8192 * sizeof(float) * 2;
         }
         if (buffer) {
             [self.bufferQueue removeObjectAtIndex:index];
+            return;
         }
     });
     return buffer;

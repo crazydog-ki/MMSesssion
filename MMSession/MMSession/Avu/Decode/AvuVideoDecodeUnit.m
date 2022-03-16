@@ -41,8 +41,8 @@
         AvuClipRange *clipRange = self.config.clipRange;
         double seekTime = time-clipRange.attachTime+clipRange.startTime;
         AvuSeekType seekType = [self.videoQueue getSeekTypeAt:seekTime];
-        if (isForce || (0.1 < fabs(time-self.lastSeekTime) && seekType==AvuSeekType_Back)) {
-            // 暂时处理仅逆向seek，100ms seek一次，防止太频繁
+        if (isForce || (0.2 < fabs(time-self.lastSeekTime) && seekType==AvuSeekType_Back)) {
+            // 暂时处理仅逆向seek，200ms seek一次，防止太频繁
             self.seekTime = seekTime;
             self.needSeek = YES;
         }
@@ -60,7 +60,7 @@
     AvuBuffer *buffer = [self.videoQueue requestVideoBufferAtTime:reqTime];
     if (buffer && fabs(buffer.pts-reqTime)<0.2) {
         self.lastBuffer = buffer;
-    } else {
+    } else { // 没取到buffer
         buffer = self.lastBuffer;
     }
     return buffer;

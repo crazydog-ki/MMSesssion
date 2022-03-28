@@ -65,7 +65,7 @@ extern "C" {
             BOOL isVideo = _config.type==AvuType_Video;
             if (ret == AVERROR_EOF) {
                 // [self _freeAll];
-                NSLog(@"[avu] ffmpeg parse end");
+                NSLog(@"[avu] ffmpeg parse end，%p", self);
                 break;
             } else if (packet->stream_index == videoIdx) { /// 视频轨
                 if (!isVideo) continue;

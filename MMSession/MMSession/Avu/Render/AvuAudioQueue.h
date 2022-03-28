@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)flush;
 
 - (double)getPts;
+- (void)setVolume:(double)volume;
 
 typedef void(^AudioBufferBlock)(AudioBufferList *bufferList);
 typedef void(^PullAudioDataBlock)(AudioBufferBlock block);

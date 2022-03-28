@@ -132,6 +132,14 @@ static const NSInteger kBufferCaches   = 3;
     return self.audioPts;
 }
 
+- (void)setVolume:(double)volume {
+    if (!self.audioQueue) return;
+    OSStatus ret = AudioQueueSetParameter(self.audioQueue, kAudioQueueParam_Volume, volume);
+    if (ret != noErr) {
+        NSLog(@"[avu] set audio volume: %lf", volume);
+    }
+}
+
 #pragma mark - Private
 - (void)_initAudioQueue {
     AudioStreamBasicDescription asbd = AvuUtils.asbd;

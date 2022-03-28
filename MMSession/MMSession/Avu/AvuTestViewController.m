@@ -29,6 +29,7 @@
 @property (nonatomic, strong) AvuMultiAudioUnit *multiAudioUnit;
 @property (nonatomic, strong) AvuMultiVideoUnit *multiVideoUnit;
 @property (nonatomic, assign) double startTime;
+@property (nonatomic, assign) double playTime;
 @property (nonatomic, assign) BOOL debugDragSeek;
 @end
 
@@ -37,7 +38,7 @@
     [super viewDidLoad];
     self.navigationItem.title = @"AVU Module";
     self.view.backgroundColor = UIColor.blackColor;
-    self.debugDragSeek = YES;
+    self.debugDragSeek = NO;
     
     [self _setupCollectionView];
     [self _setupSlider];
@@ -70,6 +71,15 @@
     
     TTGTextTag *seekTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"Seek"] style:style];
     [tagCollectionView addTag:seekTag];
+    
+    TTGTextTag *addTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"新增片段"] style:style];
+    [tagCollectionView addTag:addTag];
+    
+    TTGTextTag *removeTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"删除片段"] style:style];
+    [tagCollectionView addTag:removeTag];
+    
+    TTGTextTag *volumeTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"调整音量"] style:style];
+    [tagCollectionView addTag:volumeTag];
 }
 
 - (void)_setupSlider {
@@ -197,6 +207,11 @@
     config.clipRanges[path3] = range3;
     config.clipRanges[path4] = range4;
     // config.clipRanges[path5] = range5;
+    
+    config.audioVolumes[path1] = @(1.0);
+    config.audioVolumes[path2] = @(1.0);
+    config.audioVolumes[path3] = @(1.0);
+    config.audioVolumes[path4] = @(1.0);
 
     self.multiAudioUnit = [[AvuMultiAudioUnit alloc] initWithConfig:config];
 }
@@ -232,6 +247,7 @@
     }
     
     double reqTime = CFAbsoluteTimeGetCurrent()-self.startTime;
+    self.playTime = reqTime;
     if (0.1 < fabs(reqTime-self.multiAudioUnit.getAudioPts)) {
         NSLog(@"[yjx] audio modify video, video time: %lf, audio time: %lf", reqTime, self.multiAudioUnit.getAudioPts);
         reqTime = self.multiAudioUnit.getAudioPts;
@@ -286,7 +302,59 @@
 - (void)_pause {
 }
 
+- (void)_remove {
+    NSString *path2 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/beauty.mp4"];
+    NSString *path3 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/dilireba.mp4"];
+    NSString *path4 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/yangmi.mp4"];
+    
+    AvuConfig *config = [[AvuConfig alloc] init];
+    config.updateType = AvuUpdateType_Remove;
+    
+    [config.videoPaths addObject:path2];
+    [config.videoPaths addObject:path3];
+    [config.videoPaths addObject:path4];
+    [self.multiVideoUnit updateClip:config];
+    
+    // 音频
+    [config.audioPaths addObject:path2];
+    [config.audioPaths addObject:path3];
+    [config.audioPaths addObject:path4];
+    [self.multiAudioUnit updateClip:config];
+}
+
+- (void)_add {
+    NSString *path4 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/yangmi.mp4"];
+    
+    AvuConfig *config = [[AvuConfig alloc] init];
+    config.updateType = AvuUpdateType_Add;
+    // 注意设置 attachTime
+    AvuClipRange *range4 = [AvuClipRange clipRangeAttach:self.playTime start:0 end:10];
+    config.clipRanges[path4] = range4;
+    [config.videoPaths addObject:path4];
+    [self.multiVideoUnit updateClip:config];
+    
+    // 音频
+    [config.audioPaths addObject:path4];
+    [self.multiAudioUnit updateClip:config];
+}
+
+- (void)_volume {
+    NSString *path1 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/basket.mp4"];
+    AvuConfig *config = [[AvuConfig alloc] init];
+    config.updateType = AvuUpdateType_Volume;
+    [config.audioPaths addObject:path1];
+    config.audioVolumes[path1] = @0.1;
+    [self.multiAudioUnit updateClip:config];
+}
+
 - (void)_sliderValueChange {
+    NSString *path1 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/basket.mp4"];
+    AvuConfig *config = [[AvuConfig alloc] init];
+    config.updateType = AvuUpdateType_Volume;
+    [config.audioPaths addObject:path1];
+    config.audioVolumes[path1] = @(_slider.value);
+    [self.multiAudioUnit updateClip:config];
+    
     if (!self.debugDragSeek) return;
     
     double reqTime = _slider.value * 10;
@@ -312,6 +380,12 @@
         [self _pause];
     } else if ([content.text isEqualToString:@"Seek"]) {
         [self _seek];
+    } else if ([content.text isEqualToString:@"新增片段"]) {
+        [self _add];
+    } else if ([content.text isEqualToString:@"删除片段"]) {
+        [self _remove];
+    } else if ([content.text isEqualToString:@"调整音量"]) {
+        [self _volume];
     }
     return;
 }

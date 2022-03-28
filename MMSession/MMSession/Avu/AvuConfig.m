@@ -28,6 +28,8 @@
         _audioPaths = [NSMutableArray array];
         _videoPaths = [NSMutableArray array];
         _clipRanges = [NSMutableDictionary dictionary];
+        _audioVolumes = [NSMutableDictionary dictionary];
+        _updateType = AvuUpdateType_Idle;
     }
     return self;
 }

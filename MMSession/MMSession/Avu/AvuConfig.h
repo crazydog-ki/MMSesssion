@@ -19,6 +19,13 @@ typedef NS_OPTIONS(NSUInteger, AvuDecodeStatus) {
     AvuDecodeStatus_Stop  = 1 << 3,
 };
 
+typedef NS_OPTIONS(NSUInteger, AvuUpdateType) {
+    AvuUpdateType_Idle   = 1 << 0,
+    AvuUpdateType_Add    = 1 << 1,
+    AvuUpdateType_Remove = 1 << 2,
+    AvuUpdateType_Volume = 1 << 3,
+};
+
 @interface AvuClipRange : NSObject
 @property (nonatomic, assign) double attachTime;
 @property (nonatomic, assign) double startTime;
@@ -70,6 +77,8 @@ typedef NS_OPTIONS(NSUInteger, AvuDecodeStatus) {
 @property (nonatomic, strong) NSMutableArray<NSString *> *audioPaths;
 @property (nonatomic, strong) NSMutableArray<NSString *> *videoPaths;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, AvuClipRange *> *clipRanges;
+@property (nonatomic, strong) NSMutableDictionary<NSString *, NSNumber *> *audioVolumes;
+@property (nonatomic, assign) AvuUpdateType updateType;
 @end
 
 NS_ASSUME_NONNULL_END

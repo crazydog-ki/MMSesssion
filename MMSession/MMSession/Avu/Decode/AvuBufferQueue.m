@@ -161,14 +161,15 @@ static const NSInteger kPcmCacheSize = 8192 * sizeof(float) * 2;
         double minTime = startBuffer.pts;
         double maxTime = endBuffer.pts+endBuffer.duration;
         
-        if (time < minTime) { // 逆向seek
+        if (time < minTime) { // 逆向seek，暂时取第一帧，只考虑播放场景
             buffer = startBuffer;
             _seekType = AvuSeekType_Back;
             // 只保留第一帧
-            int count = (int)self.bufferQueue.count-1;
-            while (--count && 0<count) {
-                [self.bufferQueue removeLastObject];
-            }
+//            int count = (int)self.bufferQueue.count-1;
+//            while (--count && 0<count) {
+//                NSLog(@"[yjx] remove last pts: %lf", self.bufferQueue.lastObject.pts);
+//                [self.bufferQueue removeLastObject];
+//            }
             return;
         }
         
@@ -178,7 +179,8 @@ static const NSInteger kPcmCacheSize = 8192 * sizeof(float) * 2;
             // 只保留最后一帧
             int count = (int)self.bufferQueue.count-1;
             if (count == -1 || count == 0) return; // 缓存队列为空，或者只有1个，直接返回
-            while (--count) { 
+            while (--count) {
+                NSLog(@"[yjx] remove first pts: %lf", self.bufferQueue.firstObject.pts);
                 [self.bufferQueue removeObjectAtIndex:0];
             }
 //            NSLog(@"[yjx] need forward seek, maxTime: %lf, time: %lf", maxTime, time);

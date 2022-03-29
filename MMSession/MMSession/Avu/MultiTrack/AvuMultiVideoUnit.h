@@ -9,8 +9,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSArray<NSDictionary<NSString *, AvuBuffer *> *> *)requestVideoBuffersAt:(double)time;
 - (void)seekToTime:(double)time isForce:(BOOL)isForce;
 - (void)seekToTime:(double)time;
+
+- (void)start;
+- (void)pause;
+- (void)stop;
+
 // 增删
-- (void)updateClip:(AvuConfig *)config;
+- (void)updateConfig:(AvuConfig *)config;
 @end
 
 NS_ASSUME_NONNULL_END

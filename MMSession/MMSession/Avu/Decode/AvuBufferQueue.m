@@ -106,6 +106,7 @@ static const NSInteger kPcmCacheSize = 8192 * sizeof(float) * 2;
 - (void)flush {
     dispatch_sync(self.cacheQueue, ^{
         [self.bufferQueue removeAllObjects];
+        [self.convertBufferQueue removeAllObjects];
     });
 }
 
@@ -163,13 +164,16 @@ static const NSInteger kPcmCacheSize = 8192 * sizeof(float) * 2;
         
         if (time < minTime) { // 逆向seek，暂时取第一帧，只考虑播放场景
             buffer = startBuffer;
-            _seekType = AvuSeekType_Back;
-            // 只保留第一帧
-//            int count = (int)self.bufferQueue.count-1;
-//            while (--count && 0<count) {
-//                NSLog(@"[yjx] remove last pts: %lf", self.bufferQueue.lastObject.pts);
-//                [self.bufferQueue removeLastObject];
-//            }
+            if (self.seekTime) {
+                _seekType = AvuSeekType_Back;
+                // 只保留第一帧
+                int count = (int)self.bufferQueue.count-1;
+                while (--count && 0<count) {
+                    NSLog(@"[yjx] remove last pts: %lf", self.bufferQueue.lastObject.pts);
+                    [self.bufferQueue removeLastObject];
+                }
+                self.seekTime = 0.0f;
+            }
             return;
         }
         

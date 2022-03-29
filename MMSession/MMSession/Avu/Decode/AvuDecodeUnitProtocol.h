@@ -10,11 +10,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)start;
 - (void)pause;
 - (void)stop;
-- (void)seekToTime:(double)time isForce:(BOOL)isForce;
 - (void)seekToTime:(double)time;
-
 - (AvuBuffer *)requestBufferAtTime:(double)time;
-- (void)updateConfig:(AvuConfig *)config;
+@optional
+- (void)seekToTime:(double)time isForce:(BOOL)isForce;
 @end
 
 NS_ASSUME_NONNULL_END

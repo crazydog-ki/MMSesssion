@@ -20,7 +20,6 @@ static const NSUInteger kAudioTimescale = 44100;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, AvuAudioDecodeUnit *> *decoderMap;
 
 @property (nonatomic, strong) AvuAudioQueue *audioPlayer;
-
 @property (nonatomic, assign) double audioPlayTime;
 @end
 @implementation AvuMultiAudioUnit
@@ -42,6 +41,30 @@ static const NSUInteger kAudioTimescale = 44100;
 
 - (void)start {
     [self.audioPlayer play];
+    for (int i = 0; i < self.audioClips.count; i++) {
+        NSString *audioClip = self.audioClips[i];
+        AvuAudioDecodeUnit *audioDecoder = self.decoderMap[audioClip];
+        [audioDecoder start];
+    }
+}
+
+- (void)pause {
+    [self.audioPlayer pause];
+    for (int i = 0; i < self.audioClips.count; i++) {
+        NSString *audioClip = self.audioClips[i];
+        AvuAudioDecodeUnit *audioDecoder = self.decoderMap[audioClip];
+        [audioDecoder pause];
+    }
+}
+
+- (void)stop {
+    [self.audioPlayer pause];
+    [self.audioPlayer stop];
+    for (int i = 0; i < self.audioClips.count; i++) {
+        NSString *audioClip = self.audioClips[i];
+        AvuAudioDecodeUnit *audioDecoder = self.decoderMap[audioClip];
+        [audioDecoder stop];
+    }
 }
 
 - (void)seekToTime:(double)time {
@@ -49,6 +72,8 @@ static const NSUInteger kAudioTimescale = 44100;
     self.audioPlayTime = time;
     for (int i = 0; i < self.audioClips.count; i++) {
         NSString *audioClip = self.audioClips[i];
+        AvuClipRange *clipRange = self.clipRangeMap[audioClip];
+        if (![AvuClipRange isClipRange:clipRange containsTime:time]) continue;
         AvuAudioDecodeUnit *audioDecoder = self.decoderMap[audioClip];
         [audioDecoder seekToTime:time];
     }
@@ -63,7 +88,7 @@ static const NSUInteger kAudioTimescale = 44100;
     [self.audioPlayer setVolume:volume];
 }
 
-- (void)updateClip:(AvuConfig *)config {
+- (void)updateConfig:(AvuConfig *)config {
     dispatch_sync(self.multiAudioQueue, ^{
         AvuUpdateType type = config.updateType;
         NSArray *audioPaths = config.audioPaths;

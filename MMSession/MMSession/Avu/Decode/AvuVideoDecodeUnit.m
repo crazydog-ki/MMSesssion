@@ -82,13 +82,6 @@
     return 0 < self.videoQueue.size;
 }
 
-- (void)updateConfig:(nonnull AvuConfig *)config {
-    [self seekToTime:config.clipRange.startTime];
-    
-    [self.videoQueue updateConfig:config];
-    _config = config;
-}
-
 #pragma mark - Private
 - (void)_startDecode {
     dispatch_async(self.decodeQueue, ^{
@@ -182,5 +175,11 @@
         [self.videoQueue flush];
         self.videoQueue = nil;
     }
+}
+
+- (void)dealloc {
+    // 视频解码资源清理
+    self.decodeStatus = AvuDecodeStatus_Stop;
+    [self _clean];
 }
 @end

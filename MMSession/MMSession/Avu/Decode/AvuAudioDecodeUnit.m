@@ -60,11 +60,10 @@
     return 0 < self.audioQueue.size;
 }
 
-- (void)updateConfig:(AvuConfig *)config {
-    [self seekToTime:config.clipRange.startTime];
-    
-    [self.audioQueue updateConfig:config];
-    _config = config;
+- (void)dealloc {
+    // 音频解码资源清理
+    self.decodeStatus = AvuDecodeStatus_Stop;
+    [self _clean];
 }
 #pragma mark - Private
 - (void)_startDecode {

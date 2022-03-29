@@ -34,6 +34,7 @@
 @end
 
 @implementation AvuTestViewController
+#pragma mark - Life circle
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationItem.title = @"AVU Module";
@@ -42,6 +43,24 @@
     
     [self _setupCollectionView];
     [self _setupSlider];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    if (self.videoLink) {
+        [self.videoLink invalidate];
+        self.videoLink = nil;
+    }
+    
+    if (self.multiVideoUnit) {
+        [self.multiVideoUnit stop];
+        self.multiVideoUnit = nil;
+    }
+    
+    if (self.multiAudioUnit) {
+        [self.multiAudioUnit stop];
+        self.multiAudioUnit = nil;
+    }
 }
 
 #pragma mark - Priavte
@@ -91,7 +110,6 @@
     [self.view addSubview:slider];
     self.slider = slider;
 }
-
 
 - (void)_setupPreviews {
     if (!self.glPreviews) {
@@ -189,10 +207,10 @@
     NSString *path4 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/yangmi.mp4"];
     // NSString *path5 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/GXFC-LDH.mp3"];
     
-    AvuClipRange *range1 = [AvuClipRange clipRangeAttach:0 start:0 end:10];
-    AvuClipRange *range2 = [AvuClipRange clipRangeAttach:0 start:0 end:10];
-    AvuClipRange *range3 = [AvuClipRange clipRangeAttach:0 start:0 end:10];
-    AvuClipRange *range4 = [AvuClipRange clipRangeAttach:0 start:0 end:10];
+    AvuClipRange *range1 = [AvuClipRange clipRangeAttach:0 start:5 end:15];
+    AvuClipRange *range2 = [AvuClipRange clipRangeAttach:10 start:5 end:15];
+    AvuClipRange *range3 = [AvuClipRange clipRangeAttach:20 start:5 end:15];
+    AvuClipRange *range4 = [AvuClipRange clipRangeAttach:30 start:5 end:15];
     // AvuClipRange *range5 = [AvuClipRange clipRangeAttach:5 start:0 end:30];
 
     AvuConfig *config = [[AvuConfig alloc] init];
@@ -222,10 +240,10 @@
     NSString *path3 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/dilireba.mp4"];
     NSString *path4 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/yangmi.mp4"];
     
-    AvuClipRange *range1 = [AvuClipRange clipRangeAttach:0 start:0 end:10];
-    AvuClipRange *range2 = [AvuClipRange clipRangeAttach:0 start:0 end:10];
-    AvuClipRange *range3 = [AvuClipRange clipRangeAttach:0 start:0 end:10];
-    AvuClipRange *range4 = [AvuClipRange clipRangeAttach:0 start:0 end:10];
+    AvuClipRange *range1 = [AvuClipRange clipRangeAttach:0 start:5 end:15];
+    AvuClipRange *range2 = [AvuClipRange clipRangeAttach:10 start:5 end:15];
+    AvuClipRange *range3 = [AvuClipRange clipRangeAttach:20 start:5 end:15];
+    AvuClipRange *range4 = [AvuClipRange clipRangeAttach:30 start:5 end:15];
     
     AvuConfig *config = [[AvuConfig alloc] init];
     [config.videoPaths addObject:path1];
@@ -261,14 +279,10 @@
             [self.glPreviews[i] processPixelBuffer:buffer.pixelBuffer];
         }
     }
-    // NSLog(@"[yjx] request video buffer time: %lf", CFAbsoluteTimeGetCurrent()-self.startTime);
-    // NSLog(@"[yjx] audio time: %lf", [self.multiAudioUnit getAudioPts]);
 }
 
 #pragma mark - Action
 - (void)_play {
-    self.startTime = 0.0f;
-    
     if (!self.glPreviews) {
         [self _setupPreviews];
     }
@@ -287,10 +301,16 @@
     
     if (!self.debugDragSeek) {
         if (!self.videoLink) {
+            self.startTime = 0.0f;
             self.videoLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(_playVideo)];
             self.videoLink.preferredFramesPerSecond = 30;
             [self.videoLink addToRunLoop:NSRunLoop.mainRunLoop forMode:NSRunLoopCommonModes];
         }
+    }
+    [self.multiAudioUnit start];
+    [self.multiVideoUnit start];
+    if (self.videoLink) {
+        [self.videoLink setPaused:NO];
     }
 }
 
@@ -300,64 +320,68 @@
 }
 
 - (void)_pause {
+    if (self.videoLink) {
+        [self.videoLink setPaused:YES];
+    }
+    
+    if (self.multiVideoUnit) {
+        [self.multiVideoUnit pause];
+    }
+    
+    if (self.multiAudioUnit) {
+        [self.multiAudioUnit pause];
+    }
 }
 
 - (void)_remove {
-    NSString *path2 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/beauty.mp4"];
-    NSString *path3 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/dilireba.mp4"];
-    NSString *path4 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/yangmi.mp4"];
-    
-    AvuConfig *config = [[AvuConfig alloc] init];
-    config.updateType = AvuUpdateType_Remove;
-    
-    [config.videoPaths addObject:path2];
-    [config.videoPaths addObject:path3];
-    [config.videoPaths addObject:path4];
-    [self.multiVideoUnit updateClip:config];
-    
-    // 音频
-    [config.audioPaths addObject:path2];
-    [config.audioPaths addObject:path3];
-    [config.audioPaths addObject:path4];
-    [self.multiAudioUnit updateClip:config];
+//    NSString *path2 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/beauty.mp4"];
+//    NSString *path3 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/dilireba.mp4"];
+//    NSString *path4 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/yangmi.mp4"];
+//
+//    AvuConfig *config = [[AvuConfig alloc] init];
+//    config.updateType = AvuUpdateType_Remove;
+//
+//    [config.videoPaths addObject:path2];
+//    [config.videoPaths addObject:path3];
+//    [config.videoPaths addObject:path4];
+//    [self.multiVideoUnit updateConfig:config];
+//
+//    // 音频
+//    [config.audioPaths addObject:path2];
+//    [config.audioPaths addObject:path3];
+//    [config.audioPaths addObject:path4];
+//    [self.multiAudioUnit updateConfig:config];
 }
 
 - (void)_add {
-    NSString *path4 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/yangmi.mp4"];
-    
-    AvuConfig *config = [[AvuConfig alloc] init];
-    config.updateType = AvuUpdateType_Add;
-    // 注意设置 attachTime
-    AvuClipRange *range4 = [AvuClipRange clipRangeAttach:self.playTime start:0 end:10];
-    config.clipRanges[path4] = range4;
-    [config.videoPaths addObject:path4];
-    [self.multiVideoUnit updateClip:config];
-    
-    // 音频
-    [config.audioPaths addObject:path4];
-    [self.multiAudioUnit updateClip:config];
+//    NSString *path4 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/yangmi.mp4"];
+//
+//    AvuConfig *config = [[AvuConfig alloc] init];
+//    config.updateType = AvuUpdateType_Add;
+//    // 注意设置 attachTime
+//    AvuClipRange *range4 = [AvuClipRange clipRangeAttach:self.playTime start:0 end:10];
+//    config.clipRanges[path4] = range4;
+//    [config.videoPaths addObject:path4];
+//    [self.multiVideoUnit updateConfig:config];
+//
+//    // 音频
+//    [config.audioPaths addObject:path4];
+//    [self.multiAudioUnit updateConfig:config];
 }
 
-- (void)_volume {
-    NSString *path1 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/basket.mp4"];
-    AvuConfig *config = [[AvuConfig alloc] init];
-    config.updateType = AvuUpdateType_Volume;
-    [config.audioPaths addObject:path1];
-    config.audioVolumes[path1] = @0.1;
-    [self.multiAudioUnit updateClip:config];
+- (void)_operateVolume {
+//    NSString *path1 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/basket.mp4"];
+//    AvuConfig *config = [[AvuConfig alloc] init];
+//    config.updateType = AvuUpdateType_Volume;
+//    [config.audioPaths addObject:path1];
+//    config.audioVolumes[path1] = @0.1;
+//    [self.multiAudioUnit updateConfig:config];
 }
 
 - (void)_sliderValueChange {
-    NSString *path1 = [NSBundle.mainBundle.bundlePath stringByAppendingString:@"/basket.mp4"];
-    AvuConfig *config = [[AvuConfig alloc] init];
-    config.updateType = AvuUpdateType_Volume;
-    [config.audioPaths addObject:path1];
-    config.audioVolumes[path1] = @(_slider.value);
-    [self.multiAudioUnit updateClip:config];
-    
     if (!self.debugDragSeek) return;
     
-    double reqTime = _slider.value * 10;
+    double reqTime = _slider.value * 40;
     [self.multiVideoUnit seekToTime:reqTime];
     NSArray<NSDictionary<NSString *, AvuBuffer *> *> *buffers = [self.multiVideoUnit requestVideoBuffersAt:reqTime];
     for (int i = 0; i < buffers.count; i++) {
@@ -385,7 +409,7 @@
     } else if ([content.text isEqualToString:@"删除片段"]) {
         [self _remove];
     } else if ([content.text isEqualToString:@"调整音量"]) {
-        [self _volume];
+        [self _operateVolume];
     }
     return;
 }

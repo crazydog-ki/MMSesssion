@@ -43,6 +43,8 @@
 - (void)seekToTime:(double)time isForce:(BOOL)isForce {
     for (int i = 0; i < self.videoClips.count; i++) {
         NSString *videoClip = self.videoClips[i];
+        AvuClipRange *clipRange = self.clipRangeMap[videoClip];
+        if (![AvuClipRange isClipRange:clipRange containsTime:time]) continue;
         AvuVideoDecodeUnit *videoDecode = self.decoderMap[videoClip];
         [videoDecode seekToTime:time isForce:isForce];
     }
@@ -52,7 +54,31 @@
     [self seekToTime:time isForce:NO];
 }
 
-- (void)updateClip:(AvuConfig *)config {
+- (void)start {
+    for (int i = 0; i < self.videoClips.count; i++) {
+        NSString *videoClip = self.videoClips[i];
+        AvuVideoDecodeUnit *videoDecoder = self.decoderMap[videoClip];
+        [videoDecoder start];
+    }
+}
+
+- (void)pause {
+    for (int i = 0; i < self.videoClips.count; i++) {
+        NSString *videoClip = self.videoClips[i];
+        AvuVideoDecodeUnit *videoDecoder = self.decoderMap[videoClip];
+        [videoDecoder pause];
+    }
+}
+
+- (void)stop {
+    for (int i = 0; i < self.videoClips.count; i++) {
+        NSString *videoClip = self.videoClips[i];
+        AvuVideoDecodeUnit *videoDecoder = self.decoderMap[videoClip];
+        [videoDecoder stop];
+    }
+}
+
+- (void)updateConfig:(AvuConfig *)config {
     dispatch_sync(self.multiVideoQueue, ^{
         AvuUpdateType type = config.updateType;
         NSArray *videoPaths = config.videoPaths;

@@ -211,6 +211,8 @@
 }
 
 - (void)captureOutput:(AVCaptureOutput *)output didDropSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection {
-    NSLog(@"[yjx] camera drop sampleBuffer");
+    CFStringRef reason = CMGetAttachment(sampleBuffer, kCMSampleBufferAttachmentKey_DroppedFrameReason, NULL);
+    CMTime pts = sampleBuffer ? CMSampleBufferGetPresentationTimeStamp(sampleBuffer) : CMTimeMake(-1, 1);
+    NSLog(@"[yjx] camera drop sampleBuffer, pts=%lf, reason=%@", CMTimeGetSeconds(pts), (__bridge NSString *)reason);
 }
 @end

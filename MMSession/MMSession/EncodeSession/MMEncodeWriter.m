@@ -4,6 +4,8 @@
 
 #import "MMEncodeWriter.h"
 
+static const char *WRITER_QUEUE = "mmsession_camera_compile_queue";
+
 @interface MMEncodeWriter ()
 @property (nonatomic, strong) MMEncodeConfig *config;
 @property (nonatomic, strong) dispatch_queue_t writerQueue;
@@ -23,7 +25,7 @@
 - (instancetype)initWithConfig:(MMEncodeConfig *)config {
     if (self = [super init]) {
         _config = config;
-        _writerQueue = dispatch_queue_create("mmsession_camera_compile_queue", DISPATCH_QUEUE_SERIAL);
+        _writerQueue = dispatch_queue_create(WRITER_QUEUE, DISPATCH_QUEUE_SERIAL);
         _isFirstFrame = YES;
         _stopFlag = YES;
         [self _initWriter];
@@ -49,7 +51,7 @@
         } else {
             handler(self.config.outputUrl, nil);
         }
-        NSLog(@"[yjx] complete encode success");
+        NSLog(@"[yjx] write encode finish");
     };
     
     dispatch_sync(_writerQueue, ^{
@@ -82,18 +84,16 @@
     
     CFRetain(sampleBuffer);
     dispatch_async(_writerQueue, ^{
-        if (isVideo) {
-            CMTime frameTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
-            double ptsSec = CMTimeGetSeconds(frameTime);
-            
-            if (self.isFirstFrame) {
-                if (self.assetWriter.status == AVAssetWriterStatusUnknown && [self.assetWriter startWriting]) {
-                    NSLog(@"[yjx] start encode success, pts: %lf", ptsSec);
-                }
-                [self.assetWriter startSessionAtSourceTime:frameTime];
-                self.isFirstFrame = NO;
+        CMTime frameTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
+        double ptsSec = CMTimeGetSeconds(frameTime);
+        if (self.isFirstFrame) {
+            if (self.assetWriter.status == AVAssetWriterStatusUnknown && [self.assetWriter startWriting]) {
+                NSLog(@"[yjx] start encode success, pts: %lf", ptsSec);
             }
-            
+            [self.assetWriter startSessionAtSourceTime:frameTime];
+            self.isFirstFrame = NO;
+        }
+        if (isVideo) {
             BOOL onlyMux = self->_config.onlyMux;
             CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
             if (self.videoWriterInput.readyForMoreMediaData && self.assetWriter.status == AVAssetWriterStatusWriting) {
@@ -107,17 +107,6 @@
                 NSLog(@"[yjx] encode drop video frame-2, pts: %lf", ptsSec);
             }
         } else {
-            CMTime frameTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
-            double ptsSec = CMTimeGetSeconds(frameTime);
-            
-            if (self.isFirstFrame) {
-                if (self.assetWriter.status == AVAssetWriterStatusUnknown && [self.assetWriter startWriting]) {
-                    NSLog(@"[yjx] start encode success, pts: %lf", ptsSec);
-                }
-                [self.assetWriter startSessionAtSourceTime:frameTime];
-                self.isFirstFrame = NO;
-            }
-            
             if (self.audioWriterInput.readyForMoreMediaData && self.assetWriter.status == AVAssetWriterStatusWriting) {
                 if (![self.audioWriterInput appendSampleBuffer:sampleBuffer]) {
                     NSLog(@"[yjx] encode drop audio frame-1, pts: %lf", ptsSec);

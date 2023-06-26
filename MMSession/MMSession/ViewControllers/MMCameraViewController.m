@@ -8,6 +8,14 @@
 #import "MMVideoGLPreview.h"
 #import "MMEncodeWriter.h"
 
+static NSString *START_PREVIEW = @"开始预览";
+static NSString *STOP_PREVIEW = @"停止预览";
+static NSString *START_RECORD = @"开始录制";
+static NSString *STOP_RECORD = @"停止录制";
+static NSString *SWITCH_CAMERA = @"切换摄像头";
+static NSString *CENTER_FOCUS = @"中心点对焦";
+static NSString *CENTER_EXPOSE = @"中心点曝光";
+
 @interface MMCameraViewController () <TTGTextTagCollectionViewDelegate>
 @property (nonatomic, strong) TTGTextTagCollectionView *collectionView;
 
@@ -25,34 +33,9 @@
     
     [self _setupCollectionView];
     [self _setupCamera];
-    weakify(self);
-    self.camera.firstFrameBlk = ^{ // 回调首帧
-        strongify(self);
-        [self _setupPreview];
-        [self _setupWriter];
-        
-        weakify(self);
-        self.camera.videoOutputCallback = ^(CMSampleBufferRef  _Nonnull sampleBuffer) {
-            strongify(self);
-            dispatch_sync(dispatch_get_main_queue(), ^{
-                MMSampleData *videoData = [[MMSampleData alloc] init];
-                videoData.dataType = MMSampleDataType_Decoded_Video;
-                videoData.sampleBuffer = sampleBuffer;
-                [self.glPreview processSampleData:videoData];
-                [self.writer processSampleData:videoData];
-            });
-        };
-        
-        self.camera.audioOutputCallback = ^(CMSampleBufferRef  _Nonnull sampleBuffer) {
-            strongify(self);
-            dispatch_sync(dispatch_get_main_queue(), ^{
-                MMSampleData *audioData = [[MMSampleData alloc] init];
-                audioData.dataType = MMSampleDataType_Decoded_Audio;
-                audioData.sampleBuffer = sampleBuffer;
-                [self.writer processSampleData:audioData];
-            });
-        };
-    };
+    
+    // 启动相机
+    [self _startPreview];
 }
 
 - (void)dealloc {
@@ -64,6 +47,35 @@
     MMCameraSessionConfig *cameraConfig = [[MMCameraSessionConfig alloc] init];
     self.camera = [[MMCameraSession alloc] initWithConfig:cameraConfig];
     // [self.camera setVideoPreviewLayerForSession:self.layerPreview.videoPreviewLayer];
+    
+    weakify(self);
+    self.camera.firstFrameBlk = ^{ // 相机首帧
+        NSLog(@"[yjx] camera output first frame");
+        strongify(self);
+        [self _setupPreview];
+        [self _setupWriter];
+    };
+    
+    self.camera.videoOutputCallback = ^(CMSampleBufferRef  _Nonnull sampleBuffer) {
+        strongify(self);
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            MMSampleData *videoData = [[MMSampleData alloc] init];
+            videoData.dataType = MMSampleDataType_Decoded_Video;
+            videoData.sampleBuffer = sampleBuffer;
+            [self.glPreview processSampleData:videoData];
+            [self.writer processSampleData:videoData];
+        });
+    };
+    
+    self.camera.audioOutputCallback = ^(CMSampleBufferRef  _Nonnull sampleBuffer) {
+        strongify(self);
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            MMSampleData *audioData = [[MMSampleData alloc] init];
+            audioData.dataType = MMSampleDataType_Decoded_Audio;
+            audioData.sampleBuffer = sampleBuffer;
+            [self.writer processSampleData:audioData];
+        });
+    };
 }
 
 - (void)_setupPreview {
@@ -84,8 +96,7 @@
 
 - (void)_setupWriter {
     NSString *docPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
-
-    NSString *outputPath = [docPath stringByAppendingString:@"/yjx.mov"];
+    NSString *outputPath = [docPath stringByAppendingString:@"/camera.mov"];
     if ([[NSFileManager defaultManager] fileExistsAtPath:outputPath]) {
         [[NSFileManager defaultManager] removeItemAtPath:outputPath error:nil];
     }
@@ -131,25 +142,25 @@
     style.cornerRadius = 0.0f;
     style.borderWidth = 0.0f;
     
-    TTGTextTag *pickTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"开始预览"] style:style];
+    TTGTextTag *pickTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:START_PREVIEW] style:style];
     [tagCollectionView addTag:pickTag];
     
-    TTGTextTag *concatTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"停止预览"] style:style];
+    TTGTextTag *concatTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:STOP_PREVIEW] style:style];
     [tagCollectionView addTag:concatTag];
     
-    TTGTextTag *decodeTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"开始录制"] style:style];
+    TTGTextTag *decodeTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:START_RECORD] style:style];
     [tagCollectionView addTag:decodeTag];
     
-    TTGTextTag *playVideoTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"停止录制"] style:style];
+    TTGTextTag *playVideoTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:STOP_RECORD] style:style];
     [tagCollectionView addTag:playVideoTag];
     
-    TTGTextTag *switchPositionTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"切换摄像头"] style:style];
+    TTGTextTag *switchPositionTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:SWITCH_CAMERA] style:style];
     [tagCollectionView addTag:switchPositionTag];
     
-    TTGTextTag *focusTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"中心点对焦"] style:style];
+    TTGTextTag *focusTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:CENTER_FOCUS] style:style];
     [tagCollectionView addTag:focusTag];
     
-    TTGTextTag *exposureTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"中心点曝光"] style:style];
+    TTGTextTag *exposureTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:CENTER_EXPOSE] style:style];
     [tagCollectionView addTag:exposureTag];
 }
 
@@ -167,7 +178,7 @@
 
 - (void)_finishRecord {
     [self.writer stopEncodeWithCompleteHandle:^(NSURL * _Nullable fileUrl, NSError * _Nullable error) {
-        NSLog(@"[yjx] writer output url: %@", fileUrl);
+        NSLog(@"[yjx] camera record output url: %@", fileUrl);
         /// 保存相册，便于调试
         if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(fileUrl.path)) {
             UISaveVideoAtPathToSavedPhotosAlbum(fileUrl.path, nil, nil, nil);
@@ -193,19 +204,19 @@
                       atIndex:(NSUInteger)index {
     TTGTextTagStringContent *content = (TTGTextTagStringContent *)tag.content;
     NSString *text = content.text;
-    if ([text isEqualToString:@"开始预览"]) {
+    if ([text isEqualToString:START_PREVIEW]) {
         [self _startPreview];
-    } else if ([text isEqualToString:@"停止预览"]) {
+    } else if ([text isEqualToString:STOP_PREVIEW]) {
         [self _stopPreview];
-    } else if ([text isEqualToString:@"开始录制"]) {
+    } else if ([text isEqualToString:START_RECORD]) {
         [self _startRecord];
-    } else if ([text isEqualToString:@"停止录制"]) {
+    } else if ([text isEqualToString:STOP_RECORD]) {
         [self _finishRecord];
-    } else if ([text isEqualToString:@"切换摄像头"]) {
+    } else if ([text isEqualToString:SWITCH_CAMERA]) {
         [self _switchCamera];
-    } else if ([text isEqualToString:@"中心点对焦"]) {
+    } else if ([text isEqualToString:CENTER_FOCUS]) {
         [self _focusAtCenter];
-    } else if ([text isEqualToString:@"中心点曝光"]) {
+    } else if ([text isEqualToString:CENTER_EXPOSE]) {
         [self _exposeAtCenter];
     }
     return;

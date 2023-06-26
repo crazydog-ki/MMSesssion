@@ -6,7 +6,12 @@
 #import "MMCameraViewController.h"
 #import "MMAVFDViewController.h"
 #import "MMAVFFTBViewController.h"
-#import "AvuTestViewController.h"
+
+static NSString *CELL_ID = @"mmsession_cell_identifier";
+
+static NSString *CAMERA = @"Camera";
+static NSString *AVFOUNDATION = @"AVFoundation";
+static NSString *FFMPEG_VT = @"FFmpeg+VT";
 
 @interface MMMainViewController () <UITableViewDataSource, UITableViewDelegate>
 @property (nonatomic, strong) NSArray<NSString *> *data;
@@ -17,12 +22,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"MMSession";
-    self.data = @[@"相机",
-                  @"AVFoundation",
-                  @"FFmpeg & ToolBox",
-                  @"音视频多轨",
-                  @"音视频特效",
-                  @"AVU",
+    self.data = @[CAMERA,
+                  AVFOUNDATION,
+                  FFMPEG_VT,
     ];
     
     UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
@@ -46,10 +48,9 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *indentifier = @"mmsession_cell_indentifier";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:indentifier];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CELL_ID];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:indentifier];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CELL_ID];
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.textLabel.text = self.data[indexPath.row];
@@ -63,14 +64,12 @@
     [self _transAnimation];
     
     NSString *selectedTex = self.data[indexPath.row];
-    if ([selectedTex isEqualToString:@"相机"]) {
+    if ([selectedTex isEqualToString:CAMERA]) {
         [self.navigationController pushViewController:[[MMCameraViewController alloc] init] animated:NO];
-    } else if ([selectedTex isEqualToString:@"AVFoundation"])  {
+    } else if ([selectedTex isEqualToString:AVFOUNDATION])  {
         [self.navigationController pushViewController:[[MMAVFDViewController alloc] init] animated:NO];
-    } else if ([selectedTex isEqualToString:@"FFmpeg & ToolBox"]) {
+    } else if ([selectedTex isEqualToString:FFMPEG_VT]) {
         [self.navigationController pushViewController:[[MMAVFFTBViewController alloc] init] animated:NO];
-    } else if ([selectedTex isEqualToString:@"AVU"]) {
-        [self.navigationController pushViewController:[[AvuTestViewController alloc] init] animated:NO];
     }
 }
 

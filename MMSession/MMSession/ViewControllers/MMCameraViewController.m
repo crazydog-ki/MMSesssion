@@ -39,6 +39,7 @@ static NSString *CENTER_EXPOSE = @"中心点曝光";
 }
 
 - (void)dealloc {
+    [self _stopPreview];
     NSLog(@"[yjx] camera controller destroy");
 }
 
@@ -63,6 +64,7 @@ static NSString *CENTER_EXPOSE = @"中心点曝光";
             videoData.dataType = MMSampleDataType_Decoded_Video;
             videoData.sampleBuffer = sampleBuffer;
             [self.glPreview processSampleData:videoData];
+            // NSLog(@"[yjx] video pts: %lf", CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(sampleBuffer)));
             [self.writer processSampleData:videoData];
         });
     };
@@ -73,6 +75,7 @@ static NSString *CENTER_EXPOSE = @"中心点曝光";
             MMSampleData *audioData = [[MMSampleData alloc] init];
             audioData.dataType = MMSampleDataType_Decoded_Audio;
             audioData.sampleBuffer = sampleBuffer;
+            // NSLog(@"[yjx] audio pts: %lf", CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(sampleBuffer)));
             [self.writer processSampleData:audioData];
         });
     };

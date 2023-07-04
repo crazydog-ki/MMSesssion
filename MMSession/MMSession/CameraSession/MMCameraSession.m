@@ -3,6 +3,7 @@
 // Github : https://github.com/crazydog-ki
 
 #import "MMCameraSession.h"
+#import "MMAudioCapture.h"
 
 @interface MMCameraSession ()<AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate>
 @property (nonatomic, strong) dispatch_queue_t cameraQueue;
@@ -17,6 +18,7 @@
 @property (nonatomic, strong) AVCaptureDevice *audioDevice;
 @property (nonatomic, strong) AVCaptureDeviceInput *audioDeviceInput;
 @property (nonatomic, strong) AVCaptureAudioDataOutput *audioOutput;
+@property (nonatomic, strong) MMAudioCapture *audioCapture;
 
 @property (nonatomic, assign) CGSize videoSize;
 @property (nonatomic, assign) BOOL isFirstFrame;
@@ -40,12 +42,14 @@
 - (void)startCapture {
     dispatch_sync(_cameraQueue, ^{
         [_captureSession startRunning];
+        [_audioCapture start];
     });
 }
 
 - (void)stopCapture {
-    dispatch_sync(_cameraQueue, ^{
-        [_captureSession stopRunning];
+    dispatch_async(_cameraQueue, ^{
+        [self.captureSession stopRunning];
+        [self.audioCapture stop];
     });
 }
 
@@ -114,7 +118,6 @@
         [_videoDevice setExposureMode:mode];
         [_videoDevice unlockForConfiguration];
         NSLog(@"[yjx] set camera focus success, point: [%lf, %lf], mode: %ld", point.x, point.y, mode);
-        
     });
 }
 
@@ -168,8 +171,8 @@
 }
 
 - (void)_setupAudioStream {
+    /*
     _audioQueue = dispatch_queue_create("mmsession_camera_audio_queue", DISPATCH_QUEUE_SERIAL);
-    
     _audioDevice = [AVCaptureDevice defaultDeviceWithDeviceType:AVCaptureDeviceTypeBuiltInMicrophone mediaType:AVMediaTypeAudio position:AVCaptureDevicePositionUnspecified];
     NSError *error = nil;
     _audioDeviceInput = [[AVCaptureDeviceInput alloc] initWithDevice:_audioDevice error:&error];
@@ -183,6 +186,16 @@
     }
     
     [_audioOutput setSampleBufferDelegate:self queue:_audioQueue];
+     */
+    MMAudioCapture *audioCapture = [[MMAudioCapture alloc] init];
+    weakify(self);
+    [audioCapture setAudioOutput:^(CMSampleBufferRef  _Nonnull sampleBuffer) {
+        strongify(self);
+        if (self.audioOutputCallback) {
+            self.audioOutputCallback(sampleBuffer);
+        }
+    }];
+    self.audioCapture = audioCapture;
 }
 
 #pragma mark - AVCaptureVideoDataOutputSampleBufferDelegate

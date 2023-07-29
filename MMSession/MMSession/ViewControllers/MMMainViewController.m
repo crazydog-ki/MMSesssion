@@ -22,6 +22,7 @@ static NSString *FFMPEG_VT = @"FFmpeg+VT";
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"MMSession";
+    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:UIColor.whiteColor}];
     self.data = @[CAMERA,
                   AVFOUNDATION,
                   FFMPEG_VT,

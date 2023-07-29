@@ -6,9 +6,9 @@ target 'MMSession' do
   use_frameworks!
 
   # Pods for MMSession
-  pod 'Masonry'
-  pod 'TZImagePickerController'
-  pod "TTGTagCollectionView"
+  pod 'Masonry', '1.1.0'
+  pod 'TZImagePickerController', '3.6.2'
+  pod "TTGTagCollectionView", '2.0.1'
   
 end
 
@@ -16,7 +16,7 @@ post_install do |installer|
   installer.generated_projects.each do |project|
     project.targets.each do |target|
         target.build_configurations.each do |config|
-            config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+            config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '16.0'
          end
     end
   end

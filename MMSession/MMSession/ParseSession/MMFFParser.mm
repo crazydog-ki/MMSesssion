@@ -30,6 +30,7 @@ extern "C" {
 @property (nonatomic, strong) NSMutableArray *nextVideoNodes;
 @property (nonatomic, strong) NSMutableArray *nextAudioNodes;
 @property (nonatomic, assign) BOOL stopFlag;
+@property (nonatomic, assign) BOOL hasSendKeyframe;
 @end
 
 @implementation MMFFParser
@@ -41,6 +42,7 @@ extern "C" {
         _nextAudioNodes = [NSMutableArray array];
         _config = config;
         _stopFlag = NO;
+        _hasSendKeyframe = NO;
         [self _initFFParser];
     }
     return self;
@@ -97,20 +99,29 @@ extern "C" {
             int ret = -1;
             ret = av_read_frame(fmtCtx, packet);
             
-            if (ret == AVERROR_EOF) {
-                sampleData.statusFlag = MMSampleDataFlagEnd;
-                if (self.nextVideoNodes) {
-                    for (id<MMSessionProcessProtocol> node in self.nextVideoNodes) {
-                        [node processSampleData:sampleData];
+            if (ret < 0) { // error or eof
+                if (ret == AVERROR_EOF) {
+                    sampleData.statusFlag = MMSampleDataFlagEnd;
+                    if (self.nextVideoNodes) {
+                        for (id<MMSessionProcessProtocol> node in self.nextVideoNodes) {
+                            [node processSampleData:sampleData];
+                        }
                     }
-                }
-                if (self.nextAudioNodes) {
-                    for (id<MMSessionProcessProtocol> node in self.nextAudioNodes) {
-                        [node processSampleData:sampleData];
+                    if (self.nextAudioNodes) {
+                        for (id<MMSessionProcessProtocol> node in self.nextAudioNodes) {
+                            [node processSampleData:sampleData];
+                        }
                     }
+                    [self _freeAll];
+                } else {
+                    NSLog(@"[yjx] av_read_frame error - %d", ret);
+                    return;
                 }
-                [self _freeAll];
-            } else if (packet->stream_index == videoIdx) { /// 视频轨
+            }
+            
+            if (!packet->data || packet->size<=0) continue;
+            
+            if (packet->stream_index == videoIdx) { /// 视频轨
                 if (!isVideo) continue;
                 /// bsf对SPS、PPS等数据进行格式转换，使其可被解码器处理
                 const AVBitStreamFilter *pFilter = NULL;
@@ -122,12 +133,19 @@ extern "C" {
                     pFilter = av_bsf_get_by_name("hevc_mp4toannexb");
                     videoFormat = MMVideoFormatH265;
                 }
-                if (!self->_bsfCtx) {
-                    av_bsf_alloc(pFilter, &self->_bsfCtx);
-                    avcodec_parameters_copy(self->_bsfCtx->par_in, videoStream->codecpar);
-                    av_bsf_init(self->_bsfCtx);
+                if (!_bsfCtx) {
+                    av_bsf_alloc(pFilter, &_bsfCtx);
+                    avcodec_parameters_copy(_bsfCtx->par_in, videoStream->codecpar);
+                    av_bsf_init(_bsfCtx);
                 }
+                av_bsf_send_packet(_bsfCtx, packet);
+                av_bsf_receive_packet(_bsfCtx, packet);
                 
+                /// 确保发往decoder的第一个packet为Key-Frame
+                bool isKey = (packet->flags & AV_PKT_FLAG_KEY) == AV_PKT_FLAG_KEY;
+                NSLog(@"[yjx] packet is keyframe - %d, pts - %lld, dts - %lld", isKey, packet->pts, packet->dts);
+                
+                /// 填充demux数据
                 int pktSize = packet->size;
                 uint8_t *videoData = (uint8_t *)malloc(pktSize);
                 memcpy(videoData, packet->data, pktSize);
@@ -147,11 +165,7 @@ extern "C" {
                 videoInfo.duration      = packet->duration * av_q2d(videoStream->time_base);
                 videoInfo.videoIdx      = videoIdx;
                 videoInfo.format        = videoFormat;
-                
-                /// bsf process
-                av_bsf_send_packet(self->_bsfCtx, packet);
-                av_bsf_receive_packet(self->_bsfCtx, packet);
-                videoInfo.parsedData = packet;
+                videoInfo.parsedData    = packet;
                 
                 sampleData.dataType = MMSampleDataType_Parsed_Video;
                 sampleData.videoInfo  = videoInfo;

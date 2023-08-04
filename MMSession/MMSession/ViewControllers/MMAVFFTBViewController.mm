@@ -11,6 +11,7 @@
 #import "MMEncodeWriter.h"
 #import "MMVTEncoder.h"
 #import "MMAudioRecorder.h"
+#import "MMVTDecoder.h"
 
 #include <iostream>
 #include <fstream>
@@ -36,6 +37,7 @@ using namespace std;
 @property (nonatomic, strong) MMAudioQueuePlayer *audioPlayer;
 @property (nonatomic, strong) MMEncodeWriter *encodeWriter;
 @property (nonatomic, strong) MMVTEncoder *vtEncoder;
+@property (nonatomic, strong) MMVTDecoder *vtDecoder;
 
 @property (nonatomic, strong) NSThread *videoThread;
 @property (nonatomic, strong) NSThread *audioThread;
@@ -132,13 +134,17 @@ using namespace std;
 }
 
 - (void)_setupDecoder {
-    if (_ffVideoDecoder || _ffAudioDecoder) return;
+    //if (_ffVideoDecoder || _ffAudioDecoder) return;
+    if (_vtDecoder || _ffAudioDecoder) return;
     
     MMDecodeConfig *videoConfig = [[MMDecodeConfig alloc] init];
     videoConfig.decodeType = MMFFDecodeType_Video;
     videoConfig.fmtCtx = (void *)_ffVideoParser.getFmtCtx;
-    videoConfig.needYuv = self.needWriteYuv;
-    _ffVideoDecoder = [[MMFFDecoder alloc] initWithConfig:videoConfig];
+//    videoConfig.needYuv = self.needWriteYuv;
+//    _ffVideoDecoder = [[MMFFDecoder alloc] initWithConfig:videoConfig];
+    videoConfig.vtDesc = _ffVideoParser.getVtDesc;
+    videoConfig.targetSize = _ffVideoParser.size;
+    _vtDecoder = [[MMVTDecoder alloc] initWithConfig:videoConfig];
     
     MMDecodeConfig *audioConfig = [[MMDecodeConfig alloc] init];
     audioConfig.decodeType = MMFFDecodeType_Audio;
@@ -165,7 +171,9 @@ using namespace std;
 
     weakify(self);
     [self.glPreview setRenderEndBlk:^{
+        NSLog(@"[yjx] video render end");
         strongify(self);
+        self.isReady = NO;
         self.videoPts = 0.0f;
         
         [self.videoThread cancel];
@@ -183,7 +191,9 @@ using namespace std;
     
     weakify(self);
     [self.audioPlayer setPlayEndBlk:^{
+        NSLog(@"[yjx] audio render end");
         strongify(self);
+        self.isReady = NO;
         self.audioPts = 0.0f;
         
         [self.audioThread cancel];
@@ -342,11 +352,11 @@ using namespace std;
     }
     
     /**视频处理链路
-     Demux(FFmpeg) -> Decode(FFmpeg) -> Render(OpenGL ES)
+     Demux(FFmpeg) -> Decode(VideoToolBox) -> Render(OpenGL ES)
                                      -> Encode(VideoToolBox) -> Mux(AVAssetWriter)
      */
-    [self.ffVideoParser addNextVideoNode:self.ffVideoDecoder];
-    [self.ffVideoDecoder addNextVideoNode:self.glPreview];
+    [self.ffVideoParser addNextVideoNode:self.vtDecoder];
+    [self.vtDecoder addNextVideoNode:self.glPreview];
     if (self.vtEncoder) {
         [self.ffVideoDecoder addNextVideoNode:self.vtEncoder];
     }
@@ -369,7 +379,8 @@ using namespace std;
 }
 
 - (void)_playVideo {
-    while (self.isReady && self.ffVideoParser && self.ffVideoDecoder && self.glPreview) {
+    // while (self.isReady && self.ffVideoParser && self.ffVideoDecoder && self.glPreview) {
+    while (self.isReady && self.ffVideoParser && self.vtDecoder && self.glPreview) {
         while (self.audioPts <= self.videoPts) {
             [NSThread sleepForTimeInterval:0.0001];
         }

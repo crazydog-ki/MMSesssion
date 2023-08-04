@@ -278,13 +278,16 @@ static const GLfloat kColorConversion709[] = {
     }
     [self _cleanUpTextures];
     if (!_videoTextureCache) {
+        /*高效地将CVPixelBufferRef对象转换为CVOpenGLESTextureRef对象，直接被OpenGL ES使用.*/
         err = CVOpenGLESTextureCacheCreate(kCFAllocatorDefault, NULL, self.context, NULL, &_videoTextureCache);
     }
     
     int frameWidth = (int)CVPixelBufferGetWidth(buffer);
     int frameHeight = (int)CVPixelBufferGetHeight(buffer);
     /// Y平面
-    glActiveTexture(GL_TEXTURE0);
+    glActiveTexture(GL_TEXTURE0); //指定当前活动的纹理单元
+    /*该函数提供一种高效的方式实现CVPixelBufferRef到CVOpenGLESTextureRef的转化，避免数据复制的开销。
+      注意：传入的PixelBuffer必须支持IOSurface.*/
     err = CVOpenGLESTextureCacheCreateTextureFromImage(kCFAllocatorDefault,
                                                        _videoTextureCache,
                                                        buffer,
@@ -295,8 +298,9 @@ static const GLfloat kColorConversion709[] = {
                                                        frameHeight,
                                                        GL_LUMINANCE,
                                                        GL_UNSIGNED_BYTE,
-                                                       0,
+                                                       0, //0 Plane
                                                        &_lumaTexture);
+    //将一个已经创建的纹理绑定到当前活动的纹理单元
     glBindTexture(CVOpenGLESTextureGetTarget(_lumaTexture), CVOpenGLESTextureGetName(_lumaTexture));
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -315,7 +319,7 @@ static const GLfloat kColorConversion709[] = {
                                                        frameHeight / 2,
                                                        GL_LUMINANCE_ALPHA,
                                                        GL_UNSIGNED_BYTE,
-                                                       1,
+                                                       1, //1 Plane
                                                        &_chromaTexture);
     glBindTexture(CVOpenGLESTextureGetTarget(_chromaTexture), CVOpenGLESTextureGetName(_chromaTexture));
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

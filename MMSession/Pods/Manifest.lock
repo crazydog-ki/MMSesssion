@@ -4,9 +4,9 @@ PODS:
   - TZImagePickerController (3.6.2)
 
 DEPENDENCIES:
-  - Masonry
-  - TTGTagCollectionView
-  - TZImagePickerController
+  - Masonry (= 1.1.0)
+  - TTGTagCollectionView (= 2.0.1)
+  - TZImagePickerController (= 3.6.2)
 
 SPEC REPOS:
   trunk:
@@ -19,6 +19,6 @@ SPEC CHECKSUMS:
   TTGTagCollectionView: 29d01ece199c257943ba490e9989734382cda5ae
   TZImagePickerController: e1775fedb4058b78000fb00d9f6eeaedb445a1ed
 
-PODFILE CHECKSUM: 6088ece91b3c8377891111c729f6496ca6362249
+PODFILE CHECKSUM: ede2ad478107d241c04fd13463bb7b57c05d5adc
 
 COCOAPODS: 1.11.2

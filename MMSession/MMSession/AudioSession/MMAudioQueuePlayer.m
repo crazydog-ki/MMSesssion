@@ -121,7 +121,6 @@ static const NSInteger kBufferCaches   = 3;
         if (self.playEndBlk) {
             self.playEndBlk();
         }
-        NSLog(@"[yjx] end audio play");
         return;
     }
 

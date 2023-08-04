@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithConfig:(MMParseConfig *)config;
 - (void)seekToTime:(double)time;
 - (void *)getFmtCtx;
+- (CMVideoFormatDescriptionRef)getVtDesc;
+- (CGSize)size;
 @end
 
 NS_ASSUME_NONNULL_END

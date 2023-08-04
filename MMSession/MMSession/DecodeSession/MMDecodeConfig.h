@@ -16,6 +16,9 @@ typedef NS_OPTIONS(NSUInteger, MMFFDecodeType) {
 @property (nonatomic, assign) MMFFDecodeType decodeType;
 @property (nonatomic, assign) BOOL needPcm;
 @property (nonatomic, assign) BOOL needYuv;
+//for vt
+@property (nonatomic, assign) CMVideoFormatDescriptionRef vtDesc;
+@property (nonatomic, assign) CGSize targetSize;
 @end
 
 NS_ASSUME_NONNULL_END

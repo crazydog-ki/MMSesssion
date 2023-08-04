@@ -75,6 +75,70 @@ extern "C" {
     return (void *)_fmtCtx;
 }
 
+- (CMVideoFormatDescriptionRef)getVtDesc {
+    CFMutableDictionaryRef extensions = CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+    CFDictionarySetValue(extensions, kCVImageBufferChromaLocationBottomFieldKey, kCVImageBufferChromaLocation_Left);
+    CFDictionarySetValue(extensions, kCVImageBufferChromaLocationTopFieldKey, kCVImageBufferChromaLocation_Left);
+    CFDictionarySetValue(extensions, CFSTR("FullRangeVideo"), kCFBooleanFalse);
+    
+    //par
+    CFMutableDictionaryRef par = CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+    _cfmap_setkeyvalue(par, kCVImageBufferPixelAspectRatioHorizontalSpacingKey, 0);
+    _cfmap_setkeyvalue(par, kCVImageBufferPixelAspectRatioVerticalSpacingKey, 0);
+    CFDictionarySetValue(extensions, CFSTR("CVPixelAspectRatio"), (CFTypeRef *)par);
+    
+    //atoms sps/pps/vps等信息
+    CFMutableDictionaryRef atoms = CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+    AVCodecParameters *codecParam = _videoStream->codecpar;
+    if (codecParam->codec_id == AV_CODEC_ID_H264) {
+        _cfmap_setdata(atoms, CFSTR("avcC"), (uint8_t*)_videoStream->codecpar->extradata, _videoStream->codecpar->extradata_size); //h264
+    } else if (codecParam->codec_id == AV_CODEC_ID_HEVC) {
+        _cfmap_setdata(atoms, CFSTR("hvcC"), (uint8_t*)_videoStream->codecpar->extradata, _videoStream->codecpar->extradata_size);
+    }
+    CFDictionarySetValue(extensions, kCMFormatDescriptionExtension_SampleDescriptionExtensionAtoms, (CFTypeRef *)atoms);
+    
+    CMVideoFormatDescriptionRef vtDesc = NULL;
+    OSStatus ret = CMVideoFormatDescriptionCreate(NULL,
+                                                  codecParam->codec_id == AV_CODEC_ID_H264 ? kCMVideoCodecType_H264 : kCMVideoCodecType_HEVC,
+                                                  codecParam->width,
+                                                  codecParam->height,
+                                                  extensions,
+                                                  &vtDesc);
+    if (!vtDesc) {
+        NSLog(@"[yjx] CMVideoFormatDescriptionCreate erro - %d", ret);
+    }
+    CFRelease(extensions);
+    CFRelease(atoms);
+    CFRelease(par);
+    return vtDesc;
+}
+
+- (CGSize)size {
+    return CGSizeMake(_videoStream->codecpar->width, _videoStream->codecpar->height);
+}
+
+void _cfmap_setkeyvalue(CFMutableDictionaryRef dict,
+                     CFStringRef key,
+                     int32_t value) {
+    CFNumberRef number;
+    number = CFNumberCreate(NULL, kCFNumberSInt32Type, &value);
+    CFDictionarySetValue(dict, key, number);
+    CFRelease(number);
+}
+
+void _cfmap_setdata(CFMutableDictionaryRef dict,
+                    CFStringRef key,
+                    uint8_t *value,
+                    uint64_t length) {
+    CFDataRef data;
+    data = CFDataCreate(NULL, value, (CFIndex)length);
+    CFDictionarySetValue(dict, key, data);
+    if (data) {
+        CFRelease(data);
+        data = NULL;
+    }
+}
+
 - (void)dealloc {
     [self _freeAll];
 }
@@ -103,11 +167,13 @@ extern "C" {
                 if (ret == AVERROR_EOF) {
                     sampleData.statusFlag = MMSampleDataFlagEnd;
                     if (self.nextVideoNodes) {
+                        sampleData.dataType = MMSampleDataType_Parsed_Video;
                         for (id<MMSessionProcessProtocol> node in self.nextVideoNodes) {
                             [node processSampleData:sampleData];
                         }
                     }
                     if (self.nextAudioNodes) {
+                        sampleData.dataType = MMSampleDataType_Parsed_Audio;
                         for (id<MMSessionProcessProtocol> node in self.nextAudioNodes) {
                             [node processSampleData:sampleData];
                         }
@@ -115,35 +181,37 @@ extern "C" {
                     [self _freeAll];
                 } else {
                     NSLog(@"[yjx] av_read_frame error - %d", ret);
-                    return;
                 }
+                break;
             }
-            
-            if (!packet->data || packet->size<=0) continue;
             
             if (packet->stream_index == videoIdx) { /// 视频轨
                 if (!isVideo) continue;
                 /// bsf对SPS、PPS等数据进行格式转换，使其可被解码器处理
-                const AVBitStreamFilter *pFilter = NULL;
+                //const AVBitStreamFilter *pFilter = NULL;
                 MMVideoFormat videoFormat = NULL;
                 if (videoStream->codecpar->codec_id == AV_CODEC_ID_H264) {
-                    pFilter = av_bsf_get_by_name("h264_mp4toannexb");
+                    //pFilter = av_bsf_get_by_name("h264_annexbtomp4");
                     videoFormat = MMVideoFormatH264;
                 } else if (videoStream->codecpar->codec_id == AV_CODEC_ID_HEVC) {
-                    pFilter = av_bsf_get_by_name("hevc_mp4toannexb");
+                    // pFilter = av_bsf_get_by_name("hevc_annexbtomp4");
                     videoFormat = MMVideoFormatH265;
                 }
+                /*
                 if (!_bsfCtx) {
                     av_bsf_alloc(pFilter, &_bsfCtx);
                     avcodec_parameters_copy(_bsfCtx->par_in, videoStream->codecpar);
                     av_bsf_init(_bsfCtx);
                 }
                 av_bsf_send_packet(_bsfCtx, packet);
-                av_bsf_receive_packet(_bsfCtx, packet);
+                while (av_bsf_receive_packet(_bsfCtx, packet) == 0) {
+                    
+                }
+                 */
                 
                 /// 确保发往decoder的第一个packet为Key-Frame
-                bool isKey = (packet->flags & AV_PKT_FLAG_KEY) == AV_PKT_FLAG_KEY;
-                NSLog(@"[yjx] packet is keyframe - %d, pts - %lld, dts - %lld", isKey, packet->pts, packet->dts);
+                // bool isKey = (packet->flags & AV_PKT_FLAG_KEY) == AV_PKT_FLAG_KEY;
+                // NSLog(@"[yjx] packet is keyframe - %d, pts - %lld, dts - %lld", isKey, packet->pts, packet->dts);
                 
                 /// 填充demux数据
                 int pktSize = packet->size;
@@ -169,6 +237,11 @@ extern "C" {
                 
                 sampleData.dataType = MMSampleDataType_Parsed_Video;
                 sampleData.videoInfo  = videoInfo;
+                
+                if (YES) { // todo: 这段代码仅针对vt解码适用
+                    CMSampleBufferRef samplebuffer = [self _convert_to_samplebuffer:packet];
+                    sampleData.sampleBuffer = samplebuffer;
+                }
                 
                 if (self.nextVideoNodes) {
                     for (id<MMSessionProcessProtocol> node in self.nextVideoNodes) {
@@ -253,6 +326,47 @@ extern "C" {
     av_init_packet(_packet);
     
     _fmtCtx = fmtCtx;
+}
+
+- (CMSampleBufferRef)_convert_to_samplebuffer:(AVPacket *)packet {
+    int size = packet->size;
+    void* buffer = packet->data;
+    
+    CMBlockBufferRef blockBuf = NULL;
+    CMSampleBufferRef sampleBuf = NULL;
+    OSStatus status = CMBlockBufferCreateWithMemoryBlock(NULL,
+                                                         buffer,
+                                                         size,
+                                                         kCFAllocatorNull,
+                                                         NULL,
+                                                         0,
+                                                         size,
+                                                         false,
+                                                         &blockBuf);
+
+    if (!status) {
+        CMSampleTimingInfo timestamp = kCMTimingInfoInvalid;
+        timestamp.duration = CMTimeMake(packet->duration, USEC_PER_SEC);
+        timestamp.presentationTimeStamp = CMTimeMake(packet->pts, USEC_PER_SEC);
+        timestamp.decodeTimeStamp = CMTimeMake(packet->dts, USEC_PER_SEC);
+        status = CMSampleBufferCreate(NULL,
+                                      blockBuf,
+                                      TRUE,
+                                      0,
+                                      0,
+                                      self.getVtDesc,
+                                      1,
+                                      1,
+                                      &timestamp,
+                                      0,
+                                      NULL,
+                                      &sampleBuf);
+    }
+    if (blockBuf) {
+        CFRelease(blockBuf);
+        blockBuf = NULL;
+    }
+    return sampleBuf;
 }
 
 - (CGFloat)_getRotation {

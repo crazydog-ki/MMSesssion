@@ -23,6 +23,9 @@
 		2B00739D26915F01006510A6 /* MMVideoPreviewConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B00739C26915F01006510A6 /* MMVideoPreviewConfig.m */; };
 		2B0F3C9D26F44EE4000F0422 /* MMAVFFTBViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B0F3C9C26F44EE4000F0422 /* MMAVFFTBViewController.mm */; };
 		2B4C0DEA26C52997004B1321 /* MMAudioQueue.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B4C0DE926C52997004B1321 /* MMAudioQueue.mm */; };
+		2B50577A2A7CE1A90069F7B5 /* MMVTDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B5057792A7CE1A90069F7B5 /* MMVTDecoder.m */; };
+		2B50577D2A7CEBFD0069F7B5 /* MMProcessBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B50577C2A7CEBFD0069F7B5 /* MMProcessBase.m */; };
+		2B50577F2A7CF1510069F7B5 /* todo.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 2B50577E2A7CF1510069F7B5 /* todo.rtf */; };
 		2B5072D0268C6D0C00444623 /* MMEncodeWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B5072CF268C6D0C00444623 /* MMEncodeWriter.m */; };
 		2B50795D268C732200444623 /* MMEncodeConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B50795C268C732200444623 /* MMEncodeConfig.m */; };
 		2B508D04268EC21700444623 /* MMVideoGLPreview.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B508D03268EC21700444623 /* MMVideoGLPreview.m */; };
@@ -99,6 +102,11 @@
 		2B0F3C9C26F44EE4000F0422 /* MMAVFFTBViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MMAVFFTBViewController.mm; sourceTree = "<group>"; };
 		2B4C0DE826C52997004B1321 /* MMAudioQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMAudioQueue.h; sourceTree = "<group>"; };
 		2B4C0DE926C52997004B1321 /* MMAudioQueue.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MMAudioQueue.mm; sourceTree = "<group>"; };
+		2B5057782A7CE1A90069F7B5 /* MMVTDecoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMVTDecoder.h; sourceTree = "<group>"; };
+		2B5057792A7CE1A90069F7B5 /* MMVTDecoder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMVTDecoder.m; sourceTree = "<group>"; };
+		2B50577B2A7CEBFD0069F7B5 /* MMProcessBase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMProcessBase.h; sourceTree = "<group>"; };
+		2B50577C2A7CEBFD0069F7B5 /* MMProcessBase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMProcessBase.m; sourceTree = "<group>"; };
+		2B50577E2A7CF1510069F7B5 /* todo.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = todo.rtf; sourceTree = "<group>"; };
 		2B5072CE268C6D0C00444623 /* MMEncodeWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEncodeWriter.h; sourceTree = "<group>"; };
 		2B5072CF268C6D0C00444623 /* MMEncodeWriter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEncodeWriter.m; sourceTree = "<group>"; };
 		2B50795B268C732200444623 /* MMEncodeConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEncodeConfig.h; sourceTree = "<group>"; };
@@ -430,6 +438,7 @@
 		2B508D06268F053200444623 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				2B50577E2A7CF1510069F7B5 /* todo.rtf */,
 				1253B68026ABC81600D7A22C /* MMPrefixHeader.pch */,
 				2B508D07268F056D00444623 /* MMSessionProcessProtocol.h */,
 				1253B6AA26ABCF4600D7A22C /* UIControl+Extension.h */,
@@ -442,6 +451,8 @@
 				2B9C80F126CA4DDD00248E56 /* MMBufferUtils.m */,
 				2B7B87CF26A51A43006D5456 /* MMSampleData.h */,
 				2B7B87D026A51A43006D5456 /* MMSampleData.m */,
+				2B50577B2A7CEBFD0069F7B5 /* MMProcessBase.h */,
+				2B50577C2A7CEBFD0069F7B5 /* MMProcessBase.m */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -474,6 +485,8 @@
 				2B9D5E5426A031CF00F401D2 /* MMDecodeReader.m */,
 				2BF08E1226BD467F0072B990 /* MMFFDecoder.h */,
 				2BF08E1326BD467F0072B990 /* MMFFDecoder.mm */,
+				2B5057782A7CE1A90069F7B5 /* MMVTDecoder.h */,
+				2B5057792A7CE1A90069F7B5 /* MMVTDecoder.m */,
 			);
 			path = DecodeSession;
 			sourceTree = "<group>";
@@ -799,6 +812,7 @@
 				12DA794726B6442900099142 /* README.md in Resources */,
 				2B0073992691511A006510A6 /* Shader.fsh in Resources */,
 				12484440268711C2003C27DF /* LaunchScreen.storyboard in Resources */,
+				2B50577F2A7CF1510069F7B5 /* todo.rtf in Resources */,
 				7E20463B27D38EE000D299FB /* GXFC-LDH.mp3 in Resources */,
 				2B9AC2BE2697F41000DC842D /* Podfile in Resources */,
 				2B9104F927BA75C30048D292 /* basket.mp4 in Resources */,
@@ -861,6 +875,7 @@
 				2B00739D26915F01006510A6 /* MMVideoPreviewConfig.m in Sources */,
 				7E00F2DB2A756A2700289947 /* MMAudioCapture.m in Sources */,
 				2BF08E1426BD467F0072B990 /* MMFFDecoder.mm in Sources */,
+				2B50577A2A7CE1A90069F7B5 /* MMVTDecoder.m in Sources */,
 				124844552687121A003C27DF /* SceneDelegate.m in Sources */,
 				2B4C0DEA26C52997004B1321 /* MMAudioQueue.mm in Sources */,
 				2B9104E427BA687E0048D292 /* MMAudioRecorderConfig.m in Sources */,
@@ -889,6 +904,7 @@
 				2B508D04268EC21700444623 /* MMVideoGLPreview.m in Sources */,
 				1284DB56268B7EB1008692B8 /* MMVideoLayerPreview.m in Sources */,
 				2B5072D0268C6D0C00444623 /* MMEncodeWriter.m in Sources */,
+				2B50577D2A7CEBFD0069F7B5 /* MMProcessBase.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

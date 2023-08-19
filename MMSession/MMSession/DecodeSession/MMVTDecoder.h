@@ -2,14 +2,31 @@
 // Email  : jxyou.ki@gmail.com
 // Github : https://github.com/crazydog-ki
 
-#import <Foundation/Foundation.h>
-#import "MMProcessBase.h"
-#import "MMDecodeConfig.h"
+#include "MMDecodeConfig.h"
+#include "MMUnitBase.h"
 
-NS_ASSUME_NONNULL_BEGIN
+#import <VideoToolbox/VideoToolbox.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
+#include "libavformat/avformat.h"
+#include "libavcodec/avcodec.h"
+#include "libavutil/samplefmt.h"
+#include "libswresample/swresample.h"
+#include "libavutil/pixdesc.h"
+#ifdef __cplusplus
+};
+#endif
 
-@interface MMVTDecoder : MMProcessBase
-- (instancetype)initWithConfig:(MMDecodeConfig *)config;
-@end
 
-NS_ASSUME_NONNULL_END
+class MMVTDecoder: public MMUnitBase {
+public:
+    MMVTDecoder(MMDecodeConfig config);
+    void process(std::shared_ptr<MMSampleData> &data) override;
+private:
+    MMDecodeConfig m_config;
+    VTDecompressionSessionRef m_vtDecodeSession;
+    
+    void _initVt();
+};
+

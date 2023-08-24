@@ -4,6 +4,10 @@
 
 #include "MMVTDecoder.h"
 
+struct MMVTAttribute {
+    double pts = 0.0f;
+};
+
 void vt_decode_callback(void *decompressionOutputRefCon,
                         void *sourceFrameRefCon,
                         OSStatus status,
@@ -20,15 +24,20 @@ void vt_decode_callback(void *decompressionOutputRefCon,
         return;
     }
     
-    MMSampleData *rawData = (MMSampleData *)sourceFrameRefCon;
-    rawData->videoBuffer = (CVPixelBufferRef)imageBuffer;
+    MMVTAttribute* attr = (MMVTAttribute*)sourceFrameRefCon;
     
-    std::shared_ptr<MMSampleData> data(rawData); //接管其声明周期
+    std::shared_ptr<MMSampleData> data = make_shared<MMSampleData>();
+    CVPixelBufferRef pixelBuffer = (CVPixelBufferRef)imageBuffer;
+    CVPixelBufferRetain(pixelBuffer);
+    data->videoBuffer = pixelBuffer;
+    data->pts = attr->pts;
     if (!vtDecoder->m_nextVideoUnits.empty()) {
-        for (MMUnitBase *unit : vtDecoder->m_nextVideoUnits) {
+        for (shared_ptr<MMUnitBase> unit : vtDecoder->m_nextVideoUnits) {
             unit->process(data);
         }
     }
+    CVPixelBufferRelease(pixelBuffer);
+    data->videoBuffer = nullptr; //这里不置空，MMSampleData析构函数内部可能会double free
 }
 
 static CFDictionaryRef _create_attributes(int width, int height, OSType pix_fmt) {
@@ -58,28 +67,32 @@ static CFDictionaryRef _create_attributes(int width, int height, OSType pix_fmt)
 }
 
 MMVTDecoder::MMVTDecoder(MMDecodeConfig config): m_config(config) {
+    _initVt();
 }
 
 void MMVTDecoder::process(std::shared_ptr<MMSampleData> &data) {
     if (!m_vtDecodeSession) return;
-    CMSampleBufferRef parsedBuffer = data->videoSample;
+    CMSampleBufferRef parsedBuffer = data->videoSample; //被压缩的视频帧
+    if (!parsedBuffer) return;
     
     CFRetain(parsedBuffer);
+    
+    MMVTAttribute attr;
+    attr.pts = data->pts;
     
     VTDecodeFrameFlags flags = kVTDecodeFrame_EnableAsynchronousDecompression;
     VTDecodeInfoFlags flagOut;
     OSStatus status = VTDecompressionSessionDecodeFrame(m_vtDecodeSession,
                                                         parsedBuffer,
                                                         flags,
-                                                        (void *)data.get(), //其他参数传递
+                                                        &attr, //其他参数传递
                                                         &flagOut); //获取解码操作信息
     if (status != noErr) {
         std::cout << "[yjx] VTDecompressionSessionDecodeFrame - " << status << std::endl;
     }
     
-    if (parsedBuffer) {
-        CFRelease(parsedBuffer);
-    }
+    CFRelease(parsedBuffer);
+    data->videoSample = nullptr; //这里不置空，MMSampleData析构函数内部可能会double free
 }
 
 #pragma mark - Private

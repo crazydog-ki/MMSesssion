@@ -2,23 +2,17 @@
 // Email  : jxyou.ki@gmail.com
 // Github : https://github.com/crazydog-ki
 
-NS_ASSUME_NONNULL_BEGIN
+#import "MMBaseDefine.h"
 
-typedef NS_OPTIONS(NSUInteger, MMFFDecodeType) {
-    MMFFDecodeType_Video = 1 << 0,
-    MMFFDecodeType_Audio = 1 << 1
+struct MMDecodeConfig {
+    NSURL *videoURL;
+    AVAsset *videoAsset;
+    void *fmtCtx;
+    MMFFDecodeType decodeType;
+    BOOL needPcm = false;
+    BOOL needYuv = false;
+    MMPixelFormatType pixelformat;
+    
+    CMVideoFormatDescriptionRef vtDesc;
+    CGSize targetSize = CGSizeZero;
 };
-
-@interface MMDecodeConfig : NSObject
-@property (nonatomic, strong) NSURL *videoURL;
-@property (nonatomic, strong) AVAsset *videoAsset;
-@property (nonatomic, assign) void *fmtCtx;
-@property (nonatomic, assign) MMFFDecodeType decodeType;
-@property (nonatomic, assign) BOOL needPcm;
-@property (nonatomic, assign) BOOL needYuv;
-//for vt
-@property (nonatomic, assign) CMVideoFormatDescriptionRef vtDesc;
-@property (nonatomic, assign) CGSize targetSize;
-@end
-
-NS_ASSUME_NONNULL_END

@@ -2,11 +2,9 @@
 // Email  : jxyou.ki@gmail.com
 // Github : https://github.com/crazydog-ki
 
-#include <iostream>
 #import "MMFFParser.h"
 
-MMFFParser::MMFFParser(MMParseConfig config) {
-    m_config = config;
+MMFFParser::MMFFParser(MMParseConfig config): m_config(config) {
     m_stopFlag = NO;
     m_hasSendKeyframe = NO;
     _init();
@@ -143,7 +141,7 @@ CMVideoFormatDescriptionRef MMFFParser::getVtDesc() {
     return vtDesc;
 }
 
-void MMFFParser::process(MMSampleData *data) {
+void MMFFParser::process(std::shared_ptr<MMSampleData> &data) {
     doTask(MMTaskSync, ^{
         BOOL isVideo = (data->dataType==MMSampleDataType_None_Video);
         while (YES) {
@@ -167,14 +165,14 @@ void MMFFParser::process(MMSampleData *data) {
                     data->statusFlag = MMSampleDataFlagEnd;
                     if (m_nextVideoUnits.size() != 0) {
                         data->dataType = MMSampleDataType_Parsed_Video;
-                        for (MMUnitBase *unit : m_nextVideoUnits) {
+                        for (shared_ptr<MMUnitBase> unit : m_nextVideoUnits) {
                             unit->process(data);
                         }
                     }
                     
                     if (m_nextAudioUnits.size() != 0) {
                         data->dataType = MMSampleDataType_Parsed_Audio;
-                        for (MMUnitBase *unit : m_nextAudioUnits) {
+                        for (shared_ptr<MMUnitBase> unit : m_nextAudioUnits) {
                             unit->process(data);
                         }
                     }
@@ -237,13 +235,11 @@ void MMFFParser::process(MMSampleData *data) {
 
                 data->dataType = MMSampleDataType_Parsed_Video;
 
-                if (YES) { // todo: 这段代码仅针对vt解码适用
-                    CMSampleBufferRef samplebuffer = _convert_to_samplebuffer(packet);
-                    data->videoSample = samplebuffer;
-                }
+                CMSampleBufferRef samplebuffer = _convert_to_samplebuffer(packet);
+                data->videoSample = samplebuffer;
                 
-                if (m_nextVideoUnits.size() != 0) {
-                    for (MMUnitBase *unit : m_nextVideoUnits) {
+                if (!m_nextVideoUnits.empty()) {
+                    for (shared_ptr<MMUnitBase> unit : m_nextVideoUnits) {
                         unit->process(data);
                     }
                 }
@@ -265,8 +261,8 @@ void MMFFParser::process(MMSampleData *data) {
 
                 data->dataType = MMSampleDataType_Parsed_Audio;
                 
-                if (m_nextAudioUnits.size() != 0) {
-                    for (MMUnitBase *unit : m_nextAudioUnits) {
+                if (!m_nextAudioUnits.empty()) {
+                    for (shared_ptr<MMUnitBase> unit : m_nextAudioUnits) {
                         unit->process(data);
                     }
                 }

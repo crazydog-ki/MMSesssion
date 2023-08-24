@@ -10,11 +10,18 @@ MMPreviewUnit::MMPreviewUnit(MMPreviewConfig config): m_config(config) {
     renderConfig.rotation = config.rotation;
     renderConfig.presentRect = config.presentRect;
     m_renderView = [[MMVideoGLPreview alloc] initWithConfig:renderConfig];
+    m_renderView.frame = config.viewFrame;
+}
+
+MMVideoGLPreview* MMPreviewUnit::getRenderView() {
+    return m_renderView;
 }
 
 void MMPreviewUnit::process(std::shared_ptr<MMSampleData> &data) {
-    if (m_renderView) {
-        CVPixelBufferRef pixelBuffer = data->videoBuffer;
-        [m_renderView processPixelBuffer:pixelBuffer];
-    }
+    doTask(MMTaskSync, ^{
+        if (m_renderView) {
+            CVPixelBufferRef pixelBuffer = data->videoBuffer;
+            [m_renderView processPixelBuffer:pixelBuffer];
+        }
+    });
 }

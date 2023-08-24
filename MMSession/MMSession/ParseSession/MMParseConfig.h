@@ -2,18 +2,11 @@
 // Email  : jxyou.ki@gmail.com
 // Github : https://github.com/crazydog-ki
 
-#import <Foundation/Foundation.h>
+#include "MMBaseDefine.h"
+#include <string>
 
-NS_ASSUME_NONNULL_BEGIN
-
-typedef NS_OPTIONS(NSUInteger, MMFFParseType) {
-    MMFFParseType_Video = 1 << 0,
-    MMFFParseType_Audio = 1 << 1
+struct MMParseConfig {
+    std::string inPath;
+    MMFFParseType parseType;
 };
 
-@interface MMParseConfig : NSObject
-@property (nonatomic, strong) NSString *inPath;
-@property (nonatomic, assign) MMFFParseType parseType;
-@end
-
-NS_ASSUME_NONNULL_END

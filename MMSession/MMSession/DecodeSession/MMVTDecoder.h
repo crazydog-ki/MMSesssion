@@ -18,7 +18,6 @@ extern "C" {
 };
 #endif
 
-
 class MMVTDecoder: public MMUnitBase {
 public:
     MMVTDecoder(MMDecodeConfig config);

@@ -25,7 +25,7 @@ public:
     
     ~MMFFParser();
     
-    void process(MMSampleData *data) override;
+    void process(std::shared_ptr<MMSampleData> &data) override;
 private:
     void _init();
     void _freeAll();

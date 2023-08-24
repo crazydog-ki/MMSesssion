@@ -39,6 +39,8 @@ static const GLfloat kColorConversion709[] = {
 @interface MMVideoGLPreview () {
     const GLfloat *_preferredConversion;
 }
+
+@property (nonatomic, strong) MMVideoPreviewConfig *config;
 @property (nonatomic) CAEAGLLayer *rendLayer;
 @property (nonatomic) EAGLContext *context;
 @property (nonatomic) GLuint renderBuffer;
@@ -54,9 +56,10 @@ static const GLfloat kColorConversion709[] = {
 @end
 
 @implementation MMVideoGLPreview
-- (instancetype)init {
+- (instancetype)initWithConfig:(MMVideoPreviewConfig *)config {
     if (self = [super init]) {
         _videoPts = 0.0f;
+        _config = config;
     }
     return self;
 }
@@ -79,35 +82,9 @@ static const GLfloat kColorConversion709[] = {
 }
 
 - (void)processPixelBuffer:(CVPixelBufferRef)pixelBuffer {
+    if (!pixelBuffer) return;
     BOOL renderYUV = _config.renderYUV;
     CVPixelBufferRetain(pixelBuffer);
-    if (!pixelBuffer) return;
-    
-    if (renderYUV) {
-        [self _rendYUVPixbuffer:pixelBuffer];
-    } else {
-        [self _rendRGBPixbuffer:pixelBuffer];
-    }
-    CVPixelBufferRelease(pixelBuffer);
-}
-
-#pragma mark - MMSessionProcessProtocol
-- (void)processSampleData:(MMSampleData *)sampleData {
-    if (sampleData.statusFlag == MMSampleDataFlagEnd) {
-        if (self.renderEndBlk) {
-            self.renderEndBlk();
-        }
-        
-        NSLog(@"[yjx] end video render");
-        return;
-    }
-    
-    BOOL renderYUV = _config.renderYUV;
-    self.videoPts = CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(sampleData.sampleBuffer));
-    // NSLog(@"[yjx] render video pts: %lf", self.videoPts);
-    CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleData.sampleBuffer);
-    CVPixelBufferRetain(pixelBuffer);
-    if (!pixelBuffer) return;
     
     if (renderYUV) {
         [self _rendYUVPixbuffer:pixelBuffer];

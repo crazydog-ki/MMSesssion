@@ -9,6 +9,7 @@
 class MMPreviewUnit: public MMUnitBase {
 public:
     MMPreviewUnit(MMPreviewConfig config);
+    MMVideoGLPreview* getRenderView();
     void process(std::shared_ptr<MMSampleData> &data) override;
 private:
     MMVideoGLPreview *m_renderView;

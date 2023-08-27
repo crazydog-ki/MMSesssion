@@ -6,8 +6,10 @@
 1. FFmpeg解封装、VT解码、OpenGL ES上屏；
 
 # 开发roadmap：
-1. 2023.08.24 -> ffmpeg解封装 + vt解码 + open gl渲染上屏链路打通；
-2. 2023.08.27 -> vt解码附带信息crash问题fix
-              -> AvCc&AnnexB格式探测
-              -> 带B帧视频生产者消费者driveUnit编写（unique_lock+condition_variable）
-              -> unitBase支持外部指定处理队列
+1. 2023.08.24 
+    1. ffmpeg解封装 + vt解码 + open gl渲染上屏链路打通；
+2. 2023.08.27 
+    1. vt解码附带信息crash问题fix
+    2. AvCc&AnnexB格式探测
+    3. 带B帧视频生产者消费者driveUnit编写（unique_lock+condition_variable）
+    4. unitBase支持外部指定处理队列

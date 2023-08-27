@@ -29,7 +29,7 @@ public:
         });
     }
     
-    void doTask(MMUnitTask taskExec, dispatch_block_t task);
+    void doTask(MMUnitTask taskExec, dispatch_block_t task, dispatch_queue_t queue = nullptr);
     
     virtual void process(std::shared_ptr<MMSampleData> &data);
     

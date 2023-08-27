@@ -25,3 +25,7 @@ void MMPreviewUnit::process(std::shared_ptr<MMSampleData> &data) {
         }
     });
 }
+
+MMPreviewUnit::~MMPreviewUnit() {
+    cout << "[yjx] MMPreviewUnit::~MMPreviewUnit()" << endl;
+}

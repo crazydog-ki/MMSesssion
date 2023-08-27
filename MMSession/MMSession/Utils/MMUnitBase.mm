@@ -5,16 +5,16 @@
 #include "MMUnitBase.h"
 
 MMUnitBase::MMUnitBase() {
-    m_processQueue = dispatch_queue_create(typeid(*this).name(), DISPATCH_QUEUE_SERIAL);
+    m_processQueue = CREATE_SERIAL_QUEUE;
 }
 
-void MMUnitBase::doTask(MMUnitTask taskExec, dispatch_block_t task) {
+void MMUnitBase::doTask(MMUnitTask taskExec, dispatch_block_t task, dispatch_queue_t queue) {
     if (MMTaskAsync==taskExec) {
-        dispatch_async(m_processQueue, ^{
+        dispatch_async(queue ? queue: m_processQueue, ^{
             task();
         });
     } else {
-        dispatch_sync(m_processQueue, ^{
+        dispatch_sync(queue ? queue: m_processQueue, ^{
             task();
         });
     }

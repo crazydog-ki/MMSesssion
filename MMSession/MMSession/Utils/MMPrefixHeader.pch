@@ -21,7 +21,9 @@
 #define kScreenH UIScreen.mainScreen.bounds.size.height
 
 #define kColor(r, g, b, a) [UIColor colorWithRed:(r)/255.0f green:(g)/255.0f blue:(b)/255.0f alpha:(a)]
-#define kMMColor kColor(79.0f, 173.0f, 91.0f, 1.0f) 
+#define kMMColor kColor(79.0f, 173.0f, 91.0f, 1.0f)
+#define kMMColor2 kColor(216.0f, 84.0f, 66.0f, 1.0f)
+#define kMMColor3 kColor(242.0f, 192.0f, 69.0f, 1.0f)
 
 #define weakify(var) __weak typeof(var) weak_##var = var;
 #define strongify(var) \

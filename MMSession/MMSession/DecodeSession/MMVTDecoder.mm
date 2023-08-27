@@ -6,6 +6,7 @@
 
 struct MMVTAttribute {
     double pts = 0.0f;
+    bool reachEof = false;
 };
 
 void vt_decode_callback(void *decompressionOutputRefCon,
@@ -31,13 +32,17 @@ void vt_decode_callback(void *decompressionOutputRefCon,
     CVPixelBufferRetain(pixelBuffer);
     data->videoBuffer = pixelBuffer;
     data->pts = attr->pts;
+    data->isEof = attr->reachEof;
     if (!vtDecoder->m_nextVideoUnits.empty()) {
         for (shared_ptr<MMUnitBase> unit : vtDecoder->m_nextVideoUnits) {
             unit->process(data);
         }
     }
     CVPixelBufferRelease(pixelBuffer);
-    data->videoBuffer = nullptr; //这里不置空，MMSampleData析构函数内部可能会double free
+    if (attr) {
+        delete attr;
+        attr = nullptr;
+    }
 }
 
 static CFDictionaryRef _create_attributes(int width, int height, OSType pix_fmt) {
@@ -73,26 +78,46 @@ MMVTDecoder::MMVTDecoder(MMDecodeConfig config): m_config(config) {
 void MMVTDecoder::process(std::shared_ptr<MMSampleData> &data) {
     if (!m_vtDecodeSession) return;
     CMSampleBufferRef parsedBuffer = data->videoSample; //被压缩的视频帧
-    if (!parsedBuffer) return;
+    if (!parsedBuffer || data->isEof) {
+        for (auto unit : m_nextVideoUnits) {
+            unit->process(data);
+        }
+        return;
+    }
     
     CFRetain(parsedBuffer);
     
-    MMVTAttribute attr;
-    attr.pts = data->pts;
+    MMVTAttribute *attr = new MMVTAttribute(); //需要传指针，解码是异步
+    attr->pts = data->pts;
+    attr->reachEof = data->isEof;
     
     VTDecodeFrameFlags flags = kVTDecodeFrame_EnableAsynchronousDecompression;
     VTDecodeInfoFlags flagOut;
     OSStatus status = VTDecompressionSessionDecodeFrame(m_vtDecodeSession,
                                                         parsedBuffer,
                                                         flags,
-                                                        &attr, //其他参数传递
+                                                        attr, //其他参数传递
                                                         &flagOut); //获取解码操作信息
     if (status != noErr) {
         std::cout << "[yjx] VTDecompressionSessionDecodeFrame - " << status << std::endl;
+        if (attr) {
+            delete attr;
+            attr = nullptr;
+        }
     }
     
     CFRelease(parsedBuffer);
     data->videoSample = nullptr; //这里不置空，MMSampleData析构函数内部可能会double free
+}
+
+MMVTDecoder::~MMVTDecoder() {
+    cout << "[yjx] MMVTDecoder::~MMVTDecoder()" << endl;
+    if (m_vtDecodeSession) {
+        VTDecompressionSessionInvalidate(m_vtDecodeSession);
+        CFRelease(m_vtDecodeSession);
+        m_vtDecodeSession = nullptr;
+        cout << "[yjx] vt decoder destroyed" << endl;
+    }
 }
 
 #pragma mark - Private
@@ -102,7 +127,7 @@ void MMVTDecoder::_initVt() {
     callBackRecord.decompressionOutputRefCon = (void *)this;
     
     int w = (int)m_config.targetSize.width;
-    int h = (int)m_config.targetSize.width;
+    int h = (int)m_config.targetSize.height;
     OSType pixelformat = NULL;
     switch (m_config.pixelformat) {
         case MMPixelFormatTypeBGRA:

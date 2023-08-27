@@ -5,8 +5,6 @@
 #import "MMFFParser.h"
 
 MMFFParser::MMFFParser(MMParseConfig config): m_config(config) {
-    m_stopFlag = NO;
-    m_hasSendKeyframe = NO;
     _init();
 }
 
@@ -29,7 +27,7 @@ void MMFFParser::seekToTime(double time) {
     });
 }
 
-CGSize MMFFParser::size() {
+CGSize MMFFParser::getSize() {
     return CGSizeMake(m_videoStream->codecpar->width, m_videoStream->codecpar->height);
 }
 
@@ -162,7 +160,8 @@ void MMFFParser::process(std::shared_ptr<MMSampleData> &data) {
 
             if (ret < 0) { // error or eof
                 if (ret == AVERROR_EOF) {
-                    data->statusFlag = MMSampleDataFlagEnd;
+                    data->isEof = true;
+                    cout << "[yjx] ffmpeg parse eof" << endl;
                     if (m_nextVideoUnits.size() != 0) {
                         data->dataType = MMSampleDataType_Parsed_Video;
                         for (shared_ptr<MMUnitBase> unit : m_nextVideoUnits) {
@@ -206,6 +205,19 @@ void MMFFParser::process(std::shared_ptr<MMSampleData> &data) {
 
                 }
                  */
+                if (isFirstPacket) { //信息打印
+                    AVCodecParameters *videoCodecpar = videoStream->codecpar;
+                    if (4 <= videoCodecpar->extradata_size && videoCodecpar->extradata[0] == 1) {
+                        cout << "[yjx] 码流格式为 AvCc" << endl;
+                    } else if (videoCodecpar->extradata_size >= 4 &&
+                               (memcmp(videoCodecpar->extradata, "\x00\x00\x00\x01", 4) == 0 ||
+                                memcmp(videoCodecpar->extradata, "\x00\x00\x01", 3) == 0)) {
+                        cout << "[yjx] 码流格式为 AnnexB" << endl;
+                    } else {
+                        cout << "[yjx] 码流格式不确定" << endl;
+                    }
+                    isFirstPacket = false;
+                }
 
                 /// 确保发往decoder的第一个packet为Key-Frame
                 bool isKey = (packet->flags & AV_PKT_FLAG_KEY) == AV_PKT_FLAG_KEY;
@@ -273,6 +285,7 @@ void MMFFParser::process(std::shared_ptr<MMSampleData> &data) {
 }
 
 MMFFParser::~MMFFParser() {
+    cout << "[yjx] MMFFParser::~MMFFParser()" << endl;
     _freeAll();
 }
 

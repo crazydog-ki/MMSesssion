@@ -26,7 +26,7 @@ struct MMSampleData {
     int audioIdx;
     
     MMSampleDataType dataType;
-    MMSampleDataFlag statusFlag;
+    bool isEof = false;
     // for audio
     CMSampleBufferRef audioSample;
     // for video

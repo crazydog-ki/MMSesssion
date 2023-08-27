@@ -19,7 +19,7 @@ class MMFFParser: public MMUnitBase  {
 public:
     MMFFParser(MMParseConfig config);
     void seekToTime(double time);
-    CGSize size();
+    CGSize getSize();
     void* getFmtCtx();
     CMVideoFormatDescriptionRef getVtDesc();
     
@@ -40,8 +40,7 @@ private:
     AVStream *m_audioStream;
     int m_videoIdx;
     int m_audioIdx;
-    BOOL m_stopFlag;
-    BOOL m_hasSendKeyframe;
+    bool isFirstPacket = true;
 };
 
 

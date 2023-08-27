@@ -5,6 +5,8 @@
 #ifndef MMBaseDefine_h
 #define MMBaseDefine_h
 
+#define CREATE_SERIAL_QUEUE dispatch_queue_create(typeid(*this).name(), DISPATCH_QUEUE_SERIAL)
+
 typedef NS_OPTIONS(NSUInteger, MMFFDecodeType) {
     MMFFDecodeType_Video = 1 << 0,
     MMFFDecodeType_Audio = 1 << 1

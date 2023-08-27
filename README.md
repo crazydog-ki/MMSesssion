@@ -2,14 +2,14 @@
 >该库目前主要for iOS。
 
 # 仓库简介
-采用OC++混编，基础技术栈如下：
-1. FFmpeg解封装、VT解码、OpenGL ES上屏；
+采用`OC++混编`，基础技术栈如下：
+1. `FFmpeg解封装`、`VT解码`、`OpenGL ES上屏`；
 
 # 开发roadmap：
 1. 2023.08.24 
-    1. ffmpeg解封装 + vt解码 + open gl渲染上屏链路打通；
+    1. `ffmpeg解封装` + `vt解码` + `open gl渲染`上屏链路打通；
 2. 2023.08.27 
     1. vt解码附带信息crash问题fix
-    2. AvCc&AnnexB格式探测
-    3. 带B帧视频生产者消费者driveUnit编写（unique_lock+condition_variable）
+    2. `AvCc&AnnexB`格式探测
+    3. `带B帧`视频`生产者消费者`driveUnit编写（unique_lock+condition_variable）
     4. unitBase支持外部指定处理队列

@@ -7,6 +7,8 @@
 #include "MMVTDecoder.h"
 #include "MMPreviewUnit.h"
 #include "MMDriveUnit.h"
+#include "MMFFDecoder.h"
+#include "MMAudioPlayer.h"
 using namespace std;
 
 @interface MMAVFFTBViewController () <TZImagePickerControllerDelegate, TTGTextTagCollectionViewDelegate> {
@@ -14,6 +16,10 @@ using namespace std;
     shared_ptr<MMVTDecoder> _vtDecoder;
     shared_ptr<MMPreviewUnit> _previewUnit;
     shared_ptr<MMDriveUnit> _driveUnit;
+    
+    shared_ptr<MMFFParser> _ffAudioParser;
+    shared_ptr<MMFFDecoder> _ffAudioDecoder;
+    shared_ptr<MMAudioPlayer> _audioPlayer;
 }
 @property (nonatomic, strong) TTGTextTagCollectionView *collectionView;
 
@@ -21,6 +27,7 @@ using namespace std;
 @property (nonatomic, assign) CGFloat videoRatio;
 
 @property (nonatomic, strong) NSThread *videoThread;
+@property (nonatomic, strong) NSThread *audioThread;
 
 @property (nonatomic, assign) BOOL isReady;
 @end
@@ -38,6 +45,8 @@ using namespace std;
     [super viewWillDisappear:animated];
     
     [self _stopThread];
+    
+    _audioPlayer->stop();
 }
 
 - (void)dealloc {
@@ -89,16 +98,26 @@ using namespace std;
     videoConfig.parseType = MMFFParseType_Video;
     videoConfig.inPath = string([self.videoPath UTF8String]);
     _ffVideoParser = shared_ptr<MMFFParser>(new MMFFParser(videoConfig));
+    
+    MMParseConfig audioConfig;
+    audioConfig.parseType = MMFFParseType_Audio;
+    audioConfig.inPath = string([self.videoPath UTF8String]);
+    _ffAudioParser = shared_ptr<MMFFParser>(new MMFFParser(audioConfig));
 }
 
 - (void)_setupDecoder {
     MMDecodeConfig videoConfig;
-    videoConfig.decodeType = MMFFDecodeType_Video;
+    videoConfig.decodeType = MMDecodeType_Video;
     videoConfig.fmtCtx = (void *)_ffVideoParser->getFmtCtx();
     videoConfig.vtDesc = _ffVideoParser->getVtDesc();
     videoConfig.targetSize = _ffVideoParser->getSize();
     videoConfig.pixelformat = MMPixelFormatTypeBGRA;
     _vtDecoder = shared_ptr<MMVTDecoder>(new MMVTDecoder(videoConfig));
+    
+    MMDecodeConfig audioConfig;
+    audioConfig.decodeType = MMDecodeType_Audio;
+    audioConfig.fmtCtx = _ffAudioParser->getFmtCtx();
+    _ffAudioDecoder = shared_ptr<MMFFDecoder>(new MMFFDecoder(audioConfig));
 }
 
 - (void)_setupDriveUnit {
@@ -111,7 +130,7 @@ using namespace std;
     CGFloat w = self.view.bounds.size.width;
     
     MMPreviewConfig config;
-    config.renderYUV = NO;
+    config.renderYUV = false;
     config.presentRect = CGRectMake(0, 0, w, w*self.videoRatio);
     config.viewFrame = CGRectMake(0, kStatusBarH+kNavBarH, w, w*self.videoRatio);
     _previewUnit = shared_ptr<MMPreviewUnit>(new MMPreviewUnit(config));
@@ -123,12 +142,25 @@ using namespace std;
     [renderView setupGLEnv];
 }
 
+- (void)_setupAudioPlayer {
+    MMAudioPlayConfig config;
+    config.needPullData = false; //推数据
+    _audioPlayer = shared_ptr<MMAudioPlayer>(new MMAudioPlayer(config));
+}
+
 - (void)_startThread {
     self.isReady = YES;
     
+    _audioPlayer->play(); //驱动
+    
     if (!self.videoThread) {
-        self.videoThread = [[NSThread alloc] initWithTarget:self selector:@selector(_playVideo) object:nil];
+        self.videoThread = [[NSThread alloc] initWithTarget:self selector:@selector(_driveVideo) object:nil];
         [self.videoThread start];
+    }
+    
+    if (!self.audioThread) {
+        self.audioThread = [[NSThread alloc] initWithTarget:self selector:@selector(_driveAudio) object:nil];
+        [self.audioThread start];
     }
 }
 
@@ -138,6 +170,11 @@ using namespace std;
     if (self.videoThread) {
         [self.videoThread cancel];
         self.videoThread = nil;
+    }
+    
+    if (self.audioThread) {
+        [self.audioThread cancel];
+        self.audioThread = nil;
     }
 }
 
@@ -149,7 +186,7 @@ using namespace std;
     [self presentViewController:imagePickerVc animated:YES completion:nil];
 }
 
-- (void)_play {
+- (void)_buildChainAndPlay {
     if (self.isReady) {
         NSLog(@"[yjx] video & audio is already playing");
         return;
@@ -159,6 +196,7 @@ using namespace std;
     [self _setupDecoder];
     [self _setupDriveUnit];
     [self _setupPreview];
+    [self _setupAudioPlayer];
     
     /**视频处理链路*/
     _ffVideoParser->addNextVideoNode(_vtDecoder);
@@ -166,15 +204,25 @@ using namespace std;
     _driveUnit->addNextVideoNode(_previewUnit);
     
     /**音频处理链路*/
+    _ffAudioParser->addNextAudioNode(_ffAudioDecoder);
+    _ffAudioDecoder->addNextAudioNode(_audioPlayer);
+    
     [self _startThread];
 }
 
-- (void)_playVideo {
+- (void)_driveVideo {
     while (self.isReady && _ffVideoParser && _vtDecoder && _previewUnit) {
-        [NSThread sleepForTimeInterval:0.03];
         shared_ptr<MMSampleData> sampleData = make_shared<MMSampleData>();
         sampleData->dataType = MMSampleDataType_None_Video;
         _ffVideoParser->process(sampleData);
+    }
+}
+
+- (void)_driveAudio {
+    while (self.isReady && _ffAudioParser && _ffAudioDecoder) {
+        shared_ptr<MMSampleData> sampleData = make_shared<MMSampleData>();
+        sampleData->dataType = MMSampleDataType_None_Audio;
+        _ffAudioParser->process(sampleData);
     }
 }
 
@@ -222,7 +270,7 @@ using namespace std;
     } else if ([content.text isEqualToString:@"相册导入"]) {
         [self _startPick];
     } else if ([content.text isEqualToString:@"视频播放"]) {
-        [self _play];
+        [self _buildChainAndPlay];
     }
     
     if (self.videoPath) { //非相册导入

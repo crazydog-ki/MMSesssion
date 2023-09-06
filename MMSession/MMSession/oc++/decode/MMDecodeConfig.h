@@ -2,15 +2,13 @@
 // Email  : jxyou.ki@gmail.com
 // Github : https://github.com/crazydog-ki
 
+#pragma once
 #import "MMBaseDefine.h"
 
 struct MMDecodeConfig {
-    NSURL *videoURL;
-    AVAsset *videoAsset;
     void *fmtCtx;
-    MMFFDecodeType decodeType;
+    MMDecodeType decodeType;
     BOOL needPcm = false;
-    BOOL needYuv = false;
     MMPixelFormatType pixelformat;
     
     CMVideoFormatDescriptionRef vtDesc;

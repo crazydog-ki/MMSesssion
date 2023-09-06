@@ -160,6 +160,7 @@ void MMFFParser::process(std::shared_ptr<MMSampleData> &data) {
 
             if (ret < 0) { // error or eof
                 if (ret == AVERROR_EOF) {
+                    cout << "[yjx] ff parse end" << endl;
                     data->isEof = true;
                     cout << "[yjx] ffmpeg parse eof" << endl;
                     if (m_nextVideoUnits.size() != 0) {
@@ -168,7 +169,7 @@ void MMFFParser::process(std::shared_ptr<MMSampleData> &data) {
                             unit->process(data);
                         }
                     }
-                    
+
                     if (m_nextAudioUnits.size() != 0) {
                         data->dataType = MMSampleDataType_Parsed_Audio;
                         for (shared_ptr<MMUnitBase> unit : m_nextAudioUnits) {
@@ -221,7 +222,6 @@ void MMFFParser::process(std::shared_ptr<MMSampleData> &data) {
 
                 /// 确保发往decoder的第一个packet为Key-Frame
                 bool isKey = (packet->flags & AV_PKT_FLAG_KEY) == AV_PKT_FLAG_KEY;
-                // NSLog(@"[yjx] packet is keyframe - %d, pts - %lld, dts - %lld", isKey, packet->pts, packet->dts);
 
                 /// 填充demux数据
                 int pktSize = packet->size;
@@ -244,6 +244,8 @@ void MMFFParser::process(std::shared_ptr<MMSampleData> &data) {
                 data->format        = videoFormat;
                 data->parsedData    = packet;
                 data->isKeyFrame    = isKey;
+                
+                // NSLog(@"[yjx] video packet is keyframe - %d, pts - %lf, dts - %lf", isKey, data->pts, data->dts);
 
                 data->dataType = MMSampleDataType_Parsed_Video;
 
@@ -270,6 +272,8 @@ void MMFFParser::process(std::shared_ptr<MMSampleData> &data) {
                 data->duration    = packet->duration * av_q2d(audioStream->time_base);
                 data->audioIdx    = audioIdx;
                 data->parsedData  = packet;
+                
+                NSLog(@"[yjx] audio packet pts - %lf, dts - %lf", data->pts, data->dts);
 
                 data->dataType = MMSampleDataType_Parsed_Audio;
                 

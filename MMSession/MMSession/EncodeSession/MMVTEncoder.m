@@ -28,37 +28,37 @@
 }
 
 #pragma mark - MMSessionProcessProtocol
-- (void)processSampleData:(MMSampleData *)sampleData {
-    dispatch_sync(_vtEncoderQueue, ^{
-        OSStatus status = noErr;
-        
-        if (sampleData.statusFlag == MMSampleDataFlagEnd) {
-            [self _finishEncode];
-            NSLog(@"[yjx] vt encode finish");
-            return;
-        }
-        
-        CMSampleBufferRef sampleBuffer = sampleData.sampleBuffer;
-        CMTime pts = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
-        
-        VTEncodeInfoFlags infoFlags;
-        CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
-        status = VTCompressionSessionEncodeFrame(_encodeSession, pixelBuffer, pts, kCMTimeInvalid, NULL, NULL, &infoFlags);
-        
-        if (status != noErr) {
-            VTCompressionSessionInvalidate(_encodeSession);
-            CFRelease(_encodeSession);
-            _encodeSession = NULL;
-            NSLog(@"[yjx] vt encode frame failed: %d", status);
-        }
-    });
-}
+//- (void)processSampleData:(MMSampleData *)sampleData {
+//    dispatch_sync(_vtEncoderQueue, ^{
+//        OSStatus status = noErr;
+//        
+//        if (sampleData.statusFlag == MMSampleDataFlagEnd) {
+//            [self _finishEncode];
+//            NSLog(@"[yjx] vt encode finish");
+//            return;
+//        }
+//        
+//        CMSampleBufferRef sampleBuffer = sampleData.sampleBuffer;
+//        CMTime pts = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
+//        
+//        VTEncodeInfoFlags infoFlags;
+//        CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+//        status = VTCompressionSessionEncodeFrame(_encodeSession, pixelBuffer, pts, kCMTimeInvalid, NULL, NULL, &infoFlags);
+//        
+//        if (status != noErr) {
+//            VTCompressionSessionInvalidate(_encodeSession);
+//            CFRelease(_encodeSession);
+//            _encodeSession = NULL;
+//            NSLog(@"[yjx] vt encode frame failed: %d", status);
+//        }
+//    });
+//}
 
-- (void)addNextVideoNode:(id<MMSessionProcessProtocol>)node {
-    dispatch_sync(_vtEncoderQueue, ^{
-        [self.nextVideoNodes addObject:node];
-    });
-}
+//- (void)addNextVideoNode:(id<MMSessionProcessProtocol>)node {
+//    dispatch_sync(_vtEncoderQueue, ^{
+//        [self.nextVideoNodes addObject:node];
+//    });
+//}
 
 #pragma mark - Private
 - (void)_initVtEncoder {
@@ -133,12 +133,12 @@ void vt_encode_callback(void *outputCallbackRefCon,
     }
     
     if (encoder.nextVideoNodes) {
-        for (id<MMSessionProcessProtocol> node in encoder.nextVideoNodes) {
-            MMSampleData *sampleData = [[MMSampleData alloc] init];
-            sampleData.sampleBuffer = sampleBuffer;
-            sampleData.dataType = MMSampleDataType_Decoded_Video;
-            [node processSampleData:sampleData];
-        }
+//        for (id<MMSessionProcessProtocol> node in encoder.nextVideoNodes) {
+//            MMSampleData *sampleData = [[MMSampleData alloc] init];
+//            sampleData.sampleBuffer = sampleBuffer;
+//            sampleData.dataType = MMSampleDataType_Decoded_Video;
+//            [node processSampleData:sampleData];
+//        }
     }
 }
 @end

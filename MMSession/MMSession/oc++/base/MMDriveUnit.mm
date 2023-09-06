@@ -22,14 +22,14 @@ void MMDriveUnit::process(std::shared_ptr<MMSampleData> &data) {
     CVPixelBufferRetain(data->videoBuffer);
     m_dataQ.push_back(data);
     m_dataQ.sort([](std::shared_ptr<MMSampleData> v1, std::shared_ptr<MMSampleData> v2) {
-        return v1->pts >= v2->pts; //降序
+        return v1->pts >= v2->pts; //按pts降序
     });
     
-    cout << "[yjx] data queue pts - " << endl;
-    for (auto iter = m_dataQ.begin(); iter != m_dataQ.end(); iter++) {
-        cout << (*iter)->pts << "-";
-    }
-    cout << endl;
+//    cout << "[yjx] data queue pts - " << endl;
+//    for (auto iter = m_dataQ.begin(); iter != m_dataQ.end(); iter++) {
+//        cout << (*iter)->pts << "-";
+//    }
+//    cout << endl;
     
     m_con.notify_one();
 }
@@ -52,7 +52,7 @@ void MMDriveUnit::_consume() {
             m_dataQ.pop_back();
             if (!m_nextVideoUnits.empty()) {
                 for (std::shared_ptr<MMUnitBase> unit : m_nextVideoUnits) {
-                    cout << "[yjx] consume pts - " << data->pts << endl;
+                    //cout << "[yjx] consume pts - " << data->pts << endl;
                     unit->process(data);
                 }
             }

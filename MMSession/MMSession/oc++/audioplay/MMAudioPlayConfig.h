@@ -2,7 +2,6 @@
 // Email  : jxyou.ki@gmail.com
 // Github : https://github.com/crazydog-ki
 
-#import "MMAudioQueuePlayerConfig.h"
-
-@implementation MMAudioQueuePlayerConfig
-@end
+struct MMAudioPlayConfig {
+    bool needPullData = true;
+};

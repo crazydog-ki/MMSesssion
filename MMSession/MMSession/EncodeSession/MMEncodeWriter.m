@@ -67,58 +67,58 @@ static const char *WRITER_QUEUE = "mmsession_camera_compile_queue";
 }
 
 #pragma mark - MMSessionProcessProtocol
-- (void)processSampleData:(MMSampleData *)sampleData {
-    if (_stopFlag) {
-        return;
-    }
-    
-    if (sampleData.statusFlag == MMSampleDataFlagEnd) {
-        if (self.endEncodeBlk) {
-            self.endEncodeBlk();
-        }
-        return;
-    }
-    
-    BOOL isVideo = (sampleData.dataType==MMSampleDataType_Decoded_Video);
-    CMSampleBufferRef sampleBuffer = sampleData.sampleBuffer;
-    
-    CFRetain(sampleBuffer);
-    dispatch_async(_writerQueue, ^{
-        CMTime frameTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
-        double ptsSec = CMTimeGetSeconds(frameTime);
-        if (self.isFirstFrame) {
-            if (self.assetWriter.status == AVAssetWriterStatusUnknown && [self.assetWriter startWriting]) {
-                NSLog(@"[yjx] start encode success, pts: %lf", ptsSec);
-            }
-            [self.assetWriter startSessionAtSourceTime:frameTime];
-            self.isFirstFrame = NO;
-        }
-        if (isVideo) {
-            BOOL onlyMux = self->_config.onlyMux;
-            CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
-            if (self.videoWriterInput.readyForMoreMediaData && self.assetWriter.status == AVAssetWriterStatusWriting) {
-                BOOL ret = false;
-                if (onlyMux) {
-                    ret = [self.videoWriterInput appendSampleBuffer:sampleBuffer];
-                } else {
-                    ret = [self.videoAdaptor appendPixelBuffer:pixelBuffer withPresentationTime:frameTime];
-                }
-            } else {
-                NSLog(@"[yjx] encode drop video frame-2, pts: %lf", ptsSec);
-            }
-        } else {
-            if (self.audioWriterInput.readyForMoreMediaData && self.assetWriter.status == AVAssetWriterStatusWriting) {
-                if (![self.audioWriterInput appendSampleBuffer:sampleBuffer]) {
-                    NSLog(@"[yjx] encode drop audio frame-1, pts: %lf", ptsSec);
-                }
-            } else {
-                NSLog(@"[yjx] encode drop audio frame-2, pts: %lf", ptsSec);
-            }
-        }
-        
-        CFRelease(sampleBuffer);
-    });
-}
+//- (void)processSampleData:(MMSampleData *)sampleData {
+//    if (_stopFlag) {
+//        return;
+//    }
+//
+//    if (sampleData.statusFlag == MMSampleDataFlagEnd) {
+//        if (self.endEncodeBlk) {
+//            self.endEncodeBlk();
+//        }
+//        return;
+//    }
+//
+//    BOOL isVideo = (sampleData.dataType==MMSampleDataType_Decoded_Video);
+//    CMSampleBufferRef sampleBuffer = sampleData.sampleBuffer;
+//
+//    CFRetain(sampleBuffer);
+//    dispatch_async(_writerQueue, ^{
+//        CMTime frameTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
+//        double ptsSec = CMTimeGetSeconds(frameTime);
+//        if (self.isFirstFrame) {
+//            if (self.assetWriter.status == AVAssetWriterStatusUnknown && [self.assetWriter startWriting]) {
+//                NSLog(@"[yjx] start encode success, pts: %lf", ptsSec);
+//            }
+//            [self.assetWriter startSessionAtSourceTime:frameTime];
+//            self.isFirstFrame = NO;
+//        }
+//        if (isVideo) {
+//            BOOL onlyMux = self->_config.onlyMux;
+//            CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+//            if (self.videoWriterInput.readyForMoreMediaData && self.assetWriter.status == AVAssetWriterStatusWriting) {
+//                BOOL ret = false;
+//                if (onlyMux) {
+//                    ret = [self.videoWriterInput appendSampleBuffer:sampleBuffer];
+//                } else {
+//                    ret = [self.videoAdaptor appendPixelBuffer:pixelBuffer withPresentationTime:frameTime];
+//                }
+//            } else {
+//                NSLog(@"[yjx] encode drop video frame-2, pts: %lf", ptsSec);
+//            }
+//        } else {
+//            if (self.audioWriterInput.readyForMoreMediaData && self.assetWriter.status == AVAssetWriterStatusWriting) {
+//                if (![self.audioWriterInput appendSampleBuffer:sampleBuffer]) {
+//                    NSLog(@"[yjx] encode drop audio frame-1, pts: %lf", ptsSec);
+//                }
+//            } else {
+//                NSLog(@"[yjx] encode drop audio frame-2, pts: %lf", ptsSec);
+//            }
+//        }
+//
+//        CFRelease(sampleBuffer);
+//    });
+//}
 
 #pragma mark - Private
 - (void)_initWriter {

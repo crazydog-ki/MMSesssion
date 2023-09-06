@@ -7,9 +7,9 @@
 
 #define CREATE_SERIAL_QUEUE dispatch_queue_create(typeid(*this).name(), DISPATCH_QUEUE_SERIAL)
 
-typedef NS_OPTIONS(NSUInteger, MMFFDecodeType) {
-    MMFFDecodeType_Video = 1 << 0,
-    MMFFDecodeType_Audio = 1 << 1
+typedef NS_OPTIONS(NSUInteger, MMDecodeType) {
+    MMDecodeType_Video = 1 << 0,
+    MMDecodeType_Audio = 1 << 1
 };
 
 typedef NS_OPTIONS(NSInteger, MMPixelFormatType) {
@@ -43,6 +43,12 @@ typedef NS_OPTIONS(NSUInteger, MMVideoFormat) {
 typedef NS_OPTIONS(NSUInteger, MMFFParseType) {
     MMFFParseType_Video = 1 << 0,
     MMFFParseType_Audio = 1 << 1
+};
+
+typedef NS_OPTIONS(NSUInteger, MMYUVType) {
+    MMYUVType_Y = 1 << 0,
+    MMYUVType_U = 1 << 1,
+    MMYUVType_V = 1 << 2,
 };
 
 #endif /* MMBaseDefine_h */

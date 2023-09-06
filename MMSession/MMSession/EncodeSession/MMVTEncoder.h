@@ -3,12 +3,12 @@
 // Github : https://github.com/crazydog-ki
 
 #import <Foundation/Foundation.h>
-#import "MMSessionProcessProtocol.h"
+//#import "MMSessionProcessProtocol.h"
 #import "MMEncodeConfig.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MMVTEncoder : NSObject<MMSessionProcessProtocol>
+@interface MMVTEncoder : NSObject
 - (instancetype)initWithConfig:(MMEncodeConfig *)config;
 @end
 

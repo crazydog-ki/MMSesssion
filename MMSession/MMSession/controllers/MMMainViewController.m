@@ -3,8 +3,7 @@
 // Github : https://github.com/crazydog-ki
 
 #import "MMMainViewController.h"
-#import "MMCameraViewController.h"
-#import "MMAVFDViewController.h"
+//#import "MMCameraViewController.h"
 #import "MMAVFFTBViewController.h"
 
 static NSString *CELL_ID = @"mmsession_cell_identifier";
@@ -66,9 +65,9 @@ static NSString *FFMPEG_VT = @"FFmpeg+VT";
     
     NSString *selectedTex = self.data[indexPath.row];
     if ([selectedTex isEqualToString:CAMERA]) {
-        [self.navigationController pushViewController:[[MMCameraViewController alloc] init] animated:NO];
+//        [self.navigationController pushViewController:[[MMCameraViewController alloc] init] animated:NO];
     } else if ([selectedTex isEqualToString:AVFOUNDATION])  {
-        [self.navigationController pushViewController:[[MMAVFDViewController alloc] init] animated:NO];
+//        [self.navigationController pushViewController:[[MMAVFDViewController alloc] init] animated:NO];
     } else if ([selectedTex isEqualToString:FFMPEG_VT]) {
         [self.navigationController pushViewController:[[MMAVFFTBViewController alloc] init] animated:NO];
     }

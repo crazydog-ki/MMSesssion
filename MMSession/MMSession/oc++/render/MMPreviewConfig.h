@@ -4,7 +4,7 @@
 
 struct MMPreviewConfig {
     CGRect viewFrame;
-    BOOL renderYUV;
+    bool renderYUV;
     CGFloat rotation; //弧度
     CGRect presentRect;
 };

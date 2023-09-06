@@ -3,14 +3,9 @@
 // Github : https://github.com/crazydog-ki
 
 #import <Foundation/Foundation.h>
+#import "MMBaseDefine.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
-typedef NS_OPTIONS(NSInteger, MMPixelFormatType) {
-    MMPixelFormatTypeFullRangeYUV  = 1 << 0,
-    MMPixelFormatTypeVideoRangeYUV = 1 << 1,
-    MMPixelFormatTypeBGRA          = 1 << 2,
-};
 
 @interface MMEncodeConfig : NSObject
 @property (nonatomic, strong) NSURL *outputUrl;

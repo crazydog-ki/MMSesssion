@@ -3,12 +3,11 @@
 // Github : https://github.com/crazydog-ki
 
 #import <Foundation/Foundation.h>
-#import "MMSessionProcessProtocol.h"
 #import "MMEncodeConfig.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MMEncodeWriter : NSObject<MMSessionProcessProtocol>
+@interface MMEncodeWriter : NSObject
 typedef void (^CompleteHandle)(NSURL *_Nullable fileUrl, NSError *_Nullable error);
 - (instancetype)initWithConfig:(MMEncodeConfig *)config;
 - (void)startEncode;

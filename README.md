@@ -13,3 +13,6 @@
     2. `AvCc&AnnexB`格式探测
     3. `带B帧`视频`生产者消费者`driveUnit编写（unique_lock+condition_variable）
     4. unitBase支持外部指定处理队列
+3. 2023.09.06
+    1. audio基于`ffmpeg解封装&解码`、`AudioQueueRef播放`（`推模式`）链路打通
+    2. 优化目录结构

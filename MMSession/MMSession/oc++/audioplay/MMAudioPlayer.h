@@ -19,18 +19,21 @@ public:
     void pause();
     void stop();
     void flush();
+    double getPts();
     ~MMAudioPlayer();
 private:
     MMAudioPlayConfig m_config;
     
-    AudioQueueBufferRef *m_audioBufferArr; //音频流缓冲区
-    AudioBufferList *m_bufferList = nullptr;
     AudioQueueRef m_audioQueue;
-    std::list<shared_ptr<MMSampleData>> m_audioQ;
+    AudioQueueBufferRef *m_audioBufferArr = nullptr; //音频流缓冲区
+    AudioBufferList *m_bufferList = nullptr;
+    
+    std::list<shared_ptr<MMSampleData>> m_sampleDataQ;
     
     std::mutex m_mutex;
     std::condition_variable m_cond;
-    bool isSytemPull = false;
+    
+    double m_pts = 0.0f;
     
     PullAudioDataBlock m_pullDataBlk;
     

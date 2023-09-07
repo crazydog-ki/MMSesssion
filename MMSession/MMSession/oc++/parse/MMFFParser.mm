@@ -245,7 +245,7 @@ void MMFFParser::process(std::shared_ptr<MMSampleData> &data) {
                 data->parsedData    = packet;
                 data->isKeyFrame    = isKey;
                 
-                // NSLog(@"[yjx] video packet is keyframe - %d, pts - %lf, dts - %lf", isKey, data->pts, data->dts);
+                //NSLog(@"[yjx] video packet is keyframe - %d, pts - %lf, dts - %lf", isKey, data->pts, data->dts);
 
                 data->dataType = MMSampleDataType_Parsed_Video;
 
@@ -273,7 +273,7 @@ void MMFFParser::process(std::shared_ptr<MMSampleData> &data) {
                 data->audioIdx    = audioIdx;
                 data->parsedData  = packet;
                 
-                NSLog(@"[yjx] audio packet pts - %lf, dts - %lf", data->pts, data->dts);
+                //NSLog(@"[yjx] audio packet pts - %lf, dts - %lf", data->pts, data->dts);
 
                 data->dataType = MMSampleDataType_Parsed_Audio;
                 

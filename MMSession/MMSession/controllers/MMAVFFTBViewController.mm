@@ -212,6 +212,14 @@ using namespace std;
 
 - (void)_driveVideo {
     while (self.isReady && _ffVideoParser && _vtDecoder && _previewUnit) {
+        double audioPts = _audioPlayer->getPts();
+        double videoPts = _previewUnit->getPts();
+        
+        if (audioPts <= videoPts) {
+            [NSThread sleepForTimeInterval:0.001];
+            continue;
+        }
+            
         shared_ptr<MMSampleData> sampleData = make_shared<MMSampleData>();
         sampleData->dataType = MMSampleDataType_None_Video;
         _ffVideoParser->process(sampleData);

@@ -10,10 +10,7 @@ static const int kBufferListSize = 8192;
 static const int kBufferCount    = 3;
 static const int kMaxAudioCache  = 20;
 
-void MMAudioQueuePropertyCallback(void *inUserData,
-                                  AudioQueueRef inAQ,
-                                  AudioQueuePropertyID inID) {
-
+void MMAudioQueuePropertyCallback(void *inUserData, AudioQueueRef inAQ, AudioQueuePropertyID inID) {
     if (inID == kAudioQueueProperty_IsRunning) {
         UInt32 flag = 0;
         UInt32 size = sizeof(flag);
@@ -21,26 +18,46 @@ void MMAudioQueuePropertyCallback(void *inUserData,
     }
 }
 
-void MMAudioQueuePullData(void* __nullable inUserData,
-                          AudioQueueRef inAQ,
-                          AudioQueueBufferRef inBuffer) {
+void MMAudioQueuePullData(void* __nullable inUserData, AudioQueueRef inAQ, AudioQueueBufferRef inBuffer) {
     MMAudioPlayer *player = (MMAudioPlayer *)inUserData;
     if (!player) {
         return;
     }
 
     OSStatus ret = noErr;
-    if (inBuffer == nullptr) {
-        ret = AudioQueueAllocateBuffer(player->m_audioQueue,
-                                       kMaxByteSize,
-                                       &inBuffer);
+    if (nullptr == inBuffer) {
+        ret = AudioQueueAllocateBuffer(player->m_audioQueue, kMaxByteSize, &inBuffer);
         if (!inBuffer || ret != noErr) {
             cout << "[yjx] AudioQueueAllocateBuffer - " << ret << endl;
             return;
         }
     }
-
-    if (player->m_config.needPullData) { //向外拉数据
+    
+    if (!player->m_config.needPullData) { //推模式
+        AudioBufferList *bufferList = player->m_bufferList;
+        [MMBufferUtils resetAudioBufferList:bufferList];
+        
+        if (!player->m_sampleDataQ.empty()) {
+            std::unique_lock<std::mutex> lock(player->m_mutex);
+            shared_ptr<MMSampleData> data = player->m_sampleDataQ.back();
+            player->m_sampleDataQ.pop_back();
+            player->m_pts = data->pts;
+            
+            CMSampleBufferRef sampleBuffer = data->audioSample;
+            UInt32 samples = (UInt32)CMSampleBufferGetNumSamples(sampleBuffer);
+            bufferList->mBuffers[0].mDataByteSize = samples * MMBufferUtils.asbd.mBytesPerFrame;
+            CMSampleBufferCopyPCMDataIntoAudioBufferList(sampleBuffer, 0, samples, bufferList);
+            player->m_cond.notify_one();
+        }
+        
+        UInt32 dataSize = bufferList->mBuffers[0].mDataByteSize;
+        memcpy(inBuffer->mAudioData, bufferList->mBuffers[0].mData, dataSize);
+        inBuffer->mAudioDataByteSize = dataSize;
+        ret = AudioQueueEnqueueBuffer(player->m_audioQueue, inBuffer, 0, NULL);
+        if (ret != noErr) {
+            cout << "[yjx] AudioQueueEnqueueBuffer - " << ret << endl;
+        }
+    } else { //向外拉数据
 //        player->m_pullDataBlk([&](AudioBufferList * _Nonnull bufferList) {
 //            if (bufferList) {
 //                UInt32 dataSize = bufferList->mBuffers[0].mDataByteSize;
@@ -53,45 +70,11 @@ void MMAudioQueuePullData(void* __nullable inUserData,
 //                ret = AudioQueueEnqueueBuffer(player->m_audioQueue, inBuffer, 0, NULL);
 //            }
 //        });
-    } else { //使用内部缓存
-        AudioBufferList *bufferList = player->m_bufferList;
-        [MMBufferUtils resetAudioBufferList:bufferList];
-        
-        std::list<shared_ptr<MMSampleData>> audiobufferQ = player->m_audioQ; //会执行拷贝
-        if (!audiobufferQ.empty()) {
-            std::unique_lock<std::mutex> lock(player->m_mutex);
-            
-            shared_ptr<MMSampleData> data = audiobufferQ.back();
-            //audiobufferQ.pop_back(); //修改audiobufferQ，不会影响player->m_audioQ
-            player->m_audioQ.pop_back();
-            
-            CMSampleBufferRef sampleBuffer = data->audioSample;
-            UInt32 samples = (UInt32)CMSampleBufferGetNumSamples(sampleBuffer);
-            bufferList->mBuffers[0].mDataByteSize = samples * MMBufferUtils.asbd.mBytesPerFrame;
-            CMSampleBufferCopyPCMDataIntoAudioBufferList(sampleBuffer, 0, samples, bufferList);
-            player->m_cond.notify_one();
-            
-            cout << "[yjx] consume audio samples: " << (int)CMSampleBufferGetNumSamples(sampleBuffer)
-                 << ", pts: " << data->pts
-                 << ", queue size: " << (int)audiobufferQ.size()
-                 << endl;
-        }
-
-        if (bufferList) {
-            UInt32 dataSize = bufferList->mBuffers[0].mDataByteSize;
-            memcpy(inBuffer->mAudioData, bufferList->mBuffers[0].mData, dataSize);
-            inBuffer->mAudioDataByteSize = dataSize;
-            ret = AudioQueueEnqueueBuffer(player->m_audioQueue, inBuffer, 0, NULL);
-            if (ret != noErr) {
-                cout << "[yjx] AudioQueueEnqueueBuffer - " << ret << endl;
-            }
-        }
     }
 }
 
 MMAudioPlayer::MMAudioPlayer(MMAudioPlayConfig config): m_config(config) {
-    m_bufferList = [MMBufferUtils produceAudioBufferList:MMBufferUtils.asbd
-                                           numberFrames:kBufferListSize];
+    m_bufferList = [MMBufferUtils produceAudioBufferList:MMBufferUtils.asbd numberFrames:kBufferListSize];
     _initAudioQueue();
 }
 
@@ -104,19 +87,18 @@ void MMAudioPlayer::process(std::shared_ptr<MMSampleData> &data) {
 
     std::unique_lock<std::mutex> lock(m_mutex);
     m_cond.wait(lock, [this] {
-        return m_audioQ.size() <= kMaxAudioCache;
+        return m_sampleDataQ.size() <= kMaxAudioCache;
     });
-    m_audioQ.push_back(data);
-    cout << "[yjx] receive audio samples: " << (UInt32)CMSampleBufferGetNumSamples(data->audioSample)
-         << ", pts: " << data->pts
-         << ", size: " << (int)m_audioQ.size()
-         <<  endl;
+    m_sampleDataQ.push_back(data);
+//    cout << "[yjx] receive audio samples: " << (UInt32)CMSampleBufferGetNumSamples(data->audioSample)
+//         << ", pts: " << data->pts
+//         << ", size: " << (int)m_sampleDataQ.size()
+//         <<  endl;
 }
 
 void MMAudioPlayer::play() {
     doTask(MMTaskSync, ^{
         AudioQueueReset(m_audioQueue);
-        
         m_audioBufferArr = (AudioQueueBufferRef *)calloc(kBufferCount, sizeof(AudioQueueBufferRef));
         for (int i = 0; i < kBufferCount; i++) {
             if (!m_audioBufferArr[i] || !m_audioBufferArr[i]->mAudioData) {
@@ -124,8 +106,6 @@ void MMAudioPlayer::play() {
             }
             MMAudioQueuePullData((void *)this, m_audioQueue, m_audioBufferArr[i]);
         }
-        
-        isSytemPull = true;
         
         if (m_audioQueue) {
             OSStatus ret = AudioQueueStart(m_audioQueue, NULL);
@@ -161,11 +141,15 @@ void MMAudioPlayer::flush() {
     });
 }
 
+double MMAudioPlayer::getPts() {
+    return m_pts;
+}
+
 MMAudioPlayer::~MMAudioPlayer() {
     if (m_audioQueue) {
         AudioQueueStop(m_audioQueue, true);
         AudioQueueDispose(m_audioQueue, true);
-        m_audioQueue = nil;
+        m_audioQueue = nullptr;
     }
 }
 

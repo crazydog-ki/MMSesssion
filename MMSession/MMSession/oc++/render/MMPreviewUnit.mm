@@ -13,8 +13,8 @@ MMPreviewUnit::MMPreviewUnit(MMPreviewConfig config): m_config(config) {
     m_renderView.frame = config.viewFrame;
 }
 
-MMVideoGLPreview* MMPreviewUnit::getRenderView() {
-    return m_renderView;
+MMPreviewUnit::~MMPreviewUnit() {
+    cout << "[yjx] MMPreviewUnit::~MMPreviewUnit()" << endl;
 }
 
 void MMPreviewUnit::process(std::shared_ptr<MMSampleData> &data) {
@@ -22,10 +22,15 @@ void MMPreviewUnit::process(std::shared_ptr<MMSampleData> &data) {
         if (m_renderView) {
             CVPixelBufferRef pixelBuffer = data->videoBuffer;
             [m_renderView processPixelBuffer:pixelBuffer];
+            m_pts = data->pts;
         }
     });
 }
 
-MMPreviewUnit::~MMPreviewUnit() {
-    cout << "[yjx] MMPreviewUnit::~MMPreviewUnit()" << endl;
+MMVideoGLPreview* MMPreviewUnit::getRenderView() {
+    return m_renderView;
+}
+
+double MMPreviewUnit::getPts() {
+    return m_pts;
 }

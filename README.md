@@ -3,11 +3,12 @@
 
 # 仓库简介
 采用`OC++混编`，基础技术栈如下：
-1. `FFmpeg解封装`、`VT解码`、`OpenGL ES上屏`；
+1. `FFmpeg解封装`、`VT解码`、`OpenGL ES上屏`、`AudioQueueRef播放`
+2. 生产者消费者模式
 
 # 开发roadmap：
 1. 2023.08.24 
-    1. `ffmpeg解封装` + `vt解码` + `open gl渲染`上屏链路打通；
+    1. `ffmpeg解封装` + `vt解码` + `open gl渲染`上屏链路打通
 2. 2023.08.27 
     1. vt解码附带信息crash问题fix
     2. `AvCc&AnnexB`格式探测

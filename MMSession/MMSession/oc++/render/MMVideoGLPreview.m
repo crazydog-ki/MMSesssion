@@ -195,19 +195,20 @@ static const GLfloat kColorConversion709[] = {
         -1.0f,  1.0f, -1.0f,   0.0f, 0.0f,
          1.0f,  1.0f, -1.0f,   1.0f, 0.0f,
     };
-    
+
+    // 使用VBO的方式upload顶点数据
     GLuint attaBuffer;
     glGenBuffers(1, &attaBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, attaBuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(attrArr), &attrArr, GL_DYNAMIC_DRAW);
     
     GLuint vertex_coord = uniforms[UNIFORM_VERTEX_COORD];
-    glVertexAttribPointer(vertex_coord, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*5, NULL);
-    glEnableVertexAttribArray(vertex_coord);
+    glVertexAttribPointer(vertex_coord, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*5, NULL); //向shader发送顶点数据
+    glEnableVertexAttribArray(vertex_coord); //激活
     
     GLuint frag_coord = uniforms[UNIFORM_FRAGMENT_COORD];
-    glVertexAttribPointer(frag_coord, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*5, (float *)NULL+3);
-    glEnableVertexAttribArray(frag_coord);
+    glVertexAttribPointer(frag_coord, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*5, (float *)NULL+3); //向shader发送纹理数据
+    glEnableVertexAttribArray(frag_coord); //激活
 }
 
 - (void)_cleanUpTextures {

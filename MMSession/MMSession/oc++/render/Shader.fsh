@@ -2,7 +2,7 @@
 // Email  : jxyou.ki@gmail.com
 // Github : https://github.com/crazydog-ki
 
-varying highp vec2 texCoordVarying; //顶点坐标
+varying highp vec2 texCoordVarying; //纹理坐标
 precision highp float;
 
 //亮度和色度阈值处理

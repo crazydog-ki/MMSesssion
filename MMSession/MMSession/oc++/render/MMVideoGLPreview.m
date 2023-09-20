@@ -203,11 +203,11 @@ static const GLfloat kColorConversion709[] = {
     glBufferData(GL_ARRAY_BUFFER, sizeof(attrArr), &attrArr, GL_DYNAMIC_DRAW);
     
     GLuint vertex_coord = uniforms[UNIFORM_VERTEX_COORD];
-    glVertexAttribPointer(vertex_coord, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*5, NULL); //向shader发送顶点数据
+    glVertexAttribPointer(vertex_coord, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*5, NULL); //向shader发送顶点坐标
     glEnableVertexAttribArray(vertex_coord); //激活
     
     GLuint frag_coord = uniforms[UNIFORM_FRAGMENT_COORD];
-    glVertexAttribPointer(frag_coord, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*5, (float *)NULL+3); //向shader发送纹理数据
+    glVertexAttribPointer(frag_coord, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*5, (float *)NULL+3); //向shader发送坐标
     glEnableVertexAttribArray(frag_coord); //激活
 }
 

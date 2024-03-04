@@ -25,6 +25,8 @@ public:
     
     ~MMFFParser();
     
+    void destroy() override;
+    
     void process(std::shared_ptr<MMSampleData> &data) override;
 private:
     void _init();
@@ -40,7 +42,8 @@ private:
     AVStream *m_audioStream;
     int m_videoIdx;
     int m_audioIdx;
-    bool isFirstPacket = true;
+    bool m_isFirstPacket = true;
+    bool m_stopFlag = false;
 };
 
 

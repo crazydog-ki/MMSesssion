@@ -37,9 +37,9 @@ static const char *WRITER_QUEUE = "mmsession_camera_compile_queue";
     dispatch_sync(_writerQueue, ^{
         _stopFlag = NO;
         if (self.assetWriter.status == AVAssetWriterStatusUnknown && [self.assetWriter startWriting]) {
-            NSLog(@"[yjx] start encode success");
+            NSLog(@"[mm] start encode success");
         } else {
-            NSLog(@"[yjx] start encode error status: %zd", self.assetWriter.status);
+            NSLog(@"[mm] start encode error status: %zd", self.assetWriter.status);
         }
     });
 }
@@ -51,7 +51,7 @@ static const char *WRITER_QUEUE = "mmsession_camera_compile_queue";
         } else {
             handler(self.config.outputUrl, nil);
         }
-        NSLog(@"[yjx] write encode finish");
+        NSLog(@"[mm] write encode finish");
     };
     
     dispatch_sync(_writerQueue, ^{
@@ -88,7 +88,7 @@ static const char *WRITER_QUEUE = "mmsession_camera_compile_queue";
 //        double ptsSec = CMTimeGetSeconds(frameTime);
 //        if (self.isFirstFrame) {
 //            if (self.assetWriter.status == AVAssetWriterStatusUnknown && [self.assetWriter startWriting]) {
-//                NSLog(@"[yjx] start encode success, pts: %lf", ptsSec);
+//                NSLog(@"[mm] start encode success, pts: %lf", ptsSec);
 //            }
 //            [self.assetWriter startSessionAtSourceTime:frameTime];
 //            self.isFirstFrame = NO;
@@ -104,15 +104,15 @@ static const char *WRITER_QUEUE = "mmsession_camera_compile_queue";
 //                    ret = [self.videoAdaptor appendPixelBuffer:pixelBuffer withPresentationTime:frameTime];
 //                }
 //            } else {
-//                NSLog(@"[yjx] encode drop video frame-2, pts: %lf", ptsSec);
+//                NSLog(@"[mm] encode drop video frame-2, pts: %lf", ptsSec);
 //            }
 //        } else {
 //            if (self.audioWriterInput.readyForMoreMediaData && self.assetWriter.status == AVAssetWriterStatusWriting) {
 //                if (![self.audioWriterInput appendSampleBuffer:sampleBuffer]) {
-//                    NSLog(@"[yjx] encode drop audio frame-1, pts: %lf", ptsSec);
+//                    NSLog(@"[mm] encode drop audio frame-1, pts: %lf", ptsSec);
 //                }
 //            } else {
-//                NSLog(@"[yjx] encode drop audio frame-2, pts: %lf", ptsSec);
+//                NSLog(@"[mm] encode drop audio frame-2, pts: %lf", ptsSec);
 //            }
 //        }
 //

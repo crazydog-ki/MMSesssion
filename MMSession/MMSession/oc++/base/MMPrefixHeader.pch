@@ -5,6 +5,9 @@
 #ifndef MMPrefixHeader_pch
 #define MMPrefixHeader_pch
 
+#define REFRENECE_COUNT 5
+
+#ifdef __OBJC__ //表示宏内引用的文件确保只被使用Objective-C语言的文件所引用
 #import <AVFoundation/AVFoundation.h>
 #import <Masonry/Masonry.h>
 #import <TZImagePickerController/TZImagePickerController.h>
@@ -31,5 +34,6 @@ _Pragma("clang diagnostic push") \
 _Pragma("clang diagnostic ignored \"-Wshadow\"") \
 __strong typeof(var) var = weak_##var; \
 _Pragma("clang diagnostic pop")
+#endif
 
 #endif /* MMPrefixHeader_pch */

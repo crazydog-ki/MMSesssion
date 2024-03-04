@@ -38,7 +38,7 @@ static const NSUInteger kAudioQueueNum = 3;
     dispatch_sync(_audioRecorderQueue, ^{
         OSStatus status = AudioQueueStart(_audioQueue, NULL);
         if (status != noErr) {
-            NSLog(@"[yjx] audio queue start error: %d", status);
+            NSLog(@"[mm] audio queue start error: %d", status);
         }
     });
 }
@@ -47,7 +47,7 @@ static const NSUInteger kAudioQueueNum = 3;
     dispatch_sync(_audioRecorderQueue, ^{
         OSStatus status = AudioQueueStop(_audioQueue, YES);
         if (status != noErr) {
-            NSLog(@"[yjx] audio queue stop error: %d", status);
+            NSLog(@"[mm] audio queue stop error: %d", status);
         }
         
         AudioFileClose(_audioFileID);
@@ -82,7 +82,7 @@ static const NSUInteger kAudioQueueNum = 3;
                                              kAudioFileFlags_EraseFile,
                                              &audioFileID);
     if (status != noErr) {
-        NSLog(@"[yjx] audio file create error: %d", status);
+        NSLog(@"[mm] audio file create error: %d", status);
     }
     CFRelease(audioUrl);
     _audioFileID = audioFileID;
@@ -97,7 +97,7 @@ static const NSUInteger kAudioQueueNum = 3;
                                          0,
                                          &_audioQueue);
     if (status != noErr) {
-        NSLog(@"[yjx] init audio recorder error: %d", (int)status);
+        NSLog(@"[mm] init audio recorder error: %d", (int)status);
     }
 
     int bufferSize = 1024 * sizeof(float) * 16;
@@ -118,7 +118,7 @@ static const NSUInteger kAudioQueueNum = 3;
                                          0,
                                          NULL);
         if (status != noErr) {
-            NSLog(@"[yjx] audio recorder allocate / enqueue buffer error: %d", status);
+            NSLog(@"[mm] audio recorder allocate / enqueue buffer error: %d", status);
         }
     }
 }
@@ -129,7 +129,7 @@ void AudioRecordCallback(void *__nullable                   inUserData,
                          const AudioTimeStamp               *inStartTime,
                          UInt32                             inNumberPacketDescriptions,
                          const AudioStreamPacketDescription *__nullable inPacketDescs) {
-    NSLog(@"[yjx] receive audio buffer");
+    NSLog(@"[mm] receive audio buffer");
     MMAudioRecorder *audioRecorder = (__bridge MMAudioRecorder *)inUserData;
     UInt32 packetNum = inBuffer->mAudioDataByteSize/audioRecorder->_audioDesc.mBytesPerPacket;
     OSStatus status = AudioFileWritePackets(audioRecorder->_audioFileID,
@@ -140,7 +140,7 @@ void AudioRecordCallback(void *__nullable                   inUserData,
                                             &packetNum,
                                             inBuffer);
     if (status != noErr) {
-        NSLog(@"[yjx] audio file write packet error: %d", status);
+        NSLog(@"[mm] audio file write packet error: %d", status);
     }
     audioRecorder->_totalRecordNum += packetNum;
     AudioQueueEnqueueBuffer(inAQ, inBuffer, 0, NULL);

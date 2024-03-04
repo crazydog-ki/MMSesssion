@@ -28,21 +28,28 @@ void MMAudioQueuePullData(void* __nullable inUserData, AudioQueueRef inAQ, Audio
     if (nullptr == inBuffer) {
         ret = AudioQueueAllocateBuffer(player->m_audioQueue, kMaxByteSize, &inBuffer);
         if (!inBuffer || ret != noErr) {
-            cout << "[yjx] AudioQueueAllocateBuffer - " << ret << endl;
+            cout << "[mm] AudioQueueAllocateBuffer: " << ret << endl;
             return;
         }
     }
     
-    if (!player->m_config.needPullData) { //推模式
+    bool isPushMode = !player->m_config.needPullData;
+    bool isEof = player->m_reachEof;
+    bool isStop = player->m_status==MMAudioPlayerStatus_Stop;
+    if (isPushMode) { //推模式
         AudioBufferList *bufferList = player->m_bufferList;
         [MMBufferUtils resetAudioBufferList:bufferList];
-        
-        if (!player->m_sampleDataQ.empty()) {
+        /*
+         这个过程创建了dataQueue作为一个新的std::list实例，它包含了和player->m_sampleDataQueue相同的元素。由于列表中
+         的元素是std::shared_ptr<MMSampleData>类型，拷贝构造函数会复制这些智能指针，而不是它们所指向的对象。这意味着两个
+         列表共享对相同MMSampleData对象的引用，而这些对象的生命周期则由这些智能指针的引用计数共同管理。
+         */
+        // list<shared_ptr<MMSampleData>> dataQueue = player->m_sampleDataQueue; //会调用std::list的拷贝构造函数
+        if (!player->m_sampleDataQueue.empty() && !isStop) {
             std::unique_lock<std::mutex> lock(player->m_mutex);
-            shared_ptr<MMSampleData> data = player->m_sampleDataQ.back();
-            player->m_sampleDataQ.pop_back();
+            shared_ptr<MMSampleData> data = player->m_sampleDataQueue.front();
+            player->m_sampleDataQueue.pop_front();
             player->m_pts = data->pts;
-            
             CMSampleBufferRef sampleBuffer = data->audioSample;
             UInt32 samples = (UInt32)CMSampleBufferGetNumSamples(sampleBuffer);
             bufferList->mBuffers[0].mDataByteSize = samples * MMBufferUtils.asbd.mBytesPerFrame;
@@ -55,21 +62,35 @@ void MMAudioQueuePullData(void* __nullable inUserData, AudioQueueRef inAQ, Audio
         inBuffer->mAudioDataByteSize = dataSize;
         ret = AudioQueueEnqueueBuffer(player->m_audioQueue, inBuffer, 0, NULL);
         if (ret != noErr) {
-            cout << "[yjx] AudioQueueEnqueueBuffer - " << ret << endl;
+            cout << "[mm] AudioQueueEnqueueBuffer: " << ret << endl;
         }
-    } else { //向外拉数据
-//        player->m_pullDataBlk([&](AudioBufferList * _Nonnull bufferList) {
-//            if (bufferList) {
-//                UInt32 dataSize = bufferList->mBuffers[0].mDataByteSize;
-//                memcpy(inBuffer->mAudioData, bufferList->mBuffers[0].mData, dataSize);
-//                inBuffer->mAudioDataByteSize = dataSize;
-//                ret = AudioQueueEnqueueBuffer(player->m_audioQueue, inBuffer, 0, NULL);
-//            } else {
-//                memset(inBuffer->mAudioData, 0, kMaxByteSize);
-//                inBuffer->mAudioDataByteSize = kMaxByteSize;
-//                ret = AudioQueueEnqueueBuffer(player->m_audioQueue, inBuffer, 0, NULL);
-//            }
-//        });
+        
+        while (!isEof && !isStop && player->m_sampleDataQueue.size() <= kMaxAudioCache/2) { //音频要抓紧生产
+            MMMsg msg;
+            msg.msgID = MMMsg_AudioNeedBuffer;
+            player->m_sharedUnitCtx->post(msg);
+        }
+        
+        if ((isEof || isStop) && player->m_sampleDataQueue.empty()) {
+            MMMsg msg;
+            msg.msgID = MMMsg_AudioPlayEnd;
+            player->m_sharedUnitCtx->post(msg);
+        }
+    } else { //拉模式
+        /*
+         player->m_pullDataBlk([&](AudioBufferList * _Nonnull bufferList) {
+             if (bufferList) {
+                 UInt32 dataSize = bufferList->mBuffers[0].mDataByteSize;
+                 memcpy(inBuffer->mAudioData, bufferList->mBuffers[0].mData, dataSize);
+                 inBuffer->mAudioDataByteSize = dataSize;
+                 ret = AudioQueueEnqueueBuffer(player->m_audioQueue, inBuffer, 0, NULL);
+             } else {
+                 memset(inBuffer->mAudioData, 0, kMaxByteSize);
+                 inBuffer->mAudioDataByteSize = kMaxByteSize;
+                 ret = AudioQueueEnqueueBuffer(player->m_audioQueue, inBuffer, 0, NULL);
+             }
+         });
+         */
     }
 }
 
@@ -78,8 +99,25 @@ MMAudioPlayer::MMAudioPlayer(MMAudioPlayConfig config): m_config(config) {
     _initAudioQueue();
 }
 
+void MMAudioPlayer::destroy() {
+    MMUnitBase::destroy();
+    m_status = MMAudioPlayerStatus_Stop;
+    std::unique_lock<std::mutex> lock(m_mutex);
+    if (m_audioQueue) {
+        pause();
+        flush();
+        stop();
+        AudioQueueDispose(m_audioQueue, true);
+        m_audioQueue = nullptr;
+    }
+    m_sampleDataQueue.clear();
+}
+
 void MMAudioPlayer::process(std::shared_ptr<MMSampleData> &data) {
-    if (data->isEof) return;
+    if (data->isEof) {
+        m_reachEof = true;
+        return;
+    }
     if (!data->audioSample) {
         return;
     }
@@ -87,16 +125,17 @@ void MMAudioPlayer::process(std::shared_ptr<MMSampleData> &data) {
 
     std::unique_lock<std::mutex> lock(m_mutex);
     m_cond.wait(lock, [this] {
-        return m_sampleDataQ.size() <= kMaxAudioCache;
+        return m_sampleDataQueue.size() <= kMaxAudioCache;
     });
-    m_sampleDataQ.push_back(data);
-//    cout << "[yjx] receive audio samples: " << (UInt32)CMSampleBufferGetNumSamples(data->audioSample)
-//         << ", pts: " << data->pts
-//         << ", size: " << (int)m_sampleDataQ.size()
-//         <<  endl;
+    m_sampleDataQueue.push_back(data);
+//    cout << "[mm] receive audio samples: " << (UInt32)CMSampleBufferGetNumSamples(data->audioSample)
+//         << ", pts: "  << data->pts
+//         << ", size: " << (int)m_sampleDataQueue.size()
+//         << endl;
 }
 
 void MMAudioPlayer::play() {
+    if (m_status == MMAudioPlayerStatus_Play) return;
     doTask(MMTaskSync, ^{
         AudioQueueReset(m_audioQueue);
         m_audioBufferArr = (AudioQueueBufferRef *)calloc(kBufferCount, sizeof(AudioQueueBufferRef));
@@ -109,26 +148,35 @@ void MMAudioPlayer::play() {
         
         if (m_audioQueue) {
             OSStatus ret = AudioQueueStart(m_audioQueue, NULL);
-            cout << "[yjx] AudioQueueStart - " << ret << endl;
+            if (ret != noErr) {
+                cout << "[mm] AudioQueueStart: " << ret << endl;
+            }
         }
+        m_status = MMAudioPlayerStatus_Play;
     });
 }
 
 void MMAudioPlayer::pause() {
-    doTask(MMTaskSync, ^{
+    if (m_status == MMAudioPlayerStatus_Pause) return;
+    doTask(MMTaskAsync, ^{
         if (m_audioQueue) {
             OSStatus ret = AudioQueuePause(m_audioQueue);
-            cout << "[yjx] AudioQueuePause - " << ret << endl;
+            cout << "[mm] AudioQueuePause: " << ret << endl;
         }
+        m_status = MMAudioPlayerStatus_Pause;
     });
 }
 
 void MMAudioPlayer::stop() {
+    if (m_status == MMAudioPlayerStatus_Stop) return;
     doTask(MMTaskSync, ^{
         if (m_audioQueue) {
             OSStatus ret = AudioQueueStop(m_audioQueue, YES);
-            cout << "[yjx] AudioQueueStop - " << ret << endl;
+            if (ret != noErr) {
+                cout << "[mm] AudioQueueStop: " << ret << endl;
+            }
         }
+        m_status = MMAudioPlayerStatus_Stop;
     });
 }
 
@@ -136,7 +184,7 @@ void MMAudioPlayer::flush() {
     doTask(MMTaskSync, ^{
         if (m_audioQueue) {
             OSStatus ret = AudioQueueFlush(m_audioQueue);
-            cout << "[yjx] AudioQueueFlush - " << ret << endl;
+            cout << "[mm] AudioQueueFlush: " << ret << endl;
         }
     });
 }
@@ -146,11 +194,6 @@ double MMAudioPlayer::getPts() {
 }
 
 MMAudioPlayer::~MMAudioPlayer() {
-    if (m_audioQueue) {
-        AudioQueueStop(m_audioQueue, true);
-        AudioQueueDispose(m_audioQueue, true);
-        m_audioQueue = nullptr;
-    }
 }
 
 #pragma mark - Private
@@ -165,10 +208,10 @@ void MMAudioPlayer::_initAudioQueue() {
                                        &m_audioQueue);
     if (ret != noErr) {
         AudioQueueDispose(m_audioQueue, YES);
-        m_audioQueue = nil;
+        cout << "[mm] AudioQueueNewOutput: " << ret << endl;
+        m_audioQueue = nullptr;
         return;
     }
-    cout << "[yjx] AudioQueueNewOutput - " << ret << endl;
     ret = AudioQueueAddPropertyListener(m_audioQueue,
                                         kAudioQueueProperty_IsRunning,
                                         MMAudioQueuePropertyCallback,

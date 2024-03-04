@@ -10,6 +10,7 @@ class MMPreviewUnit: public MMUnitBase {
 public:
     MMPreviewUnit(MMPreviewConfig config);
     void process(std::shared_ptr<MMSampleData> &data) override;
+    void destroy() override;
     MMVideoGLPreview* getRenderView();
     double getPts();
     ~MMPreviewUnit();

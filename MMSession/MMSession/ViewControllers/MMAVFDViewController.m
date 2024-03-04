@@ -70,7 +70,7 @@
 //}
 //
 //- (void)dealloc {
-//    NSLog(@"[yjx] avfd controller destroy");
+//    NSLog(@"[mm] avfd controller destroy");
 //    if (_bufferList) {
 //        [MMBufferUtils freeAudioBufferList:_bufferList];
 //        _bufferList = nil;
@@ -136,7 +136,7 @@
 //
 //- (void)_startConcat {
 //    if (!self.videoAssets.count) {
-//        NSLog(@"[yjx] video assets is empty");
+//        NSLog(@"[mm] video assets is empty");
 //        return;
 //    }
 //    
@@ -146,7 +146,7 @@
 //    for (NSUInteger idx = 0; idx < self.videoAssets.count; idx++) {
 //        AVAsset *asset = self.videoAssets[idx];
 //        if (asset.rotation) {
-//            NSLog(@"[yjx] not support concat video with rotation currently");
+//            NSLog(@"[mm] not support concat video with rotation currently");
 //            continue;
 //        }
 //        AVAssetTrack *videoTrack = [asset tracksWithMediaType:AVMediaTypeVideo].firstObject;
@@ -158,8 +158,8 @@
 //        [composition concatVideo:self.videoAssets[idx] timeRange:CMTimeRangeMake(cmStart, cmDuration)];
 //        // [composition concatVideo:self.videoAssets[idx] timeRange:videoTrack.timeRange];
 //        
-//        NSLog(@"[yjx] video asset start: %lf, duration: %lf", CMTimeGetSeconds(videoTrack.timeRange.start), CMTimeGetSeconds(videoTrack.timeRange.duration));
-//        NSLog(@"[yjx] video asset after clip start: %lf, duration: %lf", start, duration);
+//        NSLog(@"[mm] video asset start: %lf, duration: %lf", CMTimeGetSeconds(videoTrack.timeRange.start), CMTimeGetSeconds(videoTrack.timeRange.duration));
+//        NSLog(@"[mm] video asset after clip start: %lf, duration: %lf", start, duration);
 //    }
 //    [self.videoAssets removeAllObjects];
 //    self.composition = composition;
@@ -192,7 +192,7 @@
 //        MMSampleData *videoData = [self.reader pullSampleData:MMSampleDataType_None_Video];
 //        if (videoData.statusFlag == MMSampleDataFlagEnd) {
 //            [self.displayLink setPaused:YES];
-//            NSLog(@"[yjx] pull video buffer end");
+//            NSLog(@"[mm] pull video buffer end");
 //            return;
 //        }
 //        if (self.writer) {
@@ -200,7 +200,7 @@
 //        }
 //        
 //        self.videoPts = CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(videoData.sampleBuffer));
-//        NSLog(@"[yjx] pull video buffer, pts: %lf", self.videoPts);
+//        NSLog(@"[mm] pull video buffer, pts: %lf", self.videoPts);
 //        
 //        if (self.glPreview) {
 //            [self.glPreview processSampleData:videoData];
@@ -215,7 +215,7 @@
 //        MMAudioQueuePlayer *audioPlayer = [[MMAudioQueuePlayer alloc] initWithConfig:playerConfig];
 //        self.audioPlayer = audioPlayer;
 //    } else {
-//        NSLog(@"[yjx] audio is playing now, can not interrupt");
+//        NSLog(@"[mm] audio is playing now, can not interrupt");
 //        return;
 //    }
 //    
@@ -226,11 +226,11 @@
 //        strongify(self);
 //        MMSampleData *sampleData = [self.reader pullSampleData:MMSampleDataType_None_Audio];
 //        if (sampleData.statusFlag == MMSampleDataFlagEnd) {
-//            NSLog(@"[yjx] pull audio buffer end");
+//            NSLog(@"[mm] pull audio buffer end");
 //            self.reader = nil;
 //            
 //            [self.writer stopEncodeWithCompleteHandle:^(NSURL * _Nullable fileUrl, NSError * _Nullable error) {
-//                NSLog(@"[yjx] writer output url: %@", fileUrl);
+//                NSLog(@"[mm] writer output url: %@", fileUrl);
 //                /// 保存相册，便于调试
 //                if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(fileUrl.path)) {
 //                    UISaveVideoAtPathToSavedPhotosAlbum(fileUrl.path, nil, nil, nil);
@@ -255,7 +255,7 @@
 //        NSUInteger samplesCount = (long)CMSampleBufferGetNumSamples(sampleBuffer);
 //        self.audioPts = CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(sampleBuffer));
 //    
-//        NSLog(@"[yjx] pull audio buffer, samples: %ld, pts: %lf", samplesCount, self.audioPts);
+//        NSLog(@"[mm] pull audio buffer, samples: %ld, pts: %lf", samplesCount, self.audioPts);
 //        
 //        if (sampleBuffer) {
 //            if (self.writer) {
@@ -292,7 +292,7 @@
 //
 //- (void)_startDecode {
 //    if (_alreadyDecode || _reader) {
-//        NSLog(@"[yjx] reader is not available now");
+//        NSLog(@"[mm] reader is not available now");
 //        return;
 //    }
 //    
@@ -307,7 +307,7 @@
 //- (void)_export {
 //    if (!_writer) {
 //        NSString *docPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
-//        NSString *outputPath = [docPath stringByAppendingString:@"/yjx.mov"];
+//        NSString *outputPath = [docPath stringByAppendingString:@"/mm.mov"];
 //        if ([[NSFileManager defaultManager] fileExistsAtPath:outputPath]) {
 //            [[NSFileManager defaultManager] removeItemAtPath:outputPath error:nil];
 //        }
@@ -355,7 +355,7 @@
 //    for (PHAsset *asset in assets) {
 //        [[PHImageManager defaultManager] requestImageDataAndOrientationForAsset:asset options:imageOptions resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, CGImagePropertyOrientation orientation, NSDictionary * _Nullable info) {
 //            [self.imageDatas addObject:imageData];
-//            NSLog(@"[yjx] picked image from album data: %@", imageData);
+//            NSLog(@"[mm] picked image from album data: %@", imageData);
 //        }];
 //        
 //        [[PHImageManager defaultManager] requestAVAssetForVideo:asset options:videoOptions resultHandler:^(AVAsset *asset, AVAudioMix *audioMix, NSDictionary *info) {
@@ -364,7 +364,7 @@
 //                self.composition = urlAsset;
 //                double rotation = self.composition.rotation;
 //                if (rotation) {
-//                    NSLog(@"[yjx] import video with rotation msg: %lf", rotation);
+//                    NSLog(@"[mm] import video with rotation msg: %lf", rotation);
 //                }
 //                AVAssetTrack *track = [urlAsset tracksWithMediaType:AVMediaTypeVideo].firstObject;
 //                if (track) {
@@ -373,7 +373,7 @@
 //                    self.videoRatio = h/w;
 //                }
 //                [self.videoAssets addObject:urlAsset];
-//                NSLog(@"[yjx] picked video from album URL: %@", urlAsset.URL.path);
+//                NSLog(@"[mm] picked video from album URL: %@", urlAsset.URL.path);
 //            }
 //        }];
 //    }

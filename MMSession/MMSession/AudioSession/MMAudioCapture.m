@@ -24,7 +24,7 @@
     NSError *error;
     [self.audioEngine startAndReturnError:&error];
     if (error) {
-        NSLog(@"[yjx] startAndReturnError: %@", [error localizedDescription]);
+        NSLog(@"[mm] startAndReturnError: %@", [error localizedDescription]);
     }
 }
 
@@ -48,14 +48,14 @@
         AudioStreamBasicDescription audioFormat = *(format.streamDescription);
         OSStatus status = CMAudioFormatDescriptionCreate(kCFAllocatorDefault, &audioFormat, 0, NULL, 0, NULL, NULL, &formatDescription);
         if (status != noErr) {
-            NSLog(@"[yjx] CMAudioFormatDescriptionCreate: %d", status);
+            NSLog(@"[mm] CMAudioFormatDescriptionCreate: %d", status);
             return;
         }
 
         CMBlockBufferRef blockBuffer;
         status = CMBlockBufferCreateWithMemoryBlock(kCFAllocatorDefault, audioBuffer.mData, audioBuffer.mDataByteSize, kCFAllocatorNull, NULL, 0, audioBuffer.mDataByteSize, 0, &blockBuffer);
         if (status != noErr) {
-            NSLog(@"[yjx] CMBlockBufferCreateWithMemoryBlock: %d", status);
+            NSLog(@"[mm] CMBlockBufferCreateWithMemoryBlock: %d", status);
             CFRelease(formatDescription);
             return;
         }
@@ -72,7 +72,7 @@
         CMSampleBufferRef sampleBuffer;
         status = CMSampleBufferCreate(kCFAllocatorDefault, blockBuffer, true, NULL, NULL, formatDescription, buffer.frameLength, 1, &timingInfo, 0, NULL, &sampleBuffer);
         if (status != noErr) {
-            NSLog(@"[yjx] CMSampleBufferCreate: %d", status);
+            NSLog(@"[mm] CMSampleBufferCreate: %d", status);
             CFRelease(formatDescription);
             CFRelease(blockBuffer);
             return;

@@ -101,7 +101,7 @@
         [_videoDevice setFocusPointOfInterest:point];
         [_videoDevice setFocusMode:mode];
         [_videoDevice unlockForConfiguration];
-        NSLog(@"[yjx] set camera focus success, point: [%lf, %lf], mode: %ld", point.x, point.y, mode);
+        NSLog(@"[mm] set camera focus success, point: [%lf, %lf], mode: %ld", point.x, point.y, mode);
     });
 }
 
@@ -117,7 +117,7 @@
         [_videoDevice setExposurePointOfInterest:point];
         [_videoDevice setExposureMode:mode];
         [_videoDevice unlockForConfiguration];
-        NSLog(@"[yjx] set camera focus success, point: [%lf, %lf], mode: %ld", point.x, point.y, mode);
+        NSLog(@"[mm] set camera focus success, point: [%lf, %lf], mode: %ld", point.x, point.y, mode);
     });
 }
 
@@ -206,7 +206,7 @@
             CGFloat w = CVPixelBufferGetWidth(pixelBuffer);
             CGFloat h = CVPixelBufferGetHeight(pixelBuffer);
             _videoSize = CGSizeMake(w, h);
-            NSLog(@"[yjx] camera capture video size: [%lf, %lf]", w, h);
+            NSLog(@"[mm] camera capture video size: [%lf, %lf]", w, h);
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -226,6 +226,6 @@
 - (void)captureOutput:(AVCaptureOutput *)output didDropSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection {
     CFStringRef reason = CMGetAttachment(sampleBuffer, kCMSampleBufferAttachmentKey_DroppedFrameReason, NULL);
     CMTime pts = sampleBuffer ? CMSampleBufferGetPresentationTimeStamp(sampleBuffer) : CMTimeMake(-1, 1);
-    NSLog(@"[yjx] camera drop sampleBuffer, pts=%lf, reason=%@", CMTimeGetSeconds(pts), (__bridge NSString *)reason);
+    NSLog(@"[mm] camera drop sampleBuffer, pts=%lf, reason=%@", CMTimeGetSeconds(pts), (__bridge NSString *)reason);
 }
 @end

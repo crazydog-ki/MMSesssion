@@ -8,6 +8,7 @@
 #include <iostream>
 #include <list>
 #include "MMSampleData.h"
+#include "MMUnitContext.h"
 using namespace::std;
 
 typedef NS_OPTIONS(NSUInteger, MMUnitTask) {
@@ -31,10 +32,19 @@ public:
     
     void doTask(MMUnitTask taskExec, dispatch_block_t task, dispatch_queue_t queue = nullptr);
     
-    virtual void process(std::shared_ptr<MMSampleData> &data);
+    virtual void process(std::shared_ptr<MMSampleData> &data) = 0;
+    
+    virtual void destroy() {
+        cout << "[mm] " << typeid(*this).name() << " destroyed" << endl;
+    }
+    
+    void setUnitContext(shared_ptr<MMUnitContext> &ctx) {
+        m_sharedUnitCtx = ctx;
+    }
     
     std::list<shared_ptr<MMUnitBase>> m_nextVideoUnits;
     std::list<shared_ptr<MMUnitBase>> m_nextAudioUnits;
+    shared_ptr<MMUnitContext> m_sharedUnitCtx;
 private:
     dispatch_queue_t m_processQueue;
 };

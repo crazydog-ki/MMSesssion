@@ -3,7 +3,6 @@
 // Github : https://github.com/crazydog-ki
 
 #include "MMDriveUnit.h"
-#define REFRENECE_COUNT 5
 
 MMDriveUnit::MMDriveUnit() {
     m_driveQueue = CREATE_SERIAL_QUEUE;
@@ -20,39 +19,42 @@ void MMDriveUnit::process(std::shared_ptr<MMSampleData> &data) {
     }
     std::unique_lock<std::mutex> lock(m_mutex);
     CVPixelBufferRetain(data->videoBuffer);
-    m_dataQ.push_back(data);
-    m_dataQ.sort([](std::shared_ptr<MMSampleData> v1, std::shared_ptr<MMSampleData> v2) {
+    m_dataQueue.push_back(data);
+    m_dataQueue.sort([](std::shared_ptr<MMSampleData> v1, std::shared_ptr<MMSampleData> v2) {
         return v1->pts >= v2->pts; //按pts降序
     });
-    
-//    cout << "[yjx] data queue pts - " << endl;
-//    for (auto iter = m_dataQ.begin(); iter != m_dataQ.end(); iter++) {
-//        cout << (*iter)->pts << "-";
-//    }
-//    cout << endl;
     
     m_con.notify_one();
 }
 
+void MMDriveUnit::destroy() {
+    MMUnitBase::destroy();
+    m_reachEof = true;
+    m_dataQueue.clear();
+}
+
 MMDriveUnit::~MMDriveUnit() {
-    cout << "[yjx] MMDriveUnit::~MMDriveUnit()" << endl;
+}
+
+int MMDriveUnit::getCacheCount() {
+    std::unique_lock<std::mutex> lock(m_mutex);
+    return (int)m_dataQueue.size();
 }
 
 void MMDriveUnit::_consume() {
     while (true) {
         std::unique_lock<std::mutex> lock(m_mutex);
         m_con.wait(lock, [this] {
-            return REFRENECE_COUNT <= m_dataQ.size() || m_reachEof;
+            return REFRENECE_COUNT <= m_dataQueue.size() || m_reachEof; //队列长度大于5才消费，兼容hevc
         });
         
-        if (m_dataQ.empty() && m_reachEof) break;
+        if (m_dataQueue.empty() && m_reachEof) break;
         
-        if (!m_dataQ.empty()) {
-            std::shared_ptr<MMSampleData> data = m_dataQ.back();
-            m_dataQ.pop_back();
+        if (!m_dataQueue.empty()) {
+            std::shared_ptr<MMSampleData> data = m_dataQueue.back();
+            m_dataQueue.pop_back();
             if (!m_nextVideoUnits.empty()) {
                 for (std::shared_ptr<MMUnitBase> unit : m_nextVideoUnits) {
-                    //cout << "[yjx] consume pts - " << data->pts << endl;
                     unit->process(data);
                 }
             }

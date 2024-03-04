@@ -28,10 +28,10 @@
 //    dispatch_sync(_readerQueue, ^{
 //        if (self.assetReader.status == AVAssetReaderStatusUnknown) {
 //            if ([self.assetReader startReading]) {
-//                NSLog(@"[yjx] start decode success");
+//                NSLog(@"[mm] start decode success");
 //                ret = YES;
 //            } else {
-//                NSLog(@"[yjx] start decode error: %@", self.assetReader.error);
+//                NSLog(@"[mm] start decode error: %@", self.assetReader.error);
 //                ret = NO;
 //            }
 //        }
@@ -49,7 +49,7 @@
 //
 //- (MMSampleData *)pullSampleData:(MMSampleDataType)type {
 //    if (self.assetReader.status != AVAssetReaderStatusReading) {
-//        NSLog(@"[yjx] must pull buffer in readering status");
+//        NSLog(@"[mm] must pull buffer in readering status");
 //        return nil;
 //    }
 //    MMSampleData *sampleData = [[MMSampleData alloc] init];

@@ -108,7 +108,7 @@ static const GLfloat kColorConversion709[] = {
     
     self.context = [[EAGLContext alloc] initWithAPI: kEAGLRenderingAPIOpenGLES3];
     if (![EAGLContext setCurrentContext:self.context]) {
-        NSLog(@"[yjx] set current context failed");
+        NSLog(@"[mm] set current context failed");
     }
 }
 
@@ -152,10 +152,10 @@ static const GLfloat kColorConversion709[] = {
         GLchar messages[256];
         glGetProgramInfoLog(self.program, sizeof(messages), 0, &messages[0]);
         NSString *messageString = [NSString stringWithUTF8String:messages];
-        NSLog(@"[yjx] gl link program failed: %@", messageString);
+        NSLog(@"[mm] gl link program failed: %@", messageString);
         return;
     } else {
-        NSLog(@"[yjx] gl link program success");
+        NSLog(@"[mm] gl link program success");
         glUseProgram(self.program);
     }
 }
@@ -246,7 +246,7 @@ static const GLfloat kColorConversion709[] = {
 
 - (void)_rendYUVPixbuffer:(CVPixelBufferRef)buffer {
     if (_context != [EAGLContext currentContext]) {
-        NSLog(@"[yjx] reset gl context");
+        NSLog(@"[mm] reset gl context");
         [EAGLContext setCurrentContext:_context];
     }
     
@@ -325,7 +325,7 @@ static const GLfloat kColorConversion709[] = {
 
 - (void)_rendRGBPixbuffer:(CVPixelBufferRef)buffer {
     if (_context != [EAGLContext currentContext]) {
-        NSLog(@"[yjx] reset gl context");
+        NSLog(@"[mm] reset gl context");
         [EAGLContext setCurrentContext:_context];
     }
     

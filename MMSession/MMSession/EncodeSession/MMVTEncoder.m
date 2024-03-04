@@ -34,7 +34,7 @@
 //        
 //        if (sampleData.statusFlag == MMSampleDataFlagEnd) {
 //            [self _finishEncode];
-//            NSLog(@"[yjx] vt encode finish");
+//            NSLog(@"[mm] vt encode finish");
 //            return;
 //        }
 //        
@@ -49,7 +49,7 @@
 //            VTCompressionSessionInvalidate(_encodeSession);
 //            CFRelease(_encodeSession);
 //            _encodeSession = NULL;
-//            NSLog(@"[yjx] vt encode frame failed: %d", status);
+//            NSLog(@"[mm] vt encode frame failed: %d", status);
 //        }
 //    });
 //}
@@ -88,7 +88,7 @@
                                    (__bridge void *)self,
                                    &_encodeSession);
         if (status == noErr) {
-            NSLog(@"[yjx] vt encoder create success");
+            NSLog(@"[mm] vt encoder create success");
         }
         
         /// 最大关键帧间隔
@@ -105,7 +105,7 @@
         /// 码率
         status = VTSessionSetProperty(_encodeSession, kVTCompressionPropertyKey_AverageBitRate, (__bridge CFTypeRef _Nonnull)[NSNumber numberWithFloat:_config.bitrate]);
         if (status == noErr) {
-            NSLog(@"[yjx] vt encoder set properties success");
+            NSLog(@"[mm] vt encoder set properties success");
             VTCompressionSessionPrepareToEncodeFrames(_encodeSession);
         }
     });
@@ -128,7 +128,7 @@ void vt_encode_callback(void *outputCallbackRefCon,
                         CMSampleBufferRef sampleBuffer) {
     MMVTEncoder *encoder = (__bridge MMVTEncoder *)outputCallbackRefCon;
     if (status != noErr) {
-        NSLog(@"[yjx] vt encoder callback error: %d", status);
+        NSLog(@"[mm] vt encoder callback error: %d", status);
         return;
     }
     

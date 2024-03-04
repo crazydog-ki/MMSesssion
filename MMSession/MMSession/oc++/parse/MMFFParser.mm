@@ -8,6 +8,15 @@ MMFFParser::MMFFParser(MMParseConfig config): m_config(config) {
     _init();
 }
 
+void MMFFParser::destroy() {
+    MMUnitBase::destroy();
+    m_stopFlag = true;
+    _freeAll();
+}
+
+MMFFParser::~MMFFParser() {
+}
+
 void MMFFParser::seekToTime(double time) {
     if (!m_fmtCtx) {
         return;
@@ -131,7 +140,7 @@ CMVideoFormatDescriptionRef MMFFParser::getVtDesc() {
                                                   extensions,
                                                   &vtDesc);
     if (!vtDesc) {
-        NSLog(@"[yjx] CMVideoFormatDescriptionCreate erro - %d", ret);
+        NSLog(@"[mm] CMVideoFormatDescriptionCreate erro - %d", ret);
     }
     CFRelease(extensions);
     CFRelease(atoms);
@@ -140,6 +149,8 @@ CMVideoFormatDescriptionRef MMFFParser::getVtDesc() {
 }
 
 void MMFFParser::process(std::shared_ptr<MMSampleData> &data) {
+    if (m_stopFlag) return;
+    
     doTask(MMTaskSync, ^{
         BOOL isVideo = (data->dataType==MMSampleDataType_None_Video);
         while (YES) {
@@ -160,9 +171,9 @@ void MMFFParser::process(std::shared_ptr<MMSampleData> &data) {
 
             if (ret < 0) { // error or eof
                 if (ret == AVERROR_EOF) {
-                    cout << "[yjx] ff parse end" << endl;
+                    cout << "[mm] ff parse end" << endl;
                     data->isEof = true;
-                    cout << "[yjx] ffmpeg parse eof" << endl;
+                    cout << "[mm] ffmpeg parse eof" << endl;
                     if (m_nextVideoUnits.size() != 0) {
                         data->dataType = MMSampleDataType_Parsed_Video;
                         for (shared_ptr<MMUnitBase> unit : m_nextVideoUnits) {
@@ -178,7 +189,7 @@ void MMFFParser::process(std::shared_ptr<MMSampleData> &data) {
                     }
                     _freeAll();
                 } else {
-                    std::cout << "[yjx] av_read_frame error - " << ret << std::endl;
+                    std::cout << "[mm] av_read_frame error - " << ret << std::endl;
                 }
                 break;
             }
@@ -206,18 +217,34 @@ void MMFFParser::process(std::shared_ptr<MMSampleData> &data) {
 
                 }
                  */
-                if (isFirstPacket) { //信息打印
+                
+                /*
+                 FFmpeg处理Annex B格式的H.264视频流并将其转换为适合解码器（如VideoToolbox）处理的格式，通常涉及以下几个步骤：
+
+                 1. 解析流并分离NAL单元
+                 FFmpeg会解析输入的AnnexB格式的H.264流，识别起始码（通常是0x000001或0x00000001），并据此分离出NAL（网络抽象层）单元。NAL单元是H.264编码视频的基本单位，包含视频数据或其他信息。
+
+                 2. 转换NAL单元格式
+                 在Annex B格式中，NAL单元由起始码直接前缀。FFmpeg会将这些NAL单元转换为AVCC（Advanced Video Coding Configuration）格式，该格式使用长度前缀而非起始码。具体而言，FFmpeg会替换起始码为一个4字节的长度字段，
+                 指明NAL单元的大小。这种格式转换使得解码器能够更容易地处理视频数据，因为解码器可以直接根据长度字段读取完整的NAL单元，而无需搜索起始码。
+
+                 3. 构建格式化的输入
+                 对于某些解码器或播放器，特别是基于硬件的解码器如VideoToolbox，FFmpeg可能还需要进一步处理转换后的数据。例如，它可能需要将转换后的NAL单元
+                 打包进一个特定格式的容器中（如MP4），或者为解码器提供额外的流信息（如SPS（序列参数集）和PPS（图像参数集））。
+                 */
+                
+                if (m_isFirstPacket) { //信息打印
                     AVCodecParameters *videoCodecpar = videoStream->codecpar;
                     if (4 <= videoCodecpar->extradata_size && videoCodecpar->extradata[0] == 1) {
-                        cout << "[yjx] 码流格式为 AvCc" << endl;
+                        cout << "[mm] 码流格式为 AvCc" << endl;
                     } else if (videoCodecpar->extradata_size >= 4 &&
                                (memcmp(videoCodecpar->extradata, "\x00\x00\x00\x01", 4) == 0 ||
                                 memcmp(videoCodecpar->extradata, "\x00\x00\x01", 3) == 0)) {
-                        cout << "[yjx] 码流格式为 AnnexB" << endl;
+                        cout << "[mm] 码流格式为 AnnexB" << endl;
                     } else {
-                        cout << "[yjx] 码流格式不确定" << endl;
+                        cout << "[mm] 码流格式不确定" << endl;
                     }
-                    isFirstPacket = false;
+                    m_isFirstPacket = false;
                 }
 
                 /// 确保发往decoder的第一个packet为Key-Frame
@@ -245,7 +272,7 @@ void MMFFParser::process(std::shared_ptr<MMSampleData> &data) {
                 data->parsedData    = packet;
                 data->isKeyFrame    = isKey;
                 
-                //NSLog(@"[yjx] video packet is keyframe - %d, pts - %lf, dts - %lf", isKey, data->pts, data->dts);
+                //NSLog(@"[mm] video packet is keyframe - %d, pts - %lf, dts - %lf", isKey, data->pts, data->dts);
 
                 data->dataType = MMSampleDataType_Parsed_Video;
 
@@ -273,7 +300,7 @@ void MMFFParser::process(std::shared_ptr<MMSampleData> &data) {
                 data->audioIdx    = audioIdx;
                 data->parsedData  = packet;
                 
-                //NSLog(@"[yjx] audio packet pts - %lf, dts - %lf", data->pts, data->dts);
+                //NSLog(@"[mm] audio packet pts - %lf, dts - %lf", data->pts, data->dts);
 
                 data->dataType = MMSampleDataType_Parsed_Audio;
                 
@@ -286,11 +313,6 @@ void MMFFParser::process(std::shared_ptr<MMSampleData> &data) {
             break;
         }
     });
-}
-
-MMFFParser::~MMFFParser() {
-    cout << "[yjx] MMFFParser::~MMFFParser()" << endl;
-    _freeAll();
 }
 
 #pragma mark - Private

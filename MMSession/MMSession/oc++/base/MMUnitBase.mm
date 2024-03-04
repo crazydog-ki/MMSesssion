@@ -19,6 +19,3 @@ void MMUnitBase::doTask(MMUnitTask taskExec, dispatch_block_t task, dispatch_que
         });
     }
 }
-
-void MMUnitBase::process(std::shared_ptr<MMSampleData> &data) {
-}

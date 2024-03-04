@@ -17,7 +17,6 @@ void vt_decode_callback(void *decompressionOutputRefCon,
                         CMTime presentationTimeStamp,
                         CMTime presentationDuration) {
     if (status != noErr) {
-        std::cout << "[yjx] vt_decode_callback - " << status << std::endl;
         return;
     }
     MMVTDecoder *vtDecoder = (MMVTDecoder *)(decompressionOutputRefCon);
@@ -99,7 +98,7 @@ void MMVTDecoder::process(std::shared_ptr<MMSampleData> &data) {
                                                         attr, //其他参数传递
                                                         &flagOut); //获取解码操作信息
     if (status != noErr) {
-        std::cout << "[yjx] VTDecompressionSessionDecodeFrame - " << status << std::endl;
+        std::cout << "[mm] VTDecompressionSessionDecodeFrame - " << status << std::endl;
         if (attr) {
             delete attr;
             attr = nullptr;
@@ -110,14 +109,17 @@ void MMVTDecoder::process(std::shared_ptr<MMSampleData> &data) {
     data->videoSample = nullptr; //这里不置空，MMSampleData析构函数内部可能会double free
 }
 
-MMVTDecoder::~MMVTDecoder() {
-    cout << "[yjx] MMVTDecoder::~MMVTDecoder()" << endl;
+void MMVTDecoder::destroy() {
+    MMUnitBase::destroy();
     if (m_vtDecodeSession) {
         VTDecompressionSessionInvalidate(m_vtDecodeSession);
         CFRelease(m_vtDecodeSession);
         m_vtDecodeSession = nullptr;
-        cout << "[yjx] vt decoder destroyed" << endl;
     }
+}
+
+MMVTDecoder::~MMVTDecoder() {
+    
 }
 
 #pragma mark - Private
@@ -150,6 +152,6 @@ void MMVTDecoder::_initVt() {
                                                    &callBackRecord,
                                                    &m_vtDecodeSession);
     if (status != noErr) {
-        std::cout << "[yjx] VTDecompressionSessionCreate - " << status << std::endl;
+        std::cout << "[mm] VTDecompressionSessionCreate - " << status << std::endl;
     }
 }

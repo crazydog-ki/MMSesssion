@@ -12,7 +12,7 @@ static const NSUInteger kAudioTimeScale  = 44100;
 MMFFDecoder::MMFFDecoder(MMDecodeConfig config): m_config(config) {
     m_audioBufferList = [MMBufferUtils produceAudioBufferList:MMBufferUtils.asbd
                                                  numberFrames:kMaxSamplesCount];
-    NSLog(@"[yjx] ffdecoder audiobufferlist dataSize: %d", m_audioBufferList->mBuffers[0].mDataByteSize);
+    NSLog(@"[mm] ffdecoder audiobufferlist dataSize: %d", m_audioBufferList->mBuffers[0].mDataByteSize);
     _initFFDecoder();
 }
 
@@ -30,7 +30,11 @@ void MMFFDecoder::process(std::shared_ptr<MMSampleData> &data) {
         AVCodecContext *codecCtx = m_codecCtx;
         AVPacket packet = *(AVPacket *)(data->parsedData);
         
-        avcodec_send_packet(codecCtx, &packet);
+        /*
+         会存在avcodec_send_packet返回0，但是avcodec_receive_frame返回-35（对应`EAGAIN`）的现象，这个情况是符合预期的
+         在当前的上下文中，代表输出不可用，需要更多的输入
+         */
+        int ret = avcodec_send_packet(codecCtx, &packet);
         while (0 == avcodec_receive_frame(codecCtx, m_frame)) {
             AVFrame *frame = m_frame;
             if (isVideo) {
@@ -102,7 +106,7 @@ void MMFFDecoder::process(std::shared_ptr<MMSampleData> &data) {
                 /// bufferList -> CMSampleBufferRef
                 CMSampleTimingInfo timingInfo;
                 timingInfo.duration              = CMTimeMake(1, kAudioTimeScale);
-                timingInfo.presentationTimeStamp = CMTimeMake(data->dts*kAudioTimeScale, kAudioTimeScale);
+                timingInfo.presentationTimeStamp = CMTimeMake(data->pts*kAudioTimeScale, kAudioTimeScale);
                 timingInfo.decodeTimeStamp       = CMTimeMake(data->dts*kAudioTimeScale, kAudioTimeScale);
                 CMSampleBufferRef sampleBuffer = [MMBufferUtils produceAudioBuffer:bufferList
                                                                         timingInfo:timingInfo
@@ -120,8 +124,13 @@ void MMFFDecoder::process(std::shared_ptr<MMSampleData> &data) {
         }});
 }
 
-MMFFDecoder::~MMFFDecoder() {
+void MMFFDecoder::destroy() {
+    MMUnitBase::destroy();
     _freeAll();
+}
+
+MMFFDecoder::~MMFFDecoder() {
+    
 }
 
 #pragma mark - Private
@@ -172,6 +181,8 @@ void MMFFDecoder::_initFFDecoder() {
     m_codecCtx = codecCtx;
     m_videoIdx = videoIdx;
     m_audioIdx = audioIdx;
+    
+    avcodec_flush_buffers(codecCtx);
 }
 
 CVPixelBufferRef MMFFDecoder::_convertAVFrame2CVPixelBuffer(AVFrame *frame) {
@@ -190,13 +201,13 @@ CVPixelBufferRef MMFFDecoder::_convertAVFrame2CVPixelBuffer(AVFrame *frame) {
         [attributes setObject:[NSDictionary dictionary] forKey:(NSString*)kCVPixelBufferIOSurfacePropertiesKey];
         error = CVPixelBufferPoolCreate(kCFAllocatorDefault, NULL, (__bridge CFDictionaryRef)attributes, &_pixelBufferPool);
         if (error != kCVReturnSuccess) {
-            NSLog(@"[yjx] pixelbuffer pool create error: %d", error);
+            NSLog(@"[mm] pixelbuffer pool create error: %d", error);
         }
     }
 
     error = CVPixelBufferPoolCreatePixelBuffer(NULL, _pixelBufferPool, &pixelBuffer);
     if (error != kCVReturnSuccess) {
-        NSLog(@"[yjx] pixelbuffer create error: %d", error);
+        NSLog(@"[mm] pixelbuffer create error: %d", error);
         return NULL;
     }
     

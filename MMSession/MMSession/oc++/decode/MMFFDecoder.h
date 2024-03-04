@@ -21,6 +21,7 @@ class MMFFDecoder: public MMUnitBase {
 public:
     MMFFDecoder(MMDecodeConfig config);
     void process(std::shared_ptr<MMSampleData> &data) override;
+    void destroy() override;
     ~MMFFDecoder();
 private:
     MMDecodeConfig m_config;

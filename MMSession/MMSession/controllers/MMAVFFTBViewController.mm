@@ -3,33 +3,15 @@
 // Github : https://github.com/crazydog-ki
 
 #import "MMAVFFTBViewController.h"
-#include "MMFFParser.h"
-#include "MMVTDecoder.h"
-#include "MMPreviewUnit.h"
-#include "MMDriveUnit.h"
-#include "MMFFDecoder.h"
-#include "MMAudioPlayer.h"
+#import "MMGraph.h"
 using namespace std;
 
 @interface MMAVFFTBViewController () <TZImagePickerControllerDelegate, TTGTextTagCollectionViewDelegate> {
-    shared_ptr<MMFFParser> _ffVideoParser;
-    shared_ptr<MMVTDecoder> _vtDecoder;
-    shared_ptr<MMPreviewUnit> _previewUnit;
-    shared_ptr<MMDriveUnit> _driveUnit;
-    
-    shared_ptr<MMFFParser> _ffAudioParser;
-    shared_ptr<MMFFDecoder> _ffAudioDecoder;
-    shared_ptr<MMAudioPlayer> _audioPlayer;
+    shared_ptr<MMGraph> _graph;
 }
 @property (nonatomic, strong) TTGTextTagCollectionView *collectionView;
-
 @property (nonatomic, strong) NSString *videoPath;
 @property (nonatomic, assign) CGFloat videoRatio;
-
-@property (nonatomic, strong) NSThread *videoThread;
-@property (nonatomic, strong) NSThread *audioThread;
-
-@property (nonatomic, assign) BOOL isReady;
 @end
 
 @implementation MMAVFFTBViewController
@@ -43,14 +25,14 @@ using namespace std;
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    
-    [self _stopThread];
-    
-    _audioPlayer->stop();
 }
 
 - (void)dealloc {
-    NSLog(@"[yjx] fftb controller destroy");
+    if (_graph) {
+        _graph->destroy(); //销毁资源
+        _graph = nullptr;
+    }
+    NSLog(@"[mm] fftb controller destroy");
 }
 
 #pragma mark - Private
@@ -93,91 +75,6 @@ using namespace std;
     [tagCollectionView addTag:allPlayTag];
 }
 
-- (void)_setupParser {
-    MMParseConfig videoConfig;
-    videoConfig.parseType = MMFFParseType_Video;
-    videoConfig.inPath = string([self.videoPath UTF8String]);
-    _ffVideoParser = shared_ptr<MMFFParser>(new MMFFParser(videoConfig));
-    
-    MMParseConfig audioConfig;
-    audioConfig.parseType = MMFFParseType_Audio;
-    audioConfig.inPath = string([self.videoPath UTF8String]);
-    _ffAudioParser = shared_ptr<MMFFParser>(new MMFFParser(audioConfig));
-}
-
-- (void)_setupDecoder {
-    MMDecodeConfig videoConfig;
-    videoConfig.decodeType = MMDecodeType_Video;
-    videoConfig.fmtCtx = (void *)_ffVideoParser->getFmtCtx();
-    videoConfig.vtDesc = _ffVideoParser->getVtDesc();
-    videoConfig.targetSize = _ffVideoParser->getSize();
-    videoConfig.pixelformat = MMPixelFormatTypeBGRA;
-    _vtDecoder = shared_ptr<MMVTDecoder>(new MMVTDecoder(videoConfig));
-    
-    MMDecodeConfig audioConfig;
-    audioConfig.decodeType = MMDecodeType_Audio;
-    audioConfig.fmtCtx = _ffAudioParser->getFmtCtx();
-    _ffAudioDecoder = shared_ptr<MMFFDecoder>(new MMFFDecoder(audioConfig));
-}
-
-- (void)_setupDriveUnit {
-    _driveUnit = make_shared<MMDriveUnit>();
-}
-
-- (void)_setupPreview {
-    if (_previewUnit) return;
-    
-    CGFloat w = self.view.bounds.size.width;
-    
-    MMPreviewConfig config;
-    config.renderYUV = false;
-    config.presentRect = CGRectMake(0, 0, w, w*self.videoRatio);
-    config.viewFrame = CGRectMake(0, kStatusBarH+kNavBarH, w, w*self.videoRatio);
-    _previewUnit = shared_ptr<MMPreviewUnit>(new MMPreviewUnit(config));
-    
-    MMVideoGLPreview *renderView = _previewUnit->getRenderView();
-    renderView.backgroundColor = UIColor.blackColor;
-    [self.view insertSubview:renderView atIndex:0];
-    
-    [renderView setupGLEnv];
-}
-
-- (void)_setupAudioPlayer {
-    MMAudioPlayConfig config;
-    config.needPullData = false; //推数据
-    _audioPlayer = shared_ptr<MMAudioPlayer>(new MMAudioPlayer(config));
-}
-
-- (void)_startThread {
-    self.isReady = YES;
-    
-    _audioPlayer->play(); //驱动
-    
-    if (!self.videoThread) {
-        self.videoThread = [[NSThread alloc] initWithTarget:self selector:@selector(_driveVideo) object:nil];
-        [self.videoThread start];
-    }
-    
-    if (!self.audioThread) {
-        self.audioThread = [[NSThread alloc] initWithTarget:self selector:@selector(_driveAudio) object:nil];
-        [self.audioThread start];
-    }
-}
-
-- (void)_stopThread {
-    self.isReady = NO;
-    
-    if (self.videoThread) {
-        [self.videoThread cancel];
-        self.videoThread = nil;
-    }
-    
-    if (self.audioThread) {
-        [self.audioThread cancel];
-        self.audioThread = nil;
-    }
-}
-
 #pragma mark - Action
 - (void)_startPick {
     TZImagePickerController *imagePickerVc = [[TZImagePickerController alloc] initWithMaxImagesCount:9 delegate:self];
@@ -187,51 +84,21 @@ using namespace std;
 }
 
 - (void)_buildChainAndPlay {
-    if (self.isReady) {
-        NSLog(@"[yjx] video & audio is already playing");
-        return;
+    if (self.videoPath) { //非相册导入
+        [self _getParamFormPath:self.videoPath];
+        NSLog(@"[mm] pick video path: %@, ratio: %lf", self.videoPath, self.videoRatio);
     }
     
-    [self _setupParser];
-    [self _setupDecoder];
-    [self _setupDriveUnit];
-    [self _setupPreview];
-    [self _setupAudioPlayer];
+    CGFloat w = self.view.bounds.size.width;
     
-    /**视频处理链路*/
-    _ffVideoParser->addNextVideoNode(_vtDecoder);
-    _vtDecoder->addNextVideoNode(_driveUnit);
-    _driveUnit->addNextVideoNode(_previewUnit);
+    MMGraphConfig config = MMGraphConfig();
+    config.videoPath = string([self.videoPath UTF8String]);
+    config.view = self.view;
+    config.presentRect = CGRectMake(0, 0, w, w*self.videoRatio);
+    config.viewRect = CGRectMake(0, kStatusBarH+kNavBarH, w, w*self.videoRatio);
     
-    /**音频处理链路*/
-    _ffAudioParser->addNextAudioNode(_ffAudioDecoder);
-    _ffAudioDecoder->addNextAudioNode(_audioPlayer);
-    
-    [self _startThread];
-}
-
-- (void)_driveVideo {
-    while (self.isReady && _ffVideoParser && _vtDecoder && _previewUnit) {
-        double audioPts = _audioPlayer->getPts();
-        double videoPts = _previewUnit->getPts();
-        
-        if (audioPts <= videoPts) {
-            [NSThread sleepForTimeInterval:0.001];
-            continue;
-        }
-            
-        shared_ptr<MMSampleData> sampleData = make_shared<MMSampleData>();
-        sampleData->dataType = MMSampleDataType_None_Video;
-        _ffVideoParser->process(sampleData);
-    }
-}
-
-- (void)_driveAudio {
-    while (self.isReady && _ffAudioParser && _ffAudioDecoder) {
-        shared_ptr<MMSampleData> sampleData = make_shared<MMSampleData>();
-        sampleData->dataType = MMSampleDataType_None_Audio;
-        _ffAudioParser->process(sampleData);
-    }
+    _graph = make_shared<MMGraph>(config);
+    _graph->drive();
 }
 
 #pragma mark - TZImagePickerControllerDelegate
@@ -250,7 +117,7 @@ using namespace std;
                     CGFloat h = track.naturalSize.height;
                     self.videoRatio = h/w;
                 }
-                NSLog(@"[yjx] picked video from album URL: %@", urlAsset.URL.path);
+                NSLog(@"[mm] picked album video path: %@, ratio: %lf", self.videoPath, self.videoRatio);
             }
         }];
     }
@@ -279,11 +146,6 @@ using namespace std;
         [self _startPick];
     } else if ([content.text isEqualToString:@"视频播放"]) {
         [self _buildChainAndPlay];
-    }
-    
-    if (self.videoPath) { //非相册导入
-        [self _getParamFormPath:self.videoPath];
-        NSLog(@"[yjx] pick local video path: %@, ratio: %lf", self.videoPath, self.videoRatio);
     }
     return;
 }

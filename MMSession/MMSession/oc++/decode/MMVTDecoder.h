@@ -22,6 +22,7 @@ class MMVTDecoder: public MMUnitBase {
 public:
     MMVTDecoder(MMDecodeConfig config);
     void process(std::shared_ptr<MMSampleData> &data) override;
+    void destroy() override;
     ~MMVTDecoder();
 private:
     MMDecodeConfig m_config;

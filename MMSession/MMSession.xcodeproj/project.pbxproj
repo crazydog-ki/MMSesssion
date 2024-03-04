@@ -18,6 +18,8 @@
 		1253B6AC26ABCF4600D7A22C /* UIControl+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 1253B6AB26ABCF4600D7A22C /* UIControl+Extension.m */; };
 		1284DB56268B7EB1008692B8 /* MMVideoLayerPreview.m in Sources */ = {isa = PBXBuildFile; fileRef = 1284DB55268B7EB1008692B8 /* MMVideoLayerPreview.m */; };
 		12DA794726B6442900099142 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 12DA794626B6442900099142 /* README.md */; };
+		2B284E8F2B86E61B00173253 /* MMUnitContext.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B284E8D2B86E61B00173253 /* MMUnitContext.mm */; };
+		2B284E922B86F75B00173253 /* MMGraph.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B284E902B86F75B00173253 /* MMGraph.mm */; };
 		2B4C0DEA26C52997004B1321 /* MMAudioQueue.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B4C0DE926C52997004B1321 /* MMAudioQueue.mm */; };
 		2B5072D0268C6D0C00444623 /* MMEncodeWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B5072CF268C6D0C00444623 /* MMEncodeWriter.m */; };
 		2B50795D268C732200444623 /* MMEncodeConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B50795C268C732200444623 /* MMEncodeConfig.m */; };
@@ -89,6 +91,10 @@
 		1284DB54268B7EB1008692B8 /* MMVideoLayerPreview.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMVideoLayerPreview.h; sourceTree = "<group>"; };
 		1284DB55268B7EB1008692B8 /* MMVideoLayerPreview.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMVideoLayerPreview.m; sourceTree = "<group>"; };
 		12DA794626B6442900099142 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../../README.md; sourceTree = "<group>"; };
+		2B284E8D2B86E61B00173253 /* MMUnitContext.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MMUnitContext.mm; sourceTree = "<group>"; };
+		2B284E8E2B86E61B00173253 /* MMUnitContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMUnitContext.h; sourceTree = "<group>"; };
+		2B284E902B86F75B00173253 /* MMGraph.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MMGraph.mm; sourceTree = "<group>"; };
+		2B284E912B86F75B00173253 /* MMGraph.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMGraph.h; sourceTree = "<group>"; };
 		2B4C0DE826C52997004B1321 /* MMAudioQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMAudioQueue.h; sourceTree = "<group>"; };
 		2B4C0DE926C52997004B1321 /* MMAudioQueue.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MMAudioQueue.mm; sourceTree = "<group>"; };
 		2B5072CE268C6D0C00444623 /* MMEncodeWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEncodeWriter.h; sourceTree = "<group>"; };
@@ -353,10 +359,10 @@
 		1248442F268711C1003C27DF /* MMSession */ = {
 			isa = PBXGroup;
 			children = (
-				2BE611E526BAC20F006C2E32 /* Resource */,
-				2BE6120626BB9506006C2E32 /* FFmpeg-iOS */,
+				2BE611E526BAC20F006C2E32 /* resource */,
 				2B85B8DF2B8302EA008092E6 /* controllers */,
 				2B85B8AE2B8302DF008092E6 /* oc++ */,
+				2BE6120626BB9506006C2E32 /* FFmpeg-iOS */,
 				2B508D06268F053200444623 /* Utils */,
 				2B508D01268DBE2F00444623 /* ViewControllers */,
 				1203870B2688C65C00D9EDCA /* CameraSession */,
@@ -422,7 +428,6 @@
 		2B508D06268F053200444623 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				1253B68026ABC81600D7A22C /* MMPrefixHeader.pch */,
 				1253B6AA26ABCF4600D7A22C /* UIControl+Extension.h */,
 				1253B6AB26ABCF4600D7A22C /* UIControl+Extension.m */,
 				2BE6F06A26B8F446006C2E32 /* AVAsset+Extension.h */,
@@ -451,12 +456,12 @@
 		2B85B8AE2B8302DF008092E6 /* oc++ */ = {
 			isa = PBXGroup;
 			children = (
-				2B85B8AF2B8302DF008092E6 /* audioplay */,
-				2B85B8B32B8302DF008092E6 /* parse */,
-				2B85B8B72B8302DF008092E6 /* render */,
 				2B85B8C12B8302DF008092E6 /* utils */,
-				2B85B8C42B8302DF008092E6 /* decode */,
 				2B85B8CA2B8302DF008092E6 /* base */,
+				2B85B8B32B8302DF008092E6 /* parse */,
+				2B85B8C42B8302DF008092E6 /* decode */,
+				2B85B8AF2B8302DF008092E6 /* audioplay */,
+				2B85B8B72B8302DF008092E6 /* render */,
 			);
 			path = "oc++";
 			sourceTree = "<group>";
@@ -521,7 +526,12 @@
 		2B85B8CA2B8302DF008092E6 /* base */ = {
 			isa = PBXGroup;
 			children = (
+				1253B68026ABC81600D7A22C /* MMPrefixHeader.pch */,
 				2B85B8CD2B8302DF008092E6 /* MMBaseDefine.h */,
+				2B284E912B86F75B00173253 /* MMGraph.h */,
+				2B284E902B86F75B00173253 /* MMGraph.mm */,
+				2B284E8E2B86E61B00173253 /* MMUnitContext.h */,
+				2B284E8D2B86E61B00173253 /* MMUnitContext.mm */,
 				2B85B8CB2B8302DF008092E6 /* MMDriveUnit.h */,
 				2B85B8CC2B8302DF008092E6 /* MMDriveUnit.mm */,
 				2B85B8CE2B8302DF008092E6 /* MMUnitBase.h */,
@@ -535,8 +545,8 @@
 		2B85B8DF2B8302EA008092E6 /* controllers */ = {
 			isa = PBXGroup;
 			children = (
-				2B85B8E12B8302EA008092E6 /* MMMainViewController.m */,
 				2B85B8E22B8302EA008092E6 /* MMMainViewController.h */,
+				2B85B8E12B8302EA008092E6 /* MMMainViewController.m */,
 				2B85B8E02B8302EA008092E6 /* MMAVFFTBViewController.h */,
 				2B85B8E32B8302EA008092E6 /* MMAVFFTBViewController.mm */,
 			);
@@ -552,13 +562,13 @@
 			path = DecodeSession;
 			sourceTree = "<group>";
 		};
-		2BE611E526BAC20F006C2E32 /* Resource */ = {
+		2BE611E526BAC20F006C2E32 /* resource */ = {
 			isa = PBXGroup;
 			children = (
 				2B85B8A92B8302A1008092E6 /* avi_h264-annexb.avi */,
 				2B85B8A82B8302A1008092E6 /* mp4_h264_avcc.mp4 */,
 			);
-			path = Resource;
+			path = resource;
 			sourceTree = "<group>";
 		};
 		2BE6120626BB9506006C2E32 /* FFmpeg-iOS */ = {
@@ -932,8 +942,10 @@
 				1203870E2688C67D00D9EDCA /* MMCameraSession.m in Sources */,
 				2B85B8DC2B8302DF008092E6 /* MMDriveUnit.mm in Sources */,
 				2B85B8E42B8302EA008092E6 /* MMMainViewController.m in Sources */,
+				2B284E8F2B86E61B00173253 /* MMUnitContext.mm in Sources */,
 				2B85B8D62B8302DF008092E6 /* MMVideoPreviewConfig.m in Sources */,
 				124844542687121A003C27DF /* MMCameraViewController.m in Sources */,
+				2B284E922B86F75B00173253 /* MMGraph.mm in Sources */,
 				2B85B8E52B8302EA008092E6 /* MMAVFFTBViewController.mm in Sources */,
 				2B50795D268C732200444623 /* MMEncodeConfig.m in Sources */,
 				120387122688C77300D9EDCA /* MMCameraSessionConfig.m in Sources */,
@@ -1083,12 +1095,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 8M2FQ87SLP;
-				GCC_PREFIX_HEADER = MMSession/Utils/MMPrefixHeader.pch;
+				DEVELOPMENT_TEAM = 4G7XDBY9J6;
+				GCC_PREFIX_HEADER = "MMSession/oc++/base/MMPrefixHeader.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"GLES_SILENCE_DEPRECATION=1",
 					"DEBUG=1",
@@ -1114,7 +1124,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = crazydog.mmsession;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Cosign iOS Wildcard (AMDDRMBYLO)";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -1130,7 +1139,7 @@
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 8M2FQ87SLP;
-				GCC_PREFIX_HEADER = MMSession/Utils/MMPrefixHeader.pch;
+				GCC_PREFIX_HEADER = "MMSession/oc++/base/MMPrefixHeader.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = "GLES_SILENCE_DEPRECATION=1";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",

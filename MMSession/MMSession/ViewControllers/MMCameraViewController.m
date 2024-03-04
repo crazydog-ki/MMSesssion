@@ -40,7 +40,7 @@
 //
 //- (void)dealloc {
 //    [self _stopPreview];
-//    NSLog(@"[yjx] camera controller destroy");
+//    NSLog(@"[mm] camera controller destroy");
 //}
 //
 //#pragma mark - Private
@@ -51,7 +51,7 @@
 //    
 //    weakify(self);
 //    self.camera.firstFrameBlk = ^{ // 相机首帧
-//        NSLog(@"[yjx] camera output first frame");
+//        NSLog(@"[mm] camera output first frame");
 //        strongify(self);
 //        [self _setupPreview];
 //        [self _setupWriter];
@@ -64,7 +64,7 @@
 ////            videoData.dataType = MMSampleDataType_Decoded_Video;
 ////            videoData.sampleBuffer = sampleBuffer;
 ////            [self.glPreview processSampleData:videoData];
-////            // NSLog(@"[yjx] video pts: %lf", CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(sampleBuffer)));
+////            // NSLog(@"[mm] video pts: %lf", CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(sampleBuffer)));
 ////            [self.writer processSampleData:videoData];
 ////        });
 ////    };
@@ -75,7 +75,7 @@
 ////            MMSampleData *audioData = [[MMSampleData alloc] init];
 ////            audioData.dataType = MMSampleDataType_Decoded_Audio;
 ////            audioData.sampleBuffer = sampleBuffer;
-////            // NSLog(@"[yjx] audio pts: %lf", CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(sampleBuffer)));
+////            // NSLog(@"[mm] audio pts: %lf", CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(sampleBuffer)));
 ////            [self.writer processSampleData:audioData];
 ////        });
 ////    };
@@ -181,7 +181,7 @@
 //
 //- (void)_finishRecord {
 //    [self.writer stopEncodeWithCompleteHandle:^(NSURL * _Nullable fileUrl, NSError * _Nullable error) {
-//        NSLog(@"[yjx] camera record output url: %@", fileUrl);
+//        NSLog(@"[mm] camera record output url: %@", fileUrl);
 //        /// 保存相册，便于调试
 //        if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(fileUrl.path)) {
 //            UISaveVideoAtPathToSavedPhotosAlbum(fileUrl.path, nil, nil, nil);

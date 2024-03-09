@@ -49,16 +49,16 @@ using namespace std;
     
     TTGTextTagStyle *style1 = [TTGTextTagStyle new];
     style1.backgroundColor = kMMColor2;
-    style1.exactWidth = 120.0f;
+    style1.exactWidth = 70.0f;
     style1.exactHeight = 37.5f;
     style1.cornerRadius = 0.0f;
     style1.borderWidth = 0.0f;
     //local video
-    TTGTextTag *mp4_h264_avcc = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"mp4-h264-AvCc"] style:style1];
-    [tagCollectionView addTag:mp4_h264_avcc];
+    TTGTextTag *mp4_h264 = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"h264"] style:style1];
+    [tagCollectionView addTag:mp4_h264];
     
-    TTGTextTag *avi_h264_annexb = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"avi-h264-AnnexB"] style:style1];
-    [tagCollectionView addTag:avi_h264_annexb];
+    TTGTextTag *mov_h265 = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"h264_B"] style:style1];
+    [tagCollectionView addTag:mov_h265];
     
     TTGTextTagStyle *style2 = [TTGTextTagStyle new];
     style2.backgroundColor = kMMColor3;
@@ -138,10 +138,10 @@ using namespace std;
                     didTapTag:(TTGTextTag *)tag
                       atIndex:(NSUInteger)index {
     TTGTextTagStringContent *content = (TTGTextTagStringContent *)tag.content;
-    if ([content.text isEqualToString:@"mp4-h264-AvCc"]) {
-        self.videoPath = [NSString stringWithFormat:@"%@/mp4_h264_avcc.mp4", NSBundle.mainBundle.bundleURL.path];
-    } else if([content.text isEqualToString:@"avi-h264-AnnexB"]) {
-        self.videoPath = [NSString stringWithFormat:@"%@/avi_h264-annexb.avi", NSBundle.mainBundle.bundleURL.path];
+    if ([content.text isEqualToString:@"h264"]) {
+        self.videoPath = [NSString stringWithFormat:@"%@/h264.mp4", NSBundle.mainBundle.bundleURL.path];
+    } else if([content.text isEqualToString:@"h264_B"]) {
+        self.videoPath = [NSString stringWithFormat:@"%@/h264_B.mov", NSBundle.mainBundle.bundleURL.path];
     } else if ([content.text isEqualToString:@"相册导入"]) {
         [self _startPick];
     } else if ([content.text isEqualToString:@"视频播放"]) {

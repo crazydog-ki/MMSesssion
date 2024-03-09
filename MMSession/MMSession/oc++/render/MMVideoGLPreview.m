@@ -155,7 +155,7 @@ static const GLfloat kColorConversion709[] = {
         NSLog(@"[mm] gl link program failed: %@", messageString);
         return;
     } else {
-        NSLog(@"[mm] gl link program success");
+        NSLog(@"[mm] gl env build success");
         glUseProgram(self.program);
     }
 }
@@ -246,7 +246,7 @@ static const GLfloat kColorConversion709[] = {
 
 - (void)_rendYUVPixbuffer:(CVPixelBufferRef)buffer {
     if (_context != [EAGLContext currentContext]) {
-        NSLog(@"[mm] reset gl context");
+        //NSLog(@"[mm] reset gl context");
         [EAGLContext setCurrentContext:_context];
     }
     
@@ -325,7 +325,7 @@ static const GLfloat kColorConversion709[] = {
 
 - (void)_rendRGBPixbuffer:(CVPixelBufferRef)buffer {
     if (_context != [EAGLContext currentContext]) {
-        NSLog(@"[mm] reset gl context");
+        //NSLog(@"[mm] reset gl context");
         [EAGLContext setCurrentContext:_context];
     }
     

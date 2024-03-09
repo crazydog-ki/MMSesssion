@@ -124,6 +124,38 @@ CMVideoFormatDescriptionRef MMFFParser::getVtDesc() {
     
     //atoms sps/pps/vps等信息
     CFMutableDictionaryRef atoms = CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+    /*
+     在使用FFmpeg解封装AVCC格式的MP4文件时，SPS（序列参数集）和PPS（图像参数集）通常不会以单独的AVPacket形式出现，
+     因为它们被封装在MP4文件的视频轨道的特定位置中，而不是作为独立的视频帧流传输。这与解封装Annex B格式的流有所不同，
+     在Annex B格式的流中，SPS和PPS可能以单独的NALU单元出现在数据流中。
+
+     对于AVCC格式的MP4文件，SPS和PPS数据一般在解封装过程中被解析，并存储在AVCodecParameters结构的extradata字段中。
+     这些数据在解码视频帧之前被读取并使用，以便正确配置解码器。
+
+     如果你需要访问SPS和PPS数据，你可以直接从视频流的codecpar结构的extradata字段获取，而不是从av_read_frame读取的
+     AVPacket中获取。
+     
+     
+     SPS、PPS在H.264裸流和MP4封装格式中存储方式的差异？？？
+     
+     在H.264编码和封装过程中，extradata的处理与存储方式依赖于所使用的封装格式。在原始的H.264码流（即裸流）中，SPS
+     （序列参数集）和PPS（图像参数集）确实以NALU（网络抽象层单元）的形式存在。但是，当这个码流被封装到特定的容器格式中时，
+     如MP4，处理方式会有所不同。
+
+     `H.264码流中的extradata`：在H.264的裸码流（通常是Annex B格式）中，SPS和PPS数据以特定的NALU出现，它们直接嵌入在视
+     频数据流中。这些NALU可以被解码器直接读取来获取视频序列的必要配置信息。
+
+     `封装到MP4后的extradata``：当H.264码流被封装到MP4（或其他格式如MKV等）文件中时，SPS和PPS信息被提取出来并存储在
+     封装格式的特定位置，通常是在`文件的元数据区域`。在MP4文件中，这些信息不再以NALU的形式存储，而是`以extradata的形式`
+     存在于视频轨道（track）的头部信息中。这样做的目的是让解码器能够在开始解码任何帧之前就获得这些必要的信息。
+
+     对于MP4文件，extradata通常存储在avcC（AVC Configuration Box）中，这是一个特定的box，它包含了SPS和PPS等信息，
+     以及其他解码H.264流所需的参数。avcC box位于样本描述（sample description）box内部，后者描述了轨道中样本的编码信息。
+
+     `extradata与封装层的转移`：因此，可以说当H.264码流被封装为MP4格式后，extradata（包括SPS和PPS）确实被转移到了封装层。
+     在MP4文件中，这些信息被组织并存储在一种格式化的方式中，以便解码器能够轻松访问并初始化解码过程。这种转移使得视频文件的播放
+     更加高效，因为解码器可以直接从文件的元数据中获得所有必需的初始化信息，而无需扫描整个视频数据流来查找这些参数集。
+     */
     AVCodecParameters *codecParam = m_videoStream->codecpar;
     if (codecParam->codec_id == AV_CODEC_ID_H264) {
         _cfmap_setdata(atoms, CFSTR("avcC"), (uint8_t*)m_videoStream->codecpar->extradata, m_videoStream->codecpar->extradata_size); //h264
@@ -171,7 +203,6 @@ void MMFFParser::process(std::shared_ptr<MMSampleData> &data) {
 
             if (ret < 0) { // error or eof
                 if (ret == AVERROR_EOF) {
-                    cout << "[mm] ff parse end" << endl;
                     data->isEof = true;
                     cout << "[mm] ffmpeg parse eof" << endl;
                     if (m_nextVideoUnits.size() != 0) {
@@ -189,24 +220,20 @@ void MMFFParser::process(std::shared_ptr<MMSampleData> &data) {
                     }
                     _freeAll();
                 } else {
-                    std::cout << "[mm] av_read_frame error - " << ret << std::endl;
+                    std::cout << "[mm] av_read_frame error: " << ret << std::endl;
                 }
                 break;
             }
 
             if (packet->stream_index == videoIdx) { /// 视频轨
                 if (!isVideo) continue;
-                /// bsf对SPS、PPS等数据进行格式转换，使其可被解码器处理
-                //const AVBitStreamFilter *pFilter = NULL;
-                MMVideoFormat videoFormat = NULL;
-                if (videoStream->codecpar->codec_id == AV_CODEC_ID_H264) {
-                    //pFilter = av_bsf_get_by_name("h264_annexbtomp4");
-                    videoFormat = MMVideoFormatH264;
-                } else if (videoStream->codecpar->codec_id == AV_CODEC_ID_HEVC) {
-                    // pFilter = av_bsf_get_by_name("hevc_annexbtomp4");
-                    videoFormat = MMVideoFormatH265;
+                /* bsf对SPS、PPS等数据进行格式转换，使其可被解码器处理
+                const AVBitStreamFilter *pFilter = NULL;
+                if (m_videoFmt == AV_CODEC_ID_H264) {
+                    pFilter = av_bsf_get_by_name("h264_annexbtomp4");
+                } else if (m_videoFmt == AV_CODEC_ID_HEVC) {
+                    pFilter = av_bsf_get_by_name("hevc_annexbtomp4");
                 }
-                /*
                 if (!_bsfCtx) {
                     av_bsf_alloc(pFilter, &_bsfCtx);
                     avcodec_parameters_copy(_bsfCtx->par_in, videoStream->codecpar);
@@ -214,7 +241,6 @@ void MMFFParser::process(std::shared_ptr<MMSampleData> &data) {
                 }
                 av_bsf_send_packet(_bsfCtx, packet);
                 while (av_bsf_receive_packet(_bsfCtx, packet) == 0) {
-
                 }
                  */
                 
@@ -233,21 +259,6 @@ void MMFFParser::process(std::shared_ptr<MMSampleData> &data) {
                  打包进一个特定格式的容器中（如MP4），或者为解码器提供额外的流信息（如SPS（序列参数集）和PPS（图像参数集））。
                  */
                 
-                if (m_isFirstPacket) { //信息打印
-                    AVCodecParameters *videoCodecpar = videoStream->codecpar;
-                    if (4 <= videoCodecpar->extradata_size && videoCodecpar->extradata[0] == 1) {
-                        cout << "[mm] 码流格式为 AvCc" << endl;
-                    } else if (videoCodecpar->extradata_size >= 4 &&
-                               (memcmp(videoCodecpar->extradata, "\x00\x00\x00\x01", 4) == 0 ||
-                                memcmp(videoCodecpar->extradata, "\x00\x00\x01", 3) == 0)) {
-                        cout << "[mm] 码流格式为 AnnexB" << endl;
-                    } else {
-                        cout << "[mm] 码流格式不确定" << endl;
-                    }
-                    m_isFirstPacket = false;
-                }
-
-                /// 确保发往decoder的第一个packet为Key-Frame
                 bool isKey = (packet->flags & AV_PKT_FLAG_KEY) == AV_PKT_FLAG_KEY;
 
                 /// 填充demux数据
@@ -264,15 +275,25 @@ void MMFFParser::process(std::shared_ptr<MMSampleData> &data) {
                 data->data          = videoData;
                 data->extradataSize = extraSize;
                 data->extraData     = extraData;
+                /*
+                 时间戳信息通常与具体的视频帧（在封装格式层面）或流（在传输层面）相关联，而不是存储在视频编码层
+                 （如H.264）的配置参数（SPS或PPS）中。例如，在MP4或MKV这样的容器格式中，pts和dts信息会被存
+                 储在容器的特定结构中，用于控制播放时帧的显示时间。
+
+                 当使用例如FFmpeg这样的库进行视频处理时，pts和dts信息可以从解封装后的AVPacket结构体中获得，
+                 而SPS和PPS信息可用于初始化解码器来正确解码视频帧。
+                 
+                 带B帧的视频，解封装出来的pts不是递增的（dts递增），是按照解码顺序出现的
+                 */
                 data->pts           = packet->pts * av_q2d(videoStream->time_base);
                 data->dts           = packet->dts * av_q2d(videoStream->time_base);
                 data->duration      = packet->duration * av_q2d(videoStream->time_base);
                 data->videoIdx      = videoIdx;
-                data->format        = videoFormat;
+                data->format        = m_videoFmt;
                 data->parsedData    = packet;
                 data->isKeyFrame    = isKey;
                 
-                //NSLog(@"[mm] video packet is keyframe - %d, pts - %lf, dts - %lf", isKey, data->pts, data->dts);
+                //NSLog(@"[mm] video packet is keyframe: %d, pts: %lf, dts: %lf", isKey, data->pts, data->dts);
 
                 data->dataType = MMSampleDataType_Parsed_Video;
 
@@ -317,7 +338,29 @@ void MMFFParser::process(std::shared_ptr<MMSampleData> &data) {
 
 #pragma mark - Private
 void MMFFParser::_init() {
+    bool isVideo = (m_config.parseType==MMFFParseType_Video);
+    
     int ret = -1;
+    /*
+     `avformat_alloc_context`函数：
+        1. av_class设置
+        2. IO默认关闭或者打开函数io_open、io_close、io_close2
+        3. 默认选项设置
+     
+     `AVFormatContext`结构体在FFmpeg解封装过程中扮演着重要的作用：
+        1. 存储媒体文件信息：包含了关于媒体文件的重要信息，如流的数量、流的类型（视频、音频或字幕）、
+           容器格式等。这为后续的数据处理提供了必要的上下文。
+        2. 管理数据流：每个媒体文件可能包含多个数据流（例如，一个视频流、多个音频流用于不同语言、字幕流等）。
+           通过AVStream数组来管理这些不同的数据流，并为每个流提供编解码器参数（AVCodecParameters）
+           等信息。
+        3. 提供I/O操作：通过AVIOContext处理媒体数据的输入和输出操作。这可以是从文件读取数据，
+           也可以是从网络接收数据。自定义的I/O操作（如读取加密视频）也可以通过设置AVFormatContext中的相应
+           字段来实现。
+        4. 存储格式特定信息：包含特定于容器格式的元数据，如标题、作者、版权信息等。此外，它还可以包含格式特定
+           的选项，比如用于调优解封装性能的标志。
+        5. 时间基准转换：AVFormatContext中的时间基准（time base）信息对于正确解释时间戳至关重要。每个
+           AVStream都有自己的时间基准，AVFormatContext提供了将这些时间戳转换为统一格式的基础。
+     */
     AVFormatContext *fmtCtx = avformat_alloc_context();
     
     ret = avformat_open_input(&fmtCtx, m_config.inPath.c_str(), NULL, NULL);
@@ -343,6 +386,25 @@ void MMFFParser::_init() {
         } else if (type == AVMEDIA_TYPE_AUDIO) {
             m_audioIdx = i;
             m_audioStream = fmtCtx->streams[i];
+        }
+    }
+    
+    if (isVideo) {
+        MMVideoFormat videoFormat = NULL;
+        if (m_videoStream->codecpar->codec_id == AV_CODEC_ID_H264) {
+            videoFormat = MMVideoFormatH264;
+            cout << "[mm] decode video: h264" << endl;
+        } else if (m_videoStream->codecpar->codec_id == AV_CODEC_ID_HEVC) {
+            videoFormat = MMVideoFormatH265;
+            cout << "[mm] decode video: h265" << endl;
+        }
+        m_videoFmt = videoFormat;
+        
+        //元信息
+        AVDictionary *metadata = fmtCtx->metadata;
+        AVDictionaryEntry *tag = NULL;
+        while ((tag = av_dict_get(metadata, "", tag, AV_DICT_IGNORE_SUFFIX))) {
+            cout << "[mm] metadata key: " << tag->key << ", value: " << tag->value << endl;
         }
     }
     

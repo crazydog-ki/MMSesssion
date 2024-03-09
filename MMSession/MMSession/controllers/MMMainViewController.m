@@ -8,9 +8,8 @@
 
 static NSString *CELL_ID = @"mmsession_cell_identifier";
 
-static NSString *CAMERA = @"Camera";
-static NSString *AVFOUNDATION = @"AVFoundation";
-static NSString *FFMPEG_VT = @"FFmpeg+VT";
+static NSString *CAMERA = @"拍摄录制";
+static NSString *VIDEO_EDITOR = @"视频编辑";
 
 @interface MMMainViewController () <UITableViewDataSource, UITableViewDelegate>
 @property (nonatomic, strong) NSArray<NSString *> *data;
@@ -21,10 +20,9 @@ static NSString *FFMPEG_VT = @"FFmpeg+VT";
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"MMSession";
-    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:UIColor.whiteColor}];
+    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:UIColor.purpleColor}];
     self.data = @[CAMERA,
-                  AVFOUNDATION,
-                  FFMPEG_VT,
+                  VIDEO_EDITOR,
     ];
     
     UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
@@ -66,9 +64,7 @@ static NSString *FFMPEG_VT = @"FFmpeg+VT";
     NSString *selectedTex = self.data[indexPath.row];
     if ([selectedTex isEqualToString:CAMERA]) {
 //        [self.navigationController pushViewController:[[MMCameraViewController alloc] init] animated:NO];
-    } else if ([selectedTex isEqualToString:AVFOUNDATION])  {
-//        [self.navigationController pushViewController:[[MMAVFDViewController alloc] init] animated:NO];
-    } else if ([selectedTex isEqualToString:FFMPEG_VT]) {
+    } else if ([selectedTex isEqualToString:VIDEO_EDITOR]) {
         [self.navigationController pushViewController:[[MMAVFFTBViewController alloc] init] animated:NO];
     }
 }

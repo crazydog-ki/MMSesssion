@@ -12,7 +12,7 @@ static const NSUInteger kAudioTimeScale  = 44100;
 MMFFDecoder::MMFFDecoder(MMDecodeConfig config): m_config(config) {
     m_audioBufferList = [MMBufferUtils produceAudioBufferList:MMBufferUtils.asbd
                                                  numberFrames:kMaxSamplesCount];
-    NSLog(@"[mm] ffdecoder audiobufferlist dataSize: %d", m_audioBufferList->mBuffers[0].mDataByteSize);
+    //NSLog(@"[mm] ffdecoder audiobufferlist dataSize: %d", m_audioBufferList->mBuffers[0].mDataByteSize);
     _initFFDecoder();
 }
 
@@ -170,6 +170,7 @@ void MMFFDecoder::_initFFDecoder() {
         ret = avcodec_parameters_to_context(codecCtx, videoStream->codecpar);
     } else if (type == MMDecodeType_Audio) {
         codec = avcodec_find_decoder(audioStream->codecpar->codec_id);
+        cout << "[mm] decode audio: " << codec->name << endl;
         codecCtx = avcodec_alloc_context3(codec);
         ret = avcodec_parameters_to_context(codecCtx, audioStream->codecpar);
     }

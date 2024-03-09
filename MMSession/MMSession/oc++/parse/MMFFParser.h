@@ -40,9 +40,9 @@ private:
     AVPacket *m_packet;
     AVStream *m_videoStream;
     AVStream *m_audioStream;
+    MMVideoFormat m_videoFmt;
     int m_videoIdx;
     int m_audioIdx;
-    bool m_isFirstPacket = true;
     bool m_stopFlag = false;
 };
 

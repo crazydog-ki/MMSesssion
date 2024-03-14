@@ -3,6 +3,7 @@
 // Github : https://github.com/crazydog-ki
 
 #import "MMFFParser.h"
+#include <chrono>
 
 MMFFParser::MMFFParser(MMParseConfig config): m_config(config) {
     _init();
@@ -198,6 +199,15 @@ void MMFFParser::process(std::shared_ptr<MMSampleData> &data) {
             av_packet_unref(packet);
             av_init_packet(packet);
 
+            /*
+             `av_read_frame`函数是FFmepeg库中用于从媒体文件中读取下一个帧数据的关键函数，他是解封装demux过程中反复调用的，用于顺
+             序地读取文件中的数据包，包括视频帧、音频帧等，这个函数对于从文件或者流中提取编码的媒体数据至关重要，为后续的解码和处理提供
+             原料。
+             
+             参数含义：
+             `AVPacket *pkt`：指向AVPacket结构的指针，用于存储读取的帧数据。AVPacket包含了解封装后的数据包信息，如数据指针、数据
+             大小、流索引、时间戳等。
+             */
             int ret = -1;
             ret = av_read_frame(fmtCtx, packet);
 
@@ -363,7 +373,34 @@ void MMFFParser::_init() {
      */
     AVFormatContext *fmtCtx = avformat_alloc_context();
     
+    /*
+     `avformat_open_input`函数：
+        1. 输入格式检测：如果没有指定输入格式（fmt为NULL），FFmpeg会尝试自动检测输入媒体的格式。
+        2. 读取和分析媒体头：avformat_open_input读取媒体文件或流的头部信息，AVFormatContext中的
+           streams数组会被填充基础的流信息，如流的数量和大致类型（视频、音频、字幕等）。然而，这些信息通常
+           仅足够表示流的存在，并不包括具体的编解码细节，如编解码器的类型、配置参数等。
+        3. 初始化AVFormatContext：基于读取到的信息，初始化传入的或新分配的AVFormatContext结构体，包括流信息、
+           持续时间、元数据等。
+     
+     获取详细的编解码信息，例如编解码器ID、视频分辨率、音频采样率等，需要调用avformat_find_stream_info函数，该函数会分析更多
+     数据，试图填充每个AVStream的codecpar字段。
+     
+     MP4解析过程包括：
+        1. 解析顶层box：如ftyp（文件类型）和moov（包含所有元数据）。
+        2. 读取流信息：通过解析moov下的trak和mdia等box，获取每个流的详细信息。
+        3. 填充AVStream：对于每个找到的流，FFmpeg会创建一个AVStream实例，包含了该流的编解码信息（通过解析stsd box获得）、时间基和其他重要的流信息。这些AVStream实例会被添加到AVFormatContext的流数组中。
+        4. 设置时间和索引：解析mvhd（影片头box）来获取整个影片的持续时间和时间基，解析stbl（样本表box）来设置每个
+           流的时间戳和关键帧索引等。
+        5. 准备读取媒体数据：通过mdat box的位置信息，FFmpeg准备读取实际的媒体数据。
+     
+     `avformat_open_input`负责打开文件、识别文件格式，并解析包含全局元数据的box，例如ftyp和moov
+     `avformat_find_stream_info`负责深入每个流的具体信息，通过解析trak、mdia、minf和stbl等box来获取每个流的
+      详细编码信息。
+     */
+    auto st = std::chrono::high_resolution_clock::now();
     ret = avformat_open_input(&fmtCtx, m_config.inPath.c_str(), NULL, NULL);
+    auto p1 = std::chrono::high_resolution_clock::now();
+    
     if (ret < 0) {
         if (fmtCtx) {
             avformat_free_context(fmtCtx);
@@ -373,6 +410,7 @@ void MMFFParser::_init() {
     }
     
     ret = avformat_find_stream_info(fmtCtx, NULL);
+    auto p2 = std::chrono::high_resolution_clock::now();
     if (ret < 0) {
         avformat_close_input(&fmtCtx);
         return;
@@ -390,6 +428,12 @@ void MMFFParser::_init() {
     }
     
     if (isVideo) {
+        std::chrono::duration<double, std::milli> deta1 = p1 - st;
+        std::chrono::duration<double, std::milli> deta2 = p2 - p1;
+        cout << "[mm] avformat_open_input cost: " << deta1.count()
+             << ", " << "avformat_find_stream_info cost: "
+             << deta2.count() << endl;
+        
         MMVideoFormat videoFormat = NULL;
         if (m_videoStream->codecpar->codec_id == AV_CODEC_ID_H264) {
             videoFormat = MMVideoFormatH264;

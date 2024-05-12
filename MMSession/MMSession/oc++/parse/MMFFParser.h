@@ -36,7 +36,7 @@ private:
     
     MMParseConfig m_config;
     AVFormatContext *m_fmtCtx;
-    AVBSFContext *m_bsfCtx;
+    AVBSFContext *m_bsfCtx = NULL;
     AVPacket *m_packet;
     AVStream *m_videoStream;
     AVStream *m_audioStream;

@@ -5,7 +5,7 @@
 #include "MMFFDecoder.h"
 #include "MMBufferUtils.h"
 
-static const NSUInteger kMaxSamplesCount = 1024;
+static const NSUInteger kMaxSamplesCount = 1024*10;
 static const NSUInteger kVideoTimeScale  = NSEC_PER_SEC;
 static const NSUInteger kAudioTimeScale  = 44100;
 
@@ -241,31 +241,33 @@ CVPixelBufferRef MMFFDecoder::_convertAVFrame2CVPixelBuffer(AVFrame *frame) {
 }
 
 void MMFFDecoder::_freeAll() {
-    if (m_codecCtx) {
-        avcodec_send_packet(m_codecCtx, nullptr);
-        avcodec_flush_buffers(m_codecCtx);
+    doTask(MMTaskSync, ^{ //防止多线程问题
+        if (m_codecCtx) {
+            avcodec_send_packet(m_codecCtx, nullptr);
+            avcodec_flush_buffers(m_codecCtx);
 
-        if (m_hwDeviceCtx) {
-            av_buffer_unref(&m_hwDeviceCtx);
-            m_hwDeviceCtx = nullptr;
+            if (m_hwDeviceCtx) {
+                av_buffer_unref(&m_hwDeviceCtx);
+                m_hwDeviceCtx = nullptr;
+            }
+            
+            avcodec_close(m_codecCtx);
+            avcodec_free_context(&m_codecCtx);
         }
 
-        avcodec_close(m_codecCtx);
-        m_codecCtx = nullptr;
-    }
+        if (m_frame) {
+            av_free(m_frame);
+            m_frame = nullptr;
+        }
 
-    if (m_frame) {
-        av_free(m_frame);
-        m_frame = nullptr;
-    }
+        if (m_swrCtx) {
+            swr_free(&m_swrCtx);
+            m_swrCtx = nullptr;
+        }
 
-    if (m_swrCtx) {
-        swr_free(&m_swrCtx);
-        m_swrCtx = nullptr;
-    }
-
-    if (m_audioBufferList) {
-        [MMBufferUtils freeAudioBufferList:m_audioBufferList];
-        m_audioBufferList = nullptr;
-    }
+        if (m_audioBufferList) {
+            [MMBufferUtils freeAudioBufferList:m_audioBufferList];
+            m_audioBufferList = nullptr;
+        }
+    });
 }

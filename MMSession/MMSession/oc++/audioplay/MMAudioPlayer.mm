@@ -65,10 +65,12 @@ void MMAudioQueuePullData(void* __nullable inUserData, AudioQueueRef inAQ, Audio
             cout << "[mm] AudioQueueEnqueueBuffer: " << ret << endl;
         }
         
-        while (!isEof && !isStop && player->m_sampleDataQueue.size() <= kMaxAudioCache/2) { //音频要抓紧生产
-            MMMsg msg;
-            msg.msgID = MMMsg_AudioNeedBuffer;
-            player->m_sharedUnitCtx->post(msg);
+        if (!isEof && !isStop && player->m_sampleDataQueue.size() <= kMaxAudioCache/2) { //音频要抓紧生产
+            for (int i = 0; i < kMaxAudioCache/4; i++) { //发5帧
+                MMMsg msg;
+                msg.msgID = MMMsg_AudioNeedBuffer;
+                player->m_sharedUnitCtx->post(msg);
+            }
         }
         
         if ((isEof || isStop) && player->m_sampleDataQueue.empty()) {

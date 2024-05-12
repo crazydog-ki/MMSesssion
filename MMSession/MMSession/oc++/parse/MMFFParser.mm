@@ -228,7 +228,7 @@ void MMFFParser::process(std::shared_ptr<MMSampleData> &data) {
                             unit->process(data);
                         }
                     }
-                    _freeAll();
+                    //_freeAll();
                 } else {
                     std::cout << "[mm] av_read_frame error: " << ret << std::endl;
                 }
@@ -244,13 +244,13 @@ void MMFFParser::process(std::shared_ptr<MMSampleData> &data) {
                 } else if (m_videoFmt == AV_CODEC_ID_HEVC) {
                     pFilter = av_bsf_get_by_name("hevc_annexbtomp4");
                 }
-                if (!_bsfCtx) {
-                    av_bsf_alloc(pFilter, &_bsfCtx);
-                    avcodec_parameters_copy(_bsfCtx->par_in, videoStream->codecpar);
-                    av_bsf_init(_bsfCtx);
+                if (!m_bsfCtx) {
+                    av_bsf_alloc(pFilter, &m_bsfCtx);
+                    avcodec_parameters_copy(m_bsfCtx->par_in, videoStream->codecpar);
+                    av_bsf_init(m_bsfCtx);
                 }
-                av_bsf_send_packet(_bsfCtx, packet);
-                while (av_bsf_receive_packet(_bsfCtx, packet) == 0) {
+                av_bsf_send_packet(m_bsfCtx, packet);
+                while (av_bsf_receive_packet(m_bsfCtx, packet) == 0) {
                 }
                  */
                 
@@ -428,6 +428,7 @@ void MMFFParser::_init() {
     }
     
     if (isVideo) {
+        /*
         std::chrono::duration<double, std::milli> deta1 = p1 - st;
         std::chrono::duration<double, std::milli> deta2 = p2 - p1;
         cout << "[mm] avformat_open_input cost: " << deta1.count()
@@ -450,6 +451,7 @@ void MMFFParser::_init() {
         while ((tag = av_dict_get(metadata, "", tag, AV_DICT_IGNORE_SUFFIX))) {
             cout << "[mm] metadata key: " << tag->key << ", value: " << tag->value << endl;
         }
+         */
     }
     
     m_packet = (AVPacket *)malloc(sizeof(AVPacket));
@@ -479,19 +481,21 @@ CGFloat MMFFParser::_getRotation() {
 }
 
 void MMFFParser::_freeAll() {
-    if (m_fmtCtx) {
-        avformat_close_input(&m_fmtCtx);
-        m_fmtCtx = NULL;
-    }
-    
-    if (m_bsfCtx) {
-        av_bsf_free(&m_bsfCtx);
-        m_bsfCtx = NULL;
-    }
-    
-    if (m_packet) {
-        av_packet_unref(m_packet);
-        free(m_packet);
-        m_packet = nil;
-    }
+    doTask(MMTaskSync, ^{
+        if (m_fmtCtx) {
+            avformat_close_input(&m_fmtCtx);
+            m_fmtCtx = NULL;
+        }
+        
+        if (m_bsfCtx) {
+            av_bsf_free(&m_bsfCtx);
+            m_bsfCtx = NULL;
+        }
+        
+        if (m_packet) {
+            av_packet_unref(m_packet);
+            free(m_packet);
+            m_packet = NULL;
+        }
+    });
 }

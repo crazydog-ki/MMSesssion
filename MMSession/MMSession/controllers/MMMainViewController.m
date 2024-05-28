@@ -26,7 +26,7 @@ static NSString *VIDEO_EDITOR = @"视频编辑";
     ];
     
     UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
-    tableView.backgroundColor = UIColor.blackColor;
+    tableView.backgroundColor = kMMColor;
     tableView.scrollEnabled = NO;
     tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     tableView.tableFooterView.backgroundColor = UIColor.blackColor;

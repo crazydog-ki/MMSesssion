@@ -17,10 +17,11 @@ using namespace std;
 @implementation MMAVFFTBViewController
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = UIColor.blackColor;
+    self.view.backgroundColor = kMMColor;
     self.navigationItem.title = @"FFTB Module";
     
     [self _setupCollectionView];
+    [self _setupSlider];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -44,7 +45,7 @@ using namespace std;
     [tagCollectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.equalTo(self.view);
         make.top.equalTo(self.view).offset(kStatusBarH+kNavBarH);
-        make.bottom.equalTo(self.view);
+        make.bottom.equalTo(self.view).offset(-100);
     }];
     
     TTGTextTagStyle *style1 = [TTGTextTagStyle new];
@@ -57,8 +58,11 @@ using namespace std;
     TTGTextTag *mp4_h264 = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"h264"] style:style1];
     [tagCollectionView addTag:mp4_h264];
     
-    TTGTextTag *mov_h265 = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"h264_B"] style:style1];
-    [tagCollectionView addTag:mov_h265];
+    TTGTextTag *mov_h264_B = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"h264_B"] style:style1];
+    [tagCollectionView addTag:mov_h264_B];
+    
+    TTGTextTag *mp4_h265 = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"h265"] style:style1];
+    [tagCollectionView addTag:mp4_h265];
     
     TTGTextTagStyle *style2 = [TTGTextTagStyle new];
     style2.backgroundColor = kMMColor3;
@@ -73,6 +77,22 @@ using namespace std;
     
     TTGTextTag *allPlayTag = [TTGTextTag tagWithContent:[TTGTextTagStringContent contentWithText:@"视频播放"] style:style2];
     [tagCollectionView addTag:allPlayTag];
+}
+
+- (void)_setupSlider {
+    UISlider *seekSlider = [[UISlider alloc] init];
+    [self.view addSubview:seekSlider];
+    [seekSlider mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.width.equalTo(self.view);
+        make.height.equalTo(@100);
+        make.top.equalTo(self.collectionView.mas_bottom);
+        make.left.equalTo(self.view);
+    }];
+    seekSlider.thumbTintColor = UIColor.whiteColor;
+    seekSlider.minimumTrackTintColor = kMMColor4;
+    seekSlider.maximumTrackTintColor = kMMColor6;
+    seekSlider.minimumValue = 0.0f;
+    seekSlider.maximumValue = 1.0f;
 }
 
 #pragma mark - Action
@@ -142,6 +162,8 @@ using namespace std;
         self.videoPath = [NSString stringWithFormat:@"%@/h264.mp4", NSBundle.mainBundle.bundleURL.path];
     } else if([content.text isEqualToString:@"h264_B"]) {
         self.videoPath = [NSString stringWithFormat:@"%@/h264_B.mov", NSBundle.mainBundle.bundleURL.path];
+    } else if([content.text isEqualToString:@"h265"]) {
+        self.videoPath = [NSString stringWithFormat:@"%@/h265.mp4", NSBundle.mainBundle.bundleURL.path];
     } else if ([content.text isEqualToString:@"相册导入"]) {
         [self _startPick];
     } else if ([content.text isEqualToString:@"视频播放"]) {

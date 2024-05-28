@@ -235,7 +235,7 @@ void MMFFParser::process(std::shared_ptr<MMSampleData> &data) {
                 break;
             }
 
-            if (packet->stream_index == videoIdx) { /// 视频轨
+            if (packet->stream_index == videoIdx) { //视频
                 if (!isVideo) continue;
                 /* bsf对SPS、PPS等数据进行格式转换，使其可被解码器处理
                 const AVBitStreamFilter *pFilter = NULL;
@@ -303,7 +303,7 @@ void MMFFParser::process(std::shared_ptr<MMSampleData> &data) {
                 data->parsedData    = packet;
                 data->isKeyFrame    = isKey;
                 
-                //NSLog(@"[mm] video packet is keyframe: %d, pts: %lf, dts: %lf", isKey, data->pts, data->dts);
+                // NSLog(@"[yjx] video packet is keyframe: %d, pts: %lf, dts: %lf", isKey, data->pts, data->dts);
 
                 data->dataType = MMSampleDataType_Parsed_Video;
 
@@ -315,7 +315,7 @@ void MMFFParser::process(std::shared_ptr<MMSampleData> &data) {
                         unit->process(data);
                     }
                 }
-            } else if (packet->stream_index == audioIdx) { /// 音频轨
+            } else if (packet->stream_index == audioIdx) { //音频
                 if (isVideo) continue;
                 uint8_t *audioData = (uint8_t *)malloc(packet->size);
                 int pktSize = packet->size;
@@ -340,6 +340,8 @@ void MMFFParser::process(std::shared_ptr<MMSampleData> &data) {
                         unit->process(data);
                     }
                 }
+            } else { //素材存在多轨，暂不处理
+                continue;
             }
             break;
         }
